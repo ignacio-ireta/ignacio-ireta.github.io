@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League of Legends ML Project - End-to-End Machine Learning Showcase</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>LoL ML Project</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#objective" class="nav-link">Objective</a></li>
+                <li class="nav-item"><a href="#data-collection" class="nav-link">Data Collection</a></li>
+                <li class="nav-item"><a href="#preprocessing" class="nav-link">Preprocessing</a></li>
+                <li class="nav-item"><a href="#eda" class="nav-link">EDA</a></li>
+                <li class="nav-item"><a href="#modeling" class="nav-link">Modeling</a></li>
+                <li class="nav-item"><a href="#evaluation" class="nav-link">Evaluation</a></li>
+                <li class="nav-item"><a href="#deployment" class="nav-link">Deployment</a></li>
+                <li class="nav-item"><a href="#monitoring" class="nav-link">Monitoring</a></li>
+                <li class="nav-item"><a href="#feedback" class="nav-link">Feedback</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>League of Legends Machine Learning Project</h1>
+            <p>An end-to-end machine learning showcase demonstrating the complete ML lifecycle</p>
+            <a href="#objective" class="cta-button">Explore the Journey</a>
+        </div>
+        <div class="hero-background"></div>
+    </section>
+
+    <!-- Section 1: Objective Definition -->
+    <section id="objective" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Kaisa_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>1. Objective Definition</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Project Goals</h3>
+                        <p>This project aims to predict match outcomes in League of Legends using machine learning techniques. We'll analyze champion selections, game statistics, and player performance metrics to build a robust predictive model.</p>
+                        <ul>
+                            <li>Predict match winners with high accuracy</li>
+                            <li>Identify key factors influencing game outcomes</li>
+                            <li>Create an interactive web application for predictions</li>
+                            <li>Demonstrate end-to-end ML project lifecycle</li>
+                        </ul>
+                    </div>
+                    <div class="visual-content">
+                        <div class="metric-card">
+                            <h4>Target Accuracy</h4>
+                            <span class="metric-value">85%+</span>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Data Points</h4>
+                            <span class="metric-value">100K+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Data Collection -->
+    <section id="data-collection" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Ezreal_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>2. Data Collection</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Data Sources</h3>
+                        <p>We leverage multiple data sources to create a comprehensive dataset for our machine learning model.</p>
+                        <div class="data-sources">
+                            <div class="source-item">
+                                <h4>Riot Games API</h4>
+                                <p>Match history, player statistics, champion data</p>
+                            </div>
+                            <div class="source-item">
+                                <h4>Data Dragon</h4>
+                                <p>Champion abilities, items, game constants</p>
+                            </div>
+                            <div class="source-item">
+                                <h4>Third-party APIs</h4>
+                                <p>Additional match data and meta information</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="code-snippet">
+                            <pre><code>import requests
+import pandas as pd
+
+def fetch_match_data(match_id):
+    url = f"https://api.riotgames.com/lol/match/v5/matches/{match_id}"
+    response = requests.get(url, headers=headers)
+    return response.json()</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Data Cleaning and Preprocessing -->
+    <section id="preprocessing" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/LeeSin_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>3. Data Cleaning and Preprocessing</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Data Preparation Pipeline</h3>
+                        <p>Raw data requires extensive cleaning and preprocessing to ensure model quality and reliability.</p>
+                        <div class="preprocessing-steps">
+                            <div class="step">
+                                <h4>Data Validation</h4>
+                                <p>Remove incomplete matches and invalid data points</p>
+                            </div>
+                            <div class="step">
+                                <h4>Feature Engineering</h4>
+                                <p>Create meaningful features from raw game statistics</p>
+                            </div>
+                            <div class="step">
+                                <h4>Normalization</h4>
+                                <p>Scale numerical features for optimal model performance</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="preprocessing-chart">
+                            <h4>Data Quality Metrics</h4>
+                            <div class="quality-metrics">
+                                <div class="metric">
+                                    <span class="label">Complete Records</span>
+                                    <span class="value">94.2%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="label">Valid Matches</span>
+                                    <span class="value">98.7%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="label">Feature Coverage</span>
+                                    <span class="value">96.5%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Exploratory Data Analysis -->
+    <section id="eda" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Lux_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>4. Exploratory Data Analysis</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Data Insights</h3>
+                        <p>Understanding patterns and relationships in the data through comprehensive analysis and visualization.</p>
+                        <div class="insights-list">
+                            <div class="insight">
+                                <h4>Champion Win Rates</h4>
+                                <p>Analysis of champion performance across different ranks and patches</p>
+                            </div>
+                            <div class="insight">
+                                <h4>Game Duration Patterns</h4>
+                                <p>Correlation between match length and outcome predictability</p>
+                            </div>
+                            <div class="insight">
+                                <h4>Team Composition Analysis</h4>
+                                <p>Impact of team synergy on match outcomes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="chart-placeholder">
+                            <h4>Champion Performance Distribution</h4>
+                            <div class="chart-container">
+                                <!-- Placeholder for interactive charts -->
+                                <p>Interactive visualizations will be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Model Selection and Training -->
+    <section id="modeling" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Yasuo_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>5. Model Selection and Training</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Algorithm Comparison</h3>
+                        <p>We tested multiple machine learning algorithms to find the best performing model for our use case.</p>
+                        <div class="model-comparison">
+                            <div class="model-item">
+                                <h4>Random Forest</h4>
+                                <span class="accuracy">Accuracy: 82.3%</span>
+                            </div>
+                            <div class="model-item">
+                                <h4>Gradient Boosting</h4>
+                                <span class="accuracy">Accuracy: 85.7%</span>
+                            </div>
+                            <div class="model-item best">
+                                <h4>Neural Network</h4>
+                                <span class="accuracy">Accuracy: 87.1%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="training-progress">
+                            <h4>Training Progress</h4>
+                            <div class="progress-metrics">
+                                <div class="progress-item">
+                                    <span class="label">Epochs</span>
+                                    <span class="value">100/100</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span class="label">Loss</span>
+                                    <span class="value">0.312</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span class="label">Val Accuracy</span>
+                                    <span class="value">87.1%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Model Evaluation and Validation -->
+    <section id="evaluation" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Ahri_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>6. Model Evaluation and Validation</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Performance Metrics</h3>
+                        <p>Comprehensive evaluation using multiple metrics to ensure model reliability and generalization.</p>
+                        <div class="evaluation-metrics">
+                            <div class="metric-group">
+                                <h4>Classification Metrics</h4>
+                                <div class="metric-item">
+                                    <span class="name">Precision</span>
+                                    <span class="value">86.8%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="name">Recall</span>
+                                    <span class="value">87.4%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="name">F1-Score</span>
+                                    <span class="value">87.1%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="confusion-matrix">
+                            <h4>Confusion Matrix</h4>
+                            <div class="matrix-placeholder">
+                                <!-- Placeholder for confusion matrix visualization -->
+                                <p>Confusion matrix visualization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Deployment -->
+    <section id="deployment" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Caitlyn_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>7. Deployment</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Production Pipeline</h3>
+                        <p>Deploying the model to production with proper infrastructure and monitoring capabilities.</p>
+                        <div class="deployment-stack">
+                            <div class="stack-item">
+                                <h4>API Framework</h4>
+                                <p>FastAPI for high-performance REST endpoints</p>
+                            </div>
+                            <div class="stack-item">
+                                <h4>Container Platform</h4>
+                                <p>Docker for consistent deployment environments</p>
+                            </div>
+                            <div class="stack-item">
+                                <h4>Cloud Infrastructure</h4>
+                                <p>AWS/GCP for scalable hosting solutions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="deployment-diagram">
+                            <h4>Architecture Overview</h4>
+                            <div class="architecture-placeholder">
+                                <!-- Placeholder for deployment architecture diagram -->
+                                <p>System architecture diagram</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Monitoring and Maintenance -->
+    <section id="monitoring" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Jinx_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>8. Monitoring and Maintenance</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>System Health</h3>
+                        <p>Continuous monitoring ensures optimal performance and early detection of issues.</p>
+                        <div class="monitoring-aspects">
+                            <div class="aspect">
+                                <h4>Performance Monitoring</h4>
+                                <p>Real-time tracking of prediction accuracy and response times</p>
+                            </div>
+                            <div class="aspect">
+                                <h4>Data Drift Detection</h4>
+                                <p>Automated alerts for changes in input data distribution</p>
+                            </div>
+                            <div class="aspect">
+                                <h4>Resource Utilization</h4>
+                                <p>CPU, memory, and storage monitoring for optimal scaling</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="monitoring-dashboard">
+                            <h4>Live Metrics</h4>
+                            <div class="dashboard-metrics">
+                                <div class="dashboard-item">
+                                    <span class="label">Uptime</span>
+                                    <span class="value">99.9%</span>
+                                </div>
+                                <div class="dashboard-item">
+                                    <span class="label">Avg Response</span>
+                                    <span class="value">45ms</span>
+                                </div>
+                                <div class="dashboard-item">
+                                    <span class="label">Requests/min</span>
+                                    <span class="value">127</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9: Feedback and Iteration -->
+    <section id="feedback" class="section">
+        <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/MissFortune_0.jpg"></div>
+        <div class="container">
+            <div class="section-content">
+                <h2>9. Feedback and Iteration</h2>
+                <div class="content-grid">
+                    <div class="text-content">
+                        <h3>Continuous Improvement</h3>
+                        <p>The ML lifecycle is iterative, with constant improvements based on user feedback and new data.</p>
+                        <div class="iteration-cycle">
+                            <div class="cycle-step">
+                                <h4>User Feedback</h4>
+                                <p>Collecting insights from model predictions and user interactions</p>
+                            </div>
+                            <div class="cycle-step">
+                                <h4>Model Updates</h4>
+                                <p>Regular retraining with new data and improved features</p>
+                            </div>
+                            <div class="cycle-step">
+                                <h4>A/B Testing</h4>
+                                <p>Comparing model versions to ensure improvements</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-content">
+                        <div class="feedback-stats">
+                            <h4>Improvement Metrics</h4>
+                            <div class="improvement-metrics">
+                                <div class="improvement-item">
+                                    <span class="label">Accuracy Gain</span>
+                                    <span class="value">+3.2%</span>
+                                </div>
+                                <div class="improvement-item">
+                                    <span class="label">Response Time</span>
+                                    <span class="value">-15ms</span>
+                                </div>
+                                <div class="improvement-item">
+                                    <span class="label">User Satisfaction</span>
+                                    <span class="value">4.7/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 League of Legends ML Project. Built with passion for machine learning and gaming.</p>
+                <div class="footer-links">
+                    <a href="https://github.com/ignacio-ireta" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Portfolio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 

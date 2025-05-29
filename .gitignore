@@ -1,0 +1,19 @@
+# Test folder
+test/
+
+# Datascience project virtual environment (if UV or other venv tools are used)
+datascience_project/.venv/
+datascience_project/__pycache__/
+datascience_project/*.pyc
+
+# Dragontail source data (raw, large files)
+dragontail_source_data/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.idea/
+.vscode/
+*.swp 
