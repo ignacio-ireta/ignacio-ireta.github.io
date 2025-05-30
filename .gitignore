@@ -17,3 +17,9 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp 
+
+datascience_project/lol_data_collector/*.json
+datascience_project/lol_data_collector/*.parquet
+datascience_project/lol_data_collector/__pycache__/
+datascience_project/lol_data_collector/__init__.py
+datascience_project/.python-version

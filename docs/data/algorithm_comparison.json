@@ -1,0 +1,56 @@
+{
+  "champion_id": 236,
+  "baseline_win_rate": 0.5260336906584993,
+  "genetic_algorithm": {
+    "champion_id": 236,
+    "optimal_build": [
+      1029,
+      3364,
+      3340,
+      3035,
+      2019,
+      1055,
+      6690
+    ],
+    "fitness": 0.91,
+    "win_probability": 0.76,
+    "generations": 100,
+    "population_size": 50
+  },
+  "differential_evolution": {
+    "champion_id": 236,
+    "optimal_build": [
+      1029,
+      3094,
+      6701,
+      3033,
+      3072,
+      1037,
+      3156
+    ],
+    "continuous_representation": [
+      3.058849041943608,
+      18.437533438001566,
+      29.11070268845683,
+      67.8441899395114,
+      82.0,
+      9.4606485516185,
+      40.98749933197742
+    ],
+    "fitness": 0.9,
+    "win_probability": 0.75,
+    "algorithm": "Differential Evolution",
+    "generations": 200,
+    "population_size": 50
+  },
+  "comparison": {
+    "winner": "Genetic Algorithm",
+    "advantage": 0.010000000000000009,
+    "ga_improvement": 44.47743813682678,
+    "de_improvement": 42.57641921397379,
+    "overlap_ratio": 0.14285714285714285,
+    "common_items": [
+      1029
+    ]
+  }
+}

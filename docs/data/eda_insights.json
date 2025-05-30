@@ -1,0 +1,89 @@
+{
+  "champion_info": {
+    "champion_id": 236,
+    "champion_key": "236",
+    "name": "Champion 236",
+    "title": "Unknown Champion",
+    "total_records": 525
+  },
+  "generated_at": "2025-05-30T10:41:24.894397",
+  "data_source": "champion_236_data.parquet",
+  "performance_stats": {
+    "avg_kda": 2.6866453572882145,
+    "avg_kills": 6.5790476190476195,
+    "avg_deaths": 4.956190476190476,
+    "avg_assists": 6.137142857142857,
+    "avg_gold": 11281.062857142857,
+    "avg_duration": 1487.6380952380953,
+    "avg_damage": 22196.241904761904
+  },
+  "top_items": [
+    {
+      "id": 3508,
+      "name": "Item 3508",
+      "usage": 97.33333333333334,
+      "count": 511
+    },
+    {
+      "id": 3363,
+      "name": "Item 3363",
+      "usage": 91.04761904761904,
+      "count": 478
+    },
+    {
+      "id": 1055,
+      "name": "Item 1055",
+      "usage": 77.33333333333333,
+      "count": 406
+    },
+    {
+      "id": 3031,
+      "name": "Item 3031",
+      "usage": 65.33333333333333,
+      "count": 343
+    },
+    {
+      "id": 6675,
+      "name": "Item 6675",
+      "usage": 44.0,
+      "count": 231
+    }
+  ],
+  "win_rate_correlations": {
+    "high_kda": {
+      "threshold": 2.0,
+      "win_rate": 0.8432835820895522,
+      "games": 268
+    },
+    "high_gold": {
+      "win_rate": 0.6145038167938931,
+      "games": 262
+    },
+    "high_damage": {
+      "win_rate": 0.5916030534351145,
+      "games": 262
+    }
+  },
+  "game_duration": {
+    "short_games": {
+      "win_rate": 0.5606936416184971,
+      "avg_duration": 17.415510597302504,
+      "games": 173
+    },
+    "medium_games": {
+      "win_rate": 0.49162011173184356,
+      "avg_duration": 25.25437616387337,
+      "games": 179
+    },
+    "long_games": {
+      "win_rate": 0.5202312138728323,
+      "avg_duration": 31.696050096339114,
+      "games": 173
+    }
+  },
+  "build_diversity": {
+    "unique_builds": 413,
+    "total_games": 525,
+    "diversity_percentage": 78.66666666666666
+  }
+}
