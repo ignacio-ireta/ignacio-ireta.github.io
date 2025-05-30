@@ -12,7 +12,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <h2>LoL ML Project</h2>
+                <img src="assets/images/lol-logo.png" alt="League of Legends" class="logo-img">
             </div>
             <ul class="nav-menu">
                 <li class="nav-item"><a href="#objective" class="nav-link">Objective</a></li>
@@ -21,9 +21,11 @@
                 <li class="nav-item"><a href="#eda" class="nav-link">EDA</a></li>
                 <li class="nav-item"><a href="#modeling" class="nav-link">Modeling</a></li>
                 <li class="nav-item"><a href="#evaluation" class="nav-link">Evaluation</a></li>
+                <!-- Sections 7-9 commented out
                 <li class="nav-item"><a href="#deployment" class="nav-link">Deployment</a></li>
                 <li class="nav-item"><a href="#monitoring" class="nav-link">Monitoring</a></li>
                 <li class="nav-item"><a href="#feedback" class="nav-link">Feedback</a></li>
+                -->
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>
@@ -48,26 +50,36 @@
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Kaisa_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>1. Objective Definition</h2>
+                <h2>Objective Definition</h2>
                 <div class="content-grid">
                     <div class="text-content">
+                        <h3>Research Objective</h3>
+                        <p>This project compares two evolutionary algorithms - Genetic Algorithm (GA) and Differential Evolution (DE) - to optimize League of Legends champion item builds for maximum win rate.</p>
+                        
+                        <h3>Research Question</h3>
+                        <p>Which evolutionary algorithm (GA or DE) is more effective at discovering optimal item builds that maximize champion win rates in League of Legends?</p>
+                        
                         <h3>Project Goals</h3>
-                        <p>This project aims to predict match outcomes in League of Legends using machine learning techniques. We'll analyze champion selections, game statistics, and player performance metrics to build a robust predictive model.</p>
                         <ul>
-                            <li>Predict match winners with high accuracy</li>
-                            <li>Identify key factors influencing game outcomes</li>
-                            <li>Create an interactive web application for predictions</li>
-                            <li>Demonstrate end-to-end ML project lifecycle</li>
+                            <li>Collect and analyze real match data from Riot Games API</li>
+                            <li>Implement both Genetic Algorithm and Differential Evolution approaches</li>
+                            <li>Compare algorithm performance in finding optimal item builds</li>
+                            <li>Analyze champion-specific patterns and insights from the data</li>
+                            <li>Demonstrate the effectiveness of evolutionary optimization in gaming</li>
                         </ul>
                     </div>
                     <div class="visual-content">
                         <div class="metric-card">
-                            <h4>Target Accuracy</h4>
-                            <span class="metric-value">85%+</span>
+                            <h4>Algorithms Compared</h4>
+                            <span class="metric-value">GA vs DE</span>
                         </div>
                         <div class="metric-card">
-                            <h4>Data Points</h4>
-                            <span class="metric-value">100K+</span>
+                            <h4>Optimization Target</h4>
+                            <span class="metric-value">Win Rate</span>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Champion Focus</h4>
+                            <span class="metric-value" id="champion-focus">Most Frequent</span>
                         </div>
                     </div>
                 </div>
@@ -80,35 +92,87 @@
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Ezreal_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>2. Data Collection</h2>
+                <h2>Data Collection</h2>
                 <div class="content-grid">
                     <div class="text-content">
-                        <h3>Data Sources</h3>
-                        <p>We leverage multiple data sources to create a comprehensive dataset for our machine learning model.</p>
-                        <div class="data-sources">
-                            <div class="source-item">
-                                <h4>Riot Games API</h4>
-                                <p>Match history, player statistics, champion data</p>
+                        <h3>The Oblique Approach</h3>
+                        <p>Collecting League of Legends match data requires a strategic approach due to Riot API's structure. We couldn't directly fetch match data - we needed to follow a multi-step process.</p>
+                        
+                        <div class="data-collection-steps">
+                            <div class="step">
+                                <h4>1. High Elo Player Collection</h4>
+                                <p>Started with Grandmaster and Challenger ranked leagues to get player PUUIDs from the first pages of each division</p>
+                                <div class="code-snippet">
+                                    <pre><code>TIERS = ['GRANDMASTER', 'CHALLENGER']
+DIVISIONS = ['I', 'II', 'III', 'IV']
+url = f"https://kr.api.riotgames.com/lol/league-exp/v4/entries/{queue}/{tier}/{division}"</code></pre>
+                                </div>
                             </div>
-                            <div class="source-item">
-                                <h4>Data Dragon</h4>
-                                <p>Champion abilities, items, game constants</p>
+                            
+                            <div class="step">
+                                <h4>2. PUUID → Match IDs</h4>
+                                <p>For each player PUUID, fetched their recent ranked match IDs (20 matches per player)</p>
+                                <div class="code-snippet">
+                                    <pre><code>url = f"https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids"
+params={"queue": 420, "type": "ranked", "start": 0, "count": 20}</code></pre>
+                                </div>
                             </div>
-                            <div class="source-item">
-                                <h4>Third-party APIs</h4>
-                                <p>Additional match data and meta information</p>
+                            
+                            <div class="step">
+                                <h4>3. Match IDs → Full Match Data</h4>
+                                <p>Finally, fetched complete match information for each unique match ID</p>
+                                <div class="code-snippet">
+                                    <pre><code>url = f"https://asia.api.riotgames.com/lol/match/v5/matches/{match_id}"</code></pre>
+                                </div>
                             </div>
                         </div>
+                        
+                        <h3>Rate Limiting & Optimization</h3>
+                        <p>We implemented sophisticated rate limiting and duplicate prevention to maximize API efficiency:</p>
+                        <ul>
+                            <li><strong>Smart Rate Limiting:</strong> Respected API headers and implemented exponential backoff</li>
+                            <li><strong>Duplicate Prevention:</strong> Saved 3,000+ API calls by detecting duplicate PUUIDs and match IDs</li>
+                            <li><strong>Checkpointing:</strong> Resumable data collection with graceful shutdown handling</li>
+                            <li><strong>Bucket Strategy:</strong> Processed data in batches to stay within API limits</li>
+                        </ul>
                     </div>
                     <div class="visual-content">
-                        <div class="code-snippet">
-                            <pre><code>import requests
-import pandas as pd
-
-def fetch_match_data(match_id):
-    url = f"https://api.riotgames.com/lol/match/v5/matches/{match_id}"
-    response = requests.get(url, headers=headers)
-    return response.json()</code></pre>
+                        <div class="collection-stats">
+                            <h4>Collection Results</h4>
+                            <div class="stat-item">
+                                <span class="label">Unique Players</span>
+                                <span class="value" id="unique-players">1,531</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">Match IDs Collected</span>
+                                <span class="value" id="match-ids-collected">8,362</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">API Calls Saved</span>
+                                <span class="value" id="api-calls-saved">4,090</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">Duplicate Efficiency</span>
+                                <span class="value" id="duplicate-efficiency">46.8%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="api-efficiency">
+                            <h4>Duplicate Prevention Impact</h4>
+                            <div class="efficiency-metrics">
+                                <div class="metric">
+                                    <span class="label">PUUID Duplicates</span>
+                                    <span class="value" id="puuid-duplicates">3,003 found</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="label">Match ID Duplicates</span>
+                                    <span class="value" id="match-id-duplicates">11,658 found</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="label">Time Saved</span>
+                                    <span class="value" id="time-saved">51.1 minutes</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,42 +185,100 @@ def fetch_match_data(match_id):
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/LeeSin_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>3. Data Cleaning and Preprocessing</h2>
+                <h2>Data Cleaning and Preprocessing</h2>
                 <div class="content-grid">
                     <div class="text-content">
-                        <h3>Data Preparation Pipeline</h3>
-                        <p>Raw data requires extensive cleaning and preprocessing to ensure model quality and reliability.</p>
-                        <div class="preprocessing-steps">
-                            <div class="step">
-                                <h4>Data Validation</h4>
-                                <p>Remove incomplete matches and invalid data points</p>
+                        <h3>From Raw JSON to Data Science Ready</h3>
+                        <p>Our preprocessing pipeline transforms the complex nested JSON match data from Riot API into clean, structured parquet files optimized for machine learning.</p>
+                        
+                        <div class="processing-pipeline">
+                            <div class="pipeline-step">
+                                <h4>1. Data Loading & Validation</h4>
+                                <p>The <code>run_processor.py</code> script validates data files and initiates processing</p>
+                                <div class="code-snippet">
+                                    <pre><code>data_files = [
+    "matches_timeline.json",
+    "players_puuids.json", 
+    "latest_games.json"
+]</code></pre>
+                                </div>
                             </div>
-                            <div class="step">
-                                <h4>Feature Engineering</h4>
-                                <p>Create meaningful features from raw game statistics</p>
+                            
+                            <div class="pipeline-step">
+                                <h4>2. Champion Analysis</h4>
+                                <p>Analyzes all champions to identify the most frequent one for focused optimization</p>
+                                <div class="code-snippet">
+                                    <pre><code>analyzer = ChampionAnalyzer()
+champion_analysis = analyzer.analyze_champions(matches_data)
+# Selects champion with most processed records</code></pre>
+                                </div>
                             </div>
-                            <div class="step">
-                                <h4>Normalization</h4>
-                                <p>Scale numerical features for optimal model performance</p>
+                            
+                            <div class="pipeline-step">
+                                <h4>3. Data Transformation</h4>
+                                <p>Extracts and structures data into two main datasets: matches and players</p>
+                                <div class="code-snippet">
+                                    <pre><code>processor = MatchProcessor()
+match_data, player_data = processor.process_matches(matches_data)
+# Outputs: matches_data.parquet, players_data.parquet</code></pre>
+                                </div>
                             </div>
                         </div>
+                        
+                        <h3>Key Data Transformations</h3>
+                        <ul>
+                            <li><strong>Unwanted Stats Removal:</strong> Filters out 20+ irrelevant columns like PlayerScore0-9, challenges, missions</li>
+                            <li><strong>Team Objectives:</strong> Extracts baron, dragon, tower kills and first blood data</li>
+                            <li><strong>Item Optimization:</strong> Structures item builds (item0-item6) for evolutionary algorithms</li>
+                            <li><strong>Champion-Specific Datasets:</strong> Creates focused datasets for the most frequent champion</li>
+                        </ul>
                     </div>
                     <div class="visual-content">
-                        <div class="preprocessing-chart">
-                            <h4>Data Quality Metrics</h4>
-                            <div class="quality-metrics">
-                                <div class="metric">
-                                    <span class="label">Complete Records</span>
-                                    <span class="value">94.2%</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="label">Valid Matches</span>
-                                    <span class="value">98.7%</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="label">Feature Coverage</span>
-                                    <span class="value">96.5%</span>
-                                </div>
+                        <div class="processing-stats">
+                            <h4>Processing Results</h4>
+                            <div class="stat-item">
+                                <span class="label">Raw JSON Size</span>
+                                <span class="value" id="raw-json-size">216.8MB</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">Processed Matches</span>
+                                <span class="value" id="processed-matches">2,809</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">Player Records</span>
+                                <span class="value" id="player-records-preprocessing">28,090</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">Columns Cleaned</span>
+                                <span class="value" id="columns-cleaned">20+ removed</span>
+                            </div>
+                        </div>
+                        
+                        <div class="interesting-columns">
+                            <h4>Key Columns for ML</h4>
+                            <div class="column-group">
+                                <h5>Build Optimization</h5>
+                                <ul>
+                                    <li><code>item0-item6</code> - Complete item builds</li>
+                                    <li><code>goldEarned</code> - Economic efficiency</li>
+                                    <li><code>win</code> - Target variable</li>
+                                </ul>
+                            </div>
+                            <div class="column-group">
+                                <h5>Performance Metrics</h5>
+                                <ul>
+                                    <li><code>kills/deaths/assists</code> - KDA ratio</li>
+                                    <li><code>totalDamageDealt</code> - Damage output</li>
+                                    <li><code>visionScore</code> - Map control</li>
+                                </ul>
+                            </div>
+                            <div class="column-group">
+                                <h5>Strategic Features</h5>
+                                <ul>
+                                    <li><code>gameDuration</code> - Match length impact</li>
+                                    <li><code>teamPosition</code> - Role analysis</li>
+                                    <li><code>objectivesStolenAssists</code> - Macro play</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -170,32 +292,54 @@ def fetch_match_data(match_id):
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Lux_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>4. Exploratory Data Analysis</h2>
+                <h2>Exploratory Data Analysis</h2>
                 <div class="content-grid">
                     <div class="text-content">
-                        <h3>Data Insights</h3>
-                        <p>Understanding patterns and relationships in the data through comprehensive analysis and visualization.</p>
-                        <div class="insights-list">
-                            <div class="insight">
-                                <h4>Champion Win Rates</h4>
-                                <p>Analysis of champion performance across different ranks and patches</p>
+                        <h3 id="eda-champion-title">Champion Analysis</h3>
+                        <p id="eda-champion-description">Loading champion insights...</p>
+                        
+                        <div class="eda-insights">
+                            <div class="insight-card">
+                                <h4>Performance Metrics</h4>
+                                <ul id="performance-metrics">
+                                    <li>Loading performance data...</li>
+                                </ul>
                             </div>
-                            <div class="insight">
-                                <h4>Game Duration Patterns</h4>
-                                <p>Correlation between match length and outcome predictability</p>
+                            
+                            <div class="insight-card">
+                                <h4>Win Rate Correlations</h4>
+                                <ul id="win-rate-correlations">
+                                    <li>Loading correlation data...</li>
+                                </ul>
                             </div>
-                            <div class="insight">
-                                <h4>Team Composition Analysis</h4>
-                                <p>Impact of team synergy on match outcomes</p>
+                            
+                            <div class="insight-card">
+                                <h4>Build Diversity Analysis</h4>
+                                <p id="build-diversity">Loading build diversity data...</p>
                             </div>
                         </div>
+                        
+                        <h3>Game Duration Impact</h3>
+                        <p id="duration-impact">Loading duration analysis...</p>
                     </div>
                     <div class="visual-content">
-                        <div class="chart-placeholder">
-                            <h4>Champion Performance Distribution</h4>
-                            <div class="chart-container">
-                                <!-- Placeholder for interactive charts -->
-                                <p>Interactive visualizations will be displayed here</p>
+                        <div class="top-items-analysis">
+                            <h4>Most Used Items</h4>
+                            <div class="item-list" id="top-items-list">
+                                <div class="item-stat">
+                                    <span class="item-name">Loading...</span>
+                                    <span class="usage-rate">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="duration-analysis">
+                            <h4>Win Rate by Game Duration</h4>
+                            <div class="duration-stats" id="duration-stats">
+                                <div class="duration-category">
+                                    <span class="duration-label">Loading...</span>
+                                    <span class="duration-winrate">...</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -209,41 +353,100 @@ def fetch_match_data(match_id):
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Yasuo_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>5. Model Selection and Training</h2>
+                <h2>Evolutionary Algorithm Comparison</h2>
                 <div class="content-grid">
                     <div class="text-content">
-                        <h3>Algorithm Comparison</h3>
-                        <p>We tested multiple machine learning algorithms to find the best performing model for our use case.</p>
-                        <div class="model-comparison">
-                            <div class="model-item">
-                                <h4>Random Forest</h4>
-                                <span class="accuracy">Accuracy: 82.3%</span>
+                        <h3>Research Objective</h3>
+                        <p>Instead of traditional machine learning models, we implemented and compared two evolutionary algorithms to optimize League of Legends champion item builds for maximum win rate prediction.</p>
+                        
+                        <h3>Algorithm Selection Rationale</h3>
+                        <p>Evolutionary algorithms are ideal for this optimization problem because:</p>
+                        <ul>
+                            <li><strong>Discrete Search Space:</strong> Item builds are combinations of discrete items (not continuous variables)</li>
+                            <li><strong>Complex Interactions:</strong> Item synergies create non-linear relationships difficult for traditional ML</li>
+                            <li><strong>Multi-Objective:</strong> Optimizing for win rate while considering item cost and availability</li>
+                            <li><strong>No Gradient Information:</strong> Win rate function is not differentiable with respect to item choices</li>
+                        </ul>
+                        
+                        <div class="algorithm-comparison">
+                            <div class="algorithm-item">
+                                <h4>Genetic Algorithm (GA)</h4>
+                                <p><strong>Approach:</strong> Binary encoding where each bit represents an item's presence/absence in the build</p>
+                                <ul>
+                                    <li>Population: 50 individuals</li>
+                                    <li>Generations: 100</li>
+                                    <li>Selection: Tournament selection</li>
+                                    <li>Crossover: Single-point crossover</li>
+                                    <li>Mutation: Bit-flip mutation</li>
+                                </ul>
                             </div>
-                            <div class="model-item">
-                                <h4>Gradient Boosting</h4>
-                                <span class="accuracy">Accuracy: 85.7%</span>
-                            </div>
-                            <div class="model-item best">
-                                <h4>Neural Network</h4>
-                                <span class="accuracy">Accuracy: 87.1%</span>
+                            <div class="algorithm-item">
+                                <h4>Differential Evolution (DE)</h4>
+                                <p><strong>Approach:</strong> Continuous optimization with discrete mapping for item selection</p>
+                                <ul>
+                                    <li>Population: 50 individuals</li>
+                                    <li>Generations: 100</li>
+                                    <li>Strategy: DE/best/1/bin</li>
+                                    <li>Mutation Factor: 0.7</li>
+                                    <li>Crossover Rate: 0.8</li>
+                                </ul>
                             </div>
                         </div>
+                        
+                        <h3>Fitness Function Design</h3>
+                        <p>Both algorithms optimize the same objective: predicting win rate based on item builds using a Random Forest model trained on historical match data. The fitness function evaluates each candidate build against the trained model to predict its effectiveness.</p>
                     </div>
                     <div class="visual-content">
-                        <div class="training-progress">
-                            <h4>Training Progress</h4>
-                            <div class="progress-metrics">
-                                <div class="progress-item">
-                                    <span class="label">Epochs</span>
-                                    <span class="value">100/100</span>
+                        <div class="optimization-results">
+                            <h4>Algorithm Performance</h4>
+                            <div class="performance-metrics">
+                                <div class="performance-item winner">
+                                    <span class="label">Genetic Algorithm</span>
+                                    <span class="value" id="ga-win-rate">76.0% Win Rate</span>
                                 </div>
-                                <div class="progress-item">
-                                    <span class="label">Loss</span>
-                                    <span class="value">0.312</span>
+                                <div class="performance-item">
+                                    <span class="label">Differential Evolution</span>
+                                    <span class="value" id="de-win-rate">75.0% Win Rate</span>
                                 </div>
-                                <div class="progress-item">
-                                    <span class="label">Val Accuracy</span>
-                                    <span class="value">87.1%</span>
+                                <div class="performance-item">
+                                    <span class="label">GA Advantage</span>
+                                    <span class="value" id="ga-advantage">+1.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="convergence-analysis">
+                            <h4>Optimization Insights</h4>
+                            <div class="insight-metrics">
+                                <div class="insight-item">
+                                    <span class="label">Baseline Win Rate</span>
+                                    <span class="value" id="baseline-win-rate">52.6%</span>
+                                </div>
+                                <div class="insight-item">
+                                    <span class="label">GA Improvement</span>
+                                    <span class="value" id="ga-improvement">+44.5%</span>
+                                </div>
+                                <div class="insight-item">
+                                    <span class="label">DE Improvement</span>
+                                    <span class="value" id="de-improvement">+42.6%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="build-characteristics">
+                            <h4>Optimal Build Features</h4>
+                            <div class="build-stats">
+                                <div class="build-stat">
+                                    <span class="label">Items in Build</span>
+                                    <span class="value" id="items-in-build">7 items</span>
+                                </div>
+                                <div class="build-stat">
+                                    <span class="label">Build Overlap</span>
+                                    <span class="value" id="build-overlap">14.3% similarity</span>
+                                </div>
+                                <div class="build-stat">
+                                    <span class="label">Common Items</span>
+                                    <span class="value" id="common-items">1 item (1029)</span>
                                 </div>
                             </div>
                         </div>
@@ -258,35 +461,142 @@ def fetch_match_data(match_id):
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Ahri_0.jpg"></div>
         <div class="container">
             <div class="section-content">
-                <h2>6. Model Evaluation and Validation</h2>
+                <h2>Algorithm Evaluation and Validation</h2>
                 <div class="content-grid">
                     <div class="text-content">
-                        <h3>Performance Metrics</h3>
-                        <p>Comprehensive evaluation using multiple metrics to ensure model reliability and generalization.</p>
+                        <h3>Evaluation Methodology</h3>
+                        <p>Our evaluation focused on comparing the effectiveness of Genetic Algorithm vs Differential Evolution for item build optimization, using multiple validation approaches.</p>
+                        
+                        <h3>Fitness Function Validation</h3>
+                        <p>Both algorithms used a Random Forest classifier as the fitness function, trained on historical match data to predict win probability based on item builds.</p>
+                        <ul>
+                            <li><strong>Training Data:</strong> 83,480 player records across 168 champions</li>
+                            <li><strong>Champion Focus:</strong> <span id="champion-focus">Champion 236</span> with <span id="champion-records">525</span> records (<span id="champion-baseline-win-rate">52.4%</span> baseline win rate)</li>
+                            <li><strong>Feature Engineering:</strong> 7 item slots (item0-item6) as input features</li>
+                            <li><strong>Validation Split:</strong> 80/20 train-test split for model validation</li>
+                        </ul>
+                        
+                        <h3>Algorithm Comparison Metrics</h3>
                         <div class="evaluation-metrics">
                             <div class="metric-group">
-                                <h4>Classification Metrics</h4>
+                                <h4>Performance Metrics</h4>
                                 <div class="metric-item">
-                                    <span class="name">Precision</span>
-                                    <span class="value">86.8%</span>
+                                    <span class="name">Genetic Algorithm Win Rate</span>
+                                    <span class="value" id="eval-ga-win-rate">76.0%</span>
                                 </div>
                                 <div class="metric-item">
-                                    <span class="name">Recall</span>
-                                    <span class="value">87.4%</span>
+                                    <span class="name">Differential Evolution Win Rate</span>
+                                    <span class="value" id="eval-de-win-rate">75.0%</span>
                                 </div>
                                 <div class="metric-item">
-                                    <span class="name">F1-Score</span>
-                                    <span class="value">87.1%</span>
+                                    <span class="name">Baseline Win Rate</span>
+                                    <span class="value" id="eval-baseline-win-rate">52.6%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-group">
+                                <h4>Optimization Efficiency</h4>
+                                <div class="metric-item">
+                                    <span class="name">GA Relative Improvement</span>
+                                    <span class="value" id="eval-ga-improvement">+44.5%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="name">DE Relative Improvement</span>
+                                    <span class="value" id="eval-de-improvement">+42.6%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="name">GA Advantage</span>
+                                    <span class="value" id="eval-ga-advantage">+1.9%</span>
                                 </div>
                             </div>
                         </div>
+                        
+                        <h3>Build Diversity Analysis</h3>
+                        <p>Validation revealed that both algorithms discovered different optimal builds, suggesting multiple effective strategies exist rather than a single global optimum.</p>
+                        <ul>
+                            <li><strong>Build Overlap:</strong> Only 14.3% similarity between optimal builds</li>
+                            <li><strong>Common Items:</strong> <span id="common-items-count">1</span> shared item (<span id="common-items-list">Item 1029</span>) out of <span id="total-items-count">7</span> total items</li>
+                            <li><strong>Algorithm Diversity:</strong> GA and DE explored different regions of the search space</li>
+                            <li><strong>Convergence Behavior:</strong> Both algorithms showed stable convergence patterns</li>
+                        </ul>
                     </div>
                     <div class="visual-content">
-                        <div class="confusion-matrix">
-                            <h4>Confusion Matrix</h4>
-                            <div class="matrix-placeholder">
-                                <!-- Placeholder for confusion matrix visualization -->
-                                <p>Confusion matrix visualization</p>
+                        <div class="comparison-matrix">
+                            <h4>Algorithm Comparison Matrix</h4>
+                            <div class="matrix-content">
+                                <div class="comparison-row">
+                                    <span class="comparison-label">Metric</span>
+                                    <span class="comparison-ga">Genetic Algorithm</span>
+                                    <span class="comparison-de">Differential Evolution</span>
+                                </div>
+                                <div class="comparison-row">
+                                    <span class="comparison-label">Win Rate</span>
+                                    <span class="comparison-ga winner" id="matrix-ga-win-rate">76.0%</span>
+                                    <span class="comparison-de" id="matrix-de-win-rate">75.0%</span>
+                                </div>
+                                <div class="comparison-row">
+                                    <span class="comparison-label">Improvement</span>
+                                    <span class="comparison-ga winner" id="matrix-ga-improvement">+44.5%</span>
+                                    <span class="comparison-de" id="matrix-de-improvement">+42.6%</span>
+                                </div>
+                                <div class="comparison-row">
+                                    <span class="comparison-label">Generations</span>
+                                    <span class="comparison-ga" id="matrix-ga-generations">100</span>
+                                    <span class="comparison-de" id="matrix-de-generations">200</span>
+                                </div>
+                                <div class="comparison-row">
+                                    <span class="comparison-label">Fitness Score</span>
+                                    <span class="comparison-ga winner" id="matrix-ga-fitness">0.91</span>
+                                    <span class="comparison-de" id="matrix-de-fitness">0.90</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="build-analysis">
+                            <h4>Optimal Build Comparison</h4>
+                            <div class="build-comparison">
+                                <div class="build-column">
+                                    <h5>Genetic Algorithm Build</h5>
+                                    <div class="build-items" id="ga-build-items">
+                                        <span class="item">Item 1029</span>
+                                        <span class="item">Item 3364</span>
+                                        <span class="item">Item 3340</span>
+                                        <span class="item">Item 3035</span>
+                                        <span class="item">Item 2019</span>
+                                        <span class="item">Item 1055</span>
+                                        <span class="item">Item 6690</span>
+                                    </div>
+                                </div>
+                                <div class="build-column">
+                                    <h5>Differential Evolution Build</h5>
+                                    <div class="build-items" id="de-build-items">
+                                        <span class="item shared">Item 1029</span>
+                                        <span class="item">Item 3094</span>
+                                        <span class="item">Item 6701</span>
+                                        <span class="item">Item 3033</span>
+                                        <span class="item">Item 3072</span>
+                                        <span class="item">Item 1037</span>
+                                        <span class="item">Item 3156</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="validation-summary">
+                            <h4>Validation Results</h4>
+                            <div class="validation-stats">
+                                <div class="validation-item">
+                                    <span class="label">Winner</span>
+                                    <span class="value" id="validation-winner">Genetic Algorithm</span>
+                                </div>
+                                <div class="validation-item">
+                                    <span class="label">Statistical Significance</span>
+                                    <span class="value" id="validation-significance">Minimal (1% difference)</span>
+                                </div>
+                                <div class="validation-item">
+                                    <span class="label">Both Algorithms</span>
+                                    <span class="value" id="validation-effectiveness">Highly Effective</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -296,6 +606,7 @@ def fetch_match_data(match_id):
     </section>
 
     <!-- Section 7: Deployment -->
+    <!-- 
     <section id="deployment" class="section">
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Caitlyn_0.jpg"></div>
         <div class="container">
@@ -324,7 +635,6 @@ def fetch_match_data(match_id):
                         <div class="deployment-diagram">
                             <h4>Architecture Overview</h4>
                             <div class="architecture-placeholder">
-                                <!-- Placeholder for deployment architecture diagram -->
                                 <p>System architecture diagram</p>
                             </div>
                         </div>
@@ -333,8 +643,10 @@ def fetch_match_data(match_id):
             </div>
         </div>
     </section>
+    -->
 
     <!-- Section 8: Monitoring and Maintenance -->
+    <!--
     <section id="monitoring" class="section">
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/Jinx_0.jpg"></div>
         <div class="container">
@@ -382,8 +694,10 @@ def fetch_match_data(match_id):
             </div>
         </div>
     </section>
+    -->
 
     <!-- Section 9: Feedback and Iteration -->
+    <!--
     <section id="feedback" class="section">
         <div class="parallax-bg" data-bg="assets/dragontail_data/img/champion/splash/MissFortune_0.jpg"></div>
         <div class="container">
@@ -431,16 +745,16 @@ def fetch_match_data(match_id):
             </div>
         </div>
     </section>
+    -->
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2024 League of Legends ML Project. Built with passion for machine learning and gaming.</p>
+                <p>&copy; 2025 League of Legends ML Project. Built with passion for machine learning and gaming.</p>
                 <div class="footer-links">
                     <a href="https://github.com/ignacio-ireta" target="_blank">GitHub</a>
-                    <a href="#" target="_blank">LinkedIn</a>
-                    <a href="#" target="_blank">Portfolio</a>
+                    <a href="https://www.linkedin.com/in/ignacioireta/" target="_blank">LinkedIn</a>
                 </div>
             </div>
         </div>
