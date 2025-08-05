@@ -1,0 +1,13 @@
+{
+  "name": "ss-website",
+  "version": "1.0.0",
+  "description": "A clean, performance-focused project showcase website",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": ["website", "showcase", "demo", "github-pages"],
+  "author": "",
+  "license": "MIT"
+}

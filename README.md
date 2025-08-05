@@ -1,274 +1,223 @@
-# League of Legends Itemization Optimization via Evolutionary Algorithms
+# Investigación Revolucionaria en IA - Sitio Web de Presentación del Proyecto
 
-A sophisticated implementation of **Genetic Algorithm (GA)** and **Differential Evolution (DE)** for optimizing champion itemization in League of Legends, featuring novel encoding schemes and hybrid ML-evolutionary approaches.
+Un sitio web limpio y enfocado en el rendimiento construido desde cero para mostrar resultados de proyectos. **Sin frameworks, sin complicaciones, solo HTML, CSS y JavaScript puro** que funciona perfectamente.
 
-## 🧬 **Core Innovation: Evolutionary Itemization Optimization**
+## 🎯 Lo Que Aprendimos y Aplicamos
 
-This project tackles the **discrete combinatorial optimization problem** of League of Legends itemization using two distinct evolutionary approaches, each with carefully designed encoding schemes and fitness functions tailored to the game's mechanics.
+Esta reconstrucción incorpora todas las lecciones aprendidas de nuestras iteraciones anteriores:
 
-### **Problem Formulation**
+- ✅ **Centrado Perfecto**: El contenido hero está correctamente centrado sin problemas de diseño
+- ✅ **Rendimiento Primero**: Sin frameworks pesados, imágenes optimizadas, carga perezosa
+- ✅ **Arquitectura Limpia**: Estructura de código simple y mantenible
+- ✅ **Diseño Responsivo**: Funciona hermosamente en todos los dispositivos
+- ✅ **Integración de Assets**: Manejo adecuado de imágenes, videos y modelos 3D
 
-**Objective**: Maximize win probability through optimal item selection
-- **Search Space**: ~74^7 ≈ 1.6×10^13 possible combinations per champion
-- **Constraints**: 7 item slots, champion-specific item pools, game state dependencies
-- **Fitness Function**: ML-predicted win probability + diversity bonuses + completion rewards
+## 🚀 Inicio Rápido
 
-## 🎯 **Algorithm Design Philosophy**
-
-### **Why Evolutionary Algorithms?**
-
-1. **Discrete Combinatorial Nature**: Traditional gradient-based methods fail on discrete item spaces
-2. **Multi-Modal Landscape**: Multiple viable build archetypes (tank, damage, hybrid)
-3. **Constraint Handling**: Natural handling of item slot limitations and dependencies
-4. **Exploration vs Exploitation**: Balance between proven builds and innovative combinations
-
-### **Encoding Strategy: The Key Innovation**
-
-We developed **two distinct encoding approaches** optimized for each algorithm's strengths:
-
-#### **Genetic Algorithm: Direct Item Encoding**
-```python
-# Chromosome representation: [item_slot_0, item_slot_1, ..., item_slot_6]
-chromosome = [3508, 3031, 3072, 0, 6675, 3153, 3364]
-#             ^     ^     ^     ^  ^     ^     ^
-#             |     |     |     |  |     |     └─ Oracle Lens
-#             |     |     |     |  |     └─ Blade of Ruined King  
-#             |     |     |     |  └─ Navori Quickblades
-#             |     |     |     └─ Empty slot
-#             |     |     └─ Bloodthirster
-#             |     └─ Infinity Edge
-#             └─ Essence Reaver
-```
-
-**Advantages**:
-- **Intuitive representation** matching game mechanics
-- **Natural crossover** preserving item synergies
-- **Direct constraint handling** (empty slots = 0)
-
-#### **Differential Evolution: Continuous Mapping**
-```python
-# Continuous vector: [0.0-1.0] mapped to item indices + probability thresholds
-continuous = [0.73, 0.45, 0.89, 0.12, 0.67, 0.91, 0.34]
-#             ↓     ↓     ↓     ↓     ↓     ↓     ↓
-discrete   = [3508, 3031, 3072,  0,  6675, 3153, 3364]
-```
-
-**Mapping Function**:
-```python
-def continuous_to_discrete(self, x):
-    build = []
-    for i, val in enumerate(x):
-        if val < 0.1:  # 10% chance for empty slot
-            build.append(0)
-        else:
-            # Map [0.1, 1.0] to item indices
-            item_idx = int((val - 0.1) / 0.9 * len(self.available_items))
-            build.append(self.available_items[item_idx])
-    return build
-```
-
-**Advantages**:
-- **Smooth optimization landscape** for DE operations
-- **Probabilistic empty slots** for build completion control
-- **Continuous mutation/crossover** with discrete interpretation
-
-## 🔬 **Algorithm Implementation Details**
-
-### **Genetic Algorithm Architecture**
-
-```python
-class Individual:
-    def __init__(self, optimizer, build=None):
-        self.build = build or self.generate_random_build()
-        self.fitness = self.calculate_fitness()
-    
-    def calculate_fitness(self):
-        # Multi-component fitness function
-        win_prob = self.optimizer.predict_win_probability(self.build)
-        diversity_bonus = unique_items / total_slots * 0.1
-        completion_bonus = filled_slots / total_slots * 0.05
-        return win_prob + diversity_bonus + completion_bonus
-```
-
-**Key Design Decisions**:
-
-1. **Fitness Function Components**:
-   - **Primary**: ML-predicted win probability (Random Forest)
-   - **Diversity Bonus**: Encourages item variety (anti-duplicate)
-   - **Completion Bonus**: Rewards full builds over partial ones
-
-2. **Genetic Operators**:
-   - **Selection**: Tournament selection (pressure = 3)
-   - **Crossover**: Single-point (preserves item synergies)
-   - **Mutation**: Probabilistic item replacement/removal
-
-3. **Population Management**:
-   - **Elitism**: Top 10% preserved each generation
-   - **Population Size**: 50 (balance between diversity and efficiency)
-   - **Generations**: 100 (convergence analysis shows plateau ~80-90)
-
-### **Differential Evolution Architecture**
-
-```python
-class DifferentialEvolution:
-    def __init__(self, F=0.5, CR=0.9, population_size=50):
-        self.F = F    # Mutation factor (exploration control)
-        self.CR = CR  # Crossover probability (exploitation control)
-```
-
-**Key Design Decisions**:
-
-1. **DE/rand/1/bin Strategy**:
-   ```python
-   # Mutation: v = x_r1 + F * (x_r2 - x_r3)
-   # Crossover: u[i] = v[i] if rand() < CR else x[i]
+1. **Clona o descarga** este repositorio
+2. **Abre `index.html`** en tu navegador - ¡eso es todo!
+3. **Para desarrollo local** con un servidor:
+   ```bash
+   python -m http.server 8000
+   # o
+   npm start
    ```
 
-2. **Parameter Tuning**:
-   - **F = 0.5**: Moderate exploration (tested 0.3-0.8)
-   - **CR = 0.9**: High crossover rate for discrete problems
-   - **Population = 50**: Consistent with GA for fair comparison
+## 📁 Estructura del Proyecto
 
-3. **Boundary Handling**:
-   ```python
-   # Clip to [0,1] and re-map to valid item space
-   mutant = np.clip(mutant, 0.0, 1.0)
-   ```
-
-## 🏗️ **Hybrid ML-Evolutionary Architecture**
-
-### **Machine Learning Integration**
-
-Both algorithms use a **Random Forest classifier** as the fitness evaluator:
-
-```python
-def train_prediction_model(self):
-    # Features: 7 item slots + 10 game statistics
-    feature_columns = self.item_slots + [
-        'kills', 'deaths', 'assists', 'totalMinionsKilled', 
-        'goldEarned', 'totalDamageDealtToChampions', 
-        'visionScore', 'champLevel', 'timePlayed', 'damageDealtToTurrets'
-    ]
-    
-    # Random Forest: handles non-linear item interactions
-    self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+```
+ss-website/
+├── index.html          # Archivo principal del sitio web
+├── style.css           # Todo el estilo (¡no se necesitan frameworks!)
+├── script.js           # Funcionalidad interactiva
+├── package.json        # Configuración simple del proyecto
+├── PLAN.md            # Hoja de ruta técnica (preservado)
+├── requirements.md    # Requerimientos del proyecto (preservado)
+└── assets/            # Todos los assets multimedia (preservados)
+    ├── images/        # Imágenes y favicon
+    ├── videos/        # Demostraciones en video
+    ├── models/        # Modelos 3D (archivos .glb)
+    └── data/          # Datos de gráficos (JSON)
 ```
 
-**Why Random Forest?**:
-- **Non-linear interactions**: Captures item synergies (e.g., crit items)
-- **Robustness**: Handles missing features gracefully
-- **Interpretability**: Feature importance reveals key items
-- **Speed**: Fast prediction for evolutionary fitness evaluation
+## 🎨 Características
 
-### **Data Pipeline Integration**
+### Características Principales
+- **Sección Hero**: Perfectamente centrada con tarjetas KPI y animaciones suaves
+- **Navegación Responsiva**: Encabezado fijo con desplazamiento suave a secciones
+- **Galería de Imágenes**: Imágenes WebP de alta resolución con carga perezosa
+- **Gráficos Interactivos**: Comparaciones de rendimiento usando Chart.js
+- **Visor de Modelos 3D**: Visualización interactiva de redes neuronales
+- **Demostraciones en Video**: Reproducción de video local con controles adecuados
+- **Perfiles del Equipo**: Presentación limpia de miembros del equipo
+- **Sistema de Citación**: Funcionalidad de copia con un clic
 
-```python
-# Automatic champion selection based on data quality
-def select_optimal_champion(match_data):
-    champion_stats = analyze_champions(match_data)
-    return champion_stats.sort_values(['game_count', 'item_diversity']).iloc[-1]
+### Optimizaciones de Rendimiento
+- **Carga Perezosa**: Las imágenes se cargan solo cuando son visibles
+- **Formato WebP**: Formato de imagen moderno para tamaños de archivo más pequeños
+- **Precarga**: Recursos críticos cargados primero
+- **CSS Eficiente**: Sin código de framework no utilizado
+- **Animaciones Suaves**: Transiciones aceleradas por hardware
+
+## 🛠️ Personalización con Tus Datos
+
+### 📸 **Imágenes**
+Actualmente usa marcadores de posición de Lorem Picsum. Reemplaza con tu contenido:
+
+#### **Imagen de Fondo del Hero**
+- **Ubicación**: `index.html` línea ~46
+- **Actual**: `https://picsum.photos/2560/1440.webp`
+- **Reemplazar con**: Imagen hero de tu proyecto (2560x1440 recomendado)
+- **Formato**: WebP preferido, JPG/PNG compatible
+
+#### **Imágenes de Contenido**
+Reemplaza las URLs de Lorem Picsum en todo `index.html`:
+- **Imagen de Resumen**: Línea ~82 - `https://picsum.photos/1920/1080.webp`
+- **Diagrama de Innovación**: Línea ~92 - `https://picsum.photos/1920/1080.webp`
+- **Imágenes Antes/Después**: Líneas ~118, 123 - `https://picsum.photos/1920/1080.webp`
+- **Ejemplos de Galería**: Líneas ~138, 142, 146 - `https://picsum.photos/1920/1080.webp`
+- **Fotos del Equipo**: Líneas ~225, 231, 237 - `person1.webp`, `person2.webp`, `person3.webp`
+
+#### **Favicon**
+- **Archivo**: `assets/images/favicon.ico`
+- **Reemplazar**: Con el ícono de tu proyecto (32x32 o 64x64 píxeles)
+- **Formatos**: ICO, PNG compatible
+
+### 🎬 **Videos**
+Agrega tus videos de demostración:
+
+#### **Video Actual**
+- **Archivo**: `assets/videos/hero-background.mp4` (19MB)
+- **Usado en**: `index.html` línea ~175
+- **Reemplazar con**: Tu video de demostración (formato MP4 recomendado)
+- **Optimización**: Mantener bajo 20MB para carga rápida
+
+#### **Póster del Video**
+- **Ubicación**: `index.html` línea ~175
+- **Actual**: `https://picsum.photos/1200/675.webp`
+- **Reemplazar con**: Imagen miniatura para tu video
+
+### 🤖 **Modelos 3D**
+Actualmente usa un modelo demo público:
+
+#### **Para el Futuro:**
+Cuando tengas un archivo GLB funcional, simplemente reemplaza la URL `src` en `index.html` línea 190 con la ruta de tu archivo local:
+```html
+<!-- Cambiar esto: -->
+src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+
+<!-- Por esto: -->
+src="assets/models/tu-modelo.glb"
 ```
 
-## 📊 **Performance Analysis & Results**
+#### **Requerimientos del Modelo 3D**
+- **Formato**: glTF binario (.glb) para mejor rendimiento
+- **Tamaño**: Mantener bajo 10MB para optimización web
+- **Optimización**: Usar Blender o glTF-Pipeline para comprimir
+- **Características**: Compatible con animaciones, materiales, texturas
 
-### **Algorithm Comparison (Champion 236 - Lucian)**
+### 📊 **Datos de Gráficos**
+Actualiza las métricas de rendimiento en `assets/data/chart-data.json`:
 
-| Metric | Genetic Algorithm | Differential Evolution | Baseline |
-|--------|------------------|----------------------|----------|
-| **Win Rate** | 58.0% | 58.0% | 52.6% |
-| **Improvement** | +10.3% | +10.3% | - |
-| **Convergence** | ~80 generations | ~120 generations | - |
-| **Diversity** | High (7 unique items) | High (7 unique items) | - |
-| **Stability** | Consistent | Consistent | - |
-
-### **Convergence Analysis**
-
-Both algorithms show **similar convergence patterns**:
-- **Phase 1** (0-40 gen): Rapid improvement (0.64 → 0.71 fitness)
-- **Phase 2** (40-80 gen): Fine-tuning (0.71 → 0.73 fitness)  
-- **Phase 3** (80+ gen): Plateau with minor fluctuations
-
-### **Build Diversity Analysis**
-
-```python
-# GA vs DE optimal builds (Champion 236)
-ga_build = [2055, 6699, 1018, 1029, 1001, 3171, 3110]
-de_build = [1042, 2421, 1029, 6699, 3072, 2010, 3153]
-
-# Overlap: {6699, 1029} - Core items identified by both
-# Divergence: Different secondary items show exploration capability
+```json
+{
+  "labels": ["Precisión", "Velocidad", "Memoria", "Escalabilidad", "Robustez", "Interpretabilidad"],
+  "ourModel": [98.7, 95, 88, 92, 89, 85],
+  "baseline": [85, 60, 70, 75, 72, 68]
+}
 ```
 
-## 🚀 **Quick Start for Algorithm Researchers**
+**Personalización:**
+- **Labels**: Cambiar nombres de métricas (6 recomendado para mejor balance visual)
+- **ourModel**: Tus resultados como porcentajes (0-100)
+- **baseline**: Valores de línea base de comparación (0-100)
 
-### **Run Complete Pipeline**
-```bash
-cd datascience_project
+### ✏️ **Text Content**
+Update project information throughout `index.html`:
 
-# 1. Collect and process data
-uv run python run_optimization.py
+#### **Hero Section** (Lines 69-73)
+- **Title**: "Revolutionary AI Research"
+- **Subtitle**: Project description
+- **KPI Numbers**: 98.7%, 50x, 3.2M metrics
 
-# 2. Run individual algorithms
-uv run python lol_genetic_algorithm.py      # GA optimization
-uv run python lol_differential_evolution.py # DE optimization
-uv run python compare_algorithms.py         # Head-to-head comparison
-```
+#### **Project Details** (Lines 102-250)
+- **Overview**: Lines 107-117 - Project description
+- **Innovation**: Lines 128-138 - Technical details
+- **Results**: Lines 145-155 - Outcome descriptions
+- **Team**: Lines 222-244 - Team member information
 
-### **Algorithm Customization**
-```python
-# Genetic Algorithm parameters
-ga = GeneticAlgorithm(
-    optimizer, 
-    population_size=50,    # Population diversity
-    generations=100,       # Evolution time
-    crossover_rate=0.8,    # Exploitation vs exploration
-    mutation_rate=0.15,    # Innovation rate
-    elite_size=5          # Elitism strength
-)
+#### **Citation** (Lines 250-265)
+Actualizar información bibliográfica:
+- **Autores**: Nombres de tu equipo
+- **Título**: Título de tu paper
+- **Revista**: Venue de publicación
+- **DOI**: DOI de tu paper
 
-# Differential Evolution parameters  
-de = DifferentialEvolution(
-    optimizer,
-    F=0.5,                # Mutation factor (exploration)
-    CR=0.9,               # Crossover probability (exploitation)
-    population_size=50,   # Search space coverage
-    generations=200       # Extended search time
-)
-```
+### 🎨 **Styling & Branding**
+Customize colors and branding in `style.css`:
 
-## 🔬 **Research Contributions**
+#### **Brand Colors**
+- **Primary Blue**: `#007bff` (buttons, links)
+- **Success Green**: `#28a745` (positive metrics)
+- **Purple Accent**: `#6f42c1` (highlights)
+- **Hero Gradient**: Lines 62-63 - Background colors
 
-1. **Novel Encoding Schemes**: Dual approach optimized for each algorithm's strengths
-2. **Hybrid ML-Evolutionary**: Random Forest fitness evaluation with game statistics
-3. **Domain-Specific Operators**: Item-aware crossover and mutation strategies
-4. **Comparative Analysis**: Systematic GA vs DE evaluation on real game data
-5. **Scalable Architecture**: Automatic champion selection and data processing
+#### **Typography**
+- **Font Family**: Line 7 - System font stack
+- **Heading Sizes**: Lines 86-87 - Title sizing
+- **Body Text**: Line 8 - Default text styling
 
-## 🛠️ **Technology Stack**
+### 🚀 **Lista de Verificación de Inicio Rápido**
+1. ✅ Reemplazar imagen de fondo del hero
+2. ✅ Actualizar datos de gráficos con tus métricas  
+3. ✅ Agregar tu video demo a `/assets/videos/`
+4. ✅ Reemplazar URLs de Lorem Picsum con tus imágenes
+5. ✅ Actualizar contenido de texto e información del equipo
+6. ✅ Personalizar colores y branding
+7. ✅ Agregar tu modelo 3D (opcional)
+8. ✅ Actualizar información de citación
+9. ✅ Probar en móvil y escritorio
+10. ✅ Desplegar en GitHub Pages
 
-- **Core**: Python 3.13+ with `uv` package management
-- **ML**: scikit-learn (Random Forest), pandas, numpy
-- **Data**: Riot Games API, 2,809 high-tier matches
-- **Optimization**: Custom GA/DE implementations
-- **Visualization**: Web-based results dashboard
+### 💡 **Consejos Pro**
+- **Optimización de Imágenes**: Usar formato WebP para tamaños de archivo más pequeños
+- **Rendimiento**: Optimizar imágenes antes de agregar (comprimir a ~80% de calidad)
+- **Responsivo**: Probar en diferentes tamaños de pantalla
+- **Carga**: Mantener assets totales bajo 50MB para carga rápida
+- **SEO**: Actualizar meta tags en la sección `<head>` para mejor visibilidad en buscadores
 
-## 📈 **Current Status**
+## 🎯 Filosofía de Diseño
 
-- ✅ **Data Collection**: 936 games for Champion 236 (Lucian)
-- ✅ **Algorithm Implementation**: Both GA and DE fully functional
-- ✅ **Performance Validation**: 10.3% win rate improvement achieved
-- ✅ **Comparative Analysis**: Comprehensive GA vs DE evaluation
-- ✅ **Web Dashboard**: Real-time results visualization
-- 🔄 **Multi-Champion**: Expanding to additional champions
-- 🔄 **Advanced Features**: Situational builds, enemy composition adaptation
+1. **Simplicidad Sobre Complejidad**: HTML/CSS/JS puro en lugar de frameworks pesados
+2. **Rendimiento Primero**: Todas las optimizaciones aplicadas desde el día uno
+3. **Experiencia de Usuario**: Interacciones suaves y carga rápida
+4. **Mantenibilidad**: Código limpio y legible que es fácil de modificar
+5. **Accesibilidad**: HTML semántico y etiquetas ARIA apropiadas
 
-## 🔗 **Links & Resources**
+## 🌐 Despliegue
 
-- **Live Demo**: [Project Showcase](https://ignacio-ireta.github.io)
-- **GitHub**: [ignacio-ireta](https://github.com/ignacio-ireta)
-- **LinkedIn**: [Ignacio Ireta](https://www.linkedin.com/in/ignacioireta/)
-- **Documentation**: [Data Science Workflow](datascience_project/README.md)
+### GitHub Pages
+1. Subir al repositorio de GitHub
+2. Ir a Settings → Pages
+3. Seleccionar rama fuente (usualmente `main`)
+4. Tu sitio estará en vivo en `https://nombredeusuario.github.io/nombre-repositorio`
+
+### Otras Plataformas
+- **Netlify**: Arrastra y suelta la carpeta
+- **Vercel**: Conecta el repositorio de GitHub
+- **Cualquier Servidor Web**: Sube archivos al directorio público
+
+## 🔧 Compatibilidad de Navegadores
+
+- ✅ Chrome 80+
+- ✅ Firefox 75+
+- ✅ Safari 13+
+- ✅ Edge 80+
+
+## 📝 Licencia
+
+Licencia MIT - ¡Siéntete libre de usar y modificar para tus proyectos!
 
 ---
 
-*Evolutionary algorithms meet esports: Where Darwin meets the Rift* 🧬⚔️
+**Construido con ❤️ y lecciones aprendidas de la experiencia**

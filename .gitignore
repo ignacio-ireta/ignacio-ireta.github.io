@@ -1,25 +1,28 @@
-# Test folder
-test/
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Datascience project virtual environment (if UV or other venv tools are used)
-datascience_project/.venv/
-datascience_project/__pycache__/
-datascience_project/*.pyc
+# Environment variables
+.env
+.env.local
+.env.production
 
-# Dragontail source data (raw, large files)
-dragontail_source_data/
-
-# OS-specific files
+# OS Files
 .DS_Store
 Thumbs.db
 
-# IDE-specific files
-.idea/
+# IDE Files
 .vscode/
-*.swp 
+.idea/
+*.swp
+*.swo
 
-datascience_project/lol_data_collector/*.json
-datascience_project/lol_data_collector/*.parquet
-datascience_project/lol_data_collector/__pycache__/
-datascience_project/lol_data_collector/__init__.py
-datascience_project/.python-version
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+logs/
+*.log
