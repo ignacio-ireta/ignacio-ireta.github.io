@@ -1,272 +1,225 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investigación Revolucionaria en IA - Presentación del Proyecto</title>
-    <meta name="description" content="Resultados revolucionarios en aprendizaje automático que logran un rendimiento sin precedentes en múltiples benchmarks">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="preload" href="https://picsum.photos/seed/hero/2560/1440.webp" as="image">
-    
-    <!-- Styles -->
+    <title>ELECTRO-GRABADO | E101</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700;900&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
-    
-    <!-- 3D Model Viewer -->
+
+    <!-- 3D & Charts -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Background Particles -->
+    <canvas id="particle-canvas"></canvas>
+
     <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">
-                <h2>ProjectX</h2>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#overview">Resumen</a></li>
-                <li><a href="#innovation">Innovación</a></li>
-                <li><a href="#results">Resultados</a></li>
-                <li><a href="#gallery">Galería</a></li>
-                <li><a href="#analysis">Análisis</a></li>
-                <li><a href="#demo">Demo</a></li>
-                <li><a href="#team">Equipo</a></li>
-            </ul>
-        </div>
+    <nav style="position: fixed; top: 0; right: 0; padding: 2rem; z-index: 100; font-family: 'Space Mono';">
+        <ul style="list-style: none; display: flex; gap: 2rem;">
+            <li><a href="#problem" style="color: #fff; text-decoration: none;">CONTEXTO</a></li>
+            <li><a href="#process" style="color: #fff; text-decoration: none;">PROCESO</a></li>
+            <li><a href="#methodology" style="color: #fff; text-decoration: none;">METODOLOGÍA</a></li>
+            <li><a href="#data" style="color: #fff; text-decoration: none;">DATOS</a></li>
+            <li><a href="#download" style="color: var(--cyan-electric); text-decoration: none;">[DESCARGAR]</a></li>
+        </ul>
     </nav>
 
-    <!-- Hero Section - PERFECTLY CENTERED -->
-    <section class="hero" id="hero">
-        <div class="hero-background" style="background-image: url('https://picsum.photos/2560/1440.webp');"></div>
-        <div class="hero-content">
-            <h1 class="fade-in-up">Investigación Revolucionaria en IA</h1>
-            <p class="fade-in-up">Resultados revolucionarios en aprendizaje automático que logran un rendimiento sin precedentes en múltiples benchmarks</p>
-            
-            <!-- Key Performance Indicators -->
-            <div class="kpi-container fade-in-up">
-                <div class="kpi-card">
-                    <div class="kpi-number">98.7%</div>
-                    <div class="kpi-label">Precisión</div>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <span class="hero-subtitle">PROYECTO E101 // UNAM</span>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="ELECTRO">ELECTRO</h1>
+            </div>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="GRABADO">GRABADO</h1>
+            </div>
+
+            <p class="hero-desc">
+                La fusión alquímica entre la gráfica tradicional y la tecnología digital.
+                Sustituyendo ácidos por electrones. Controlando el caos con código.
+            </p>
+
+            <a href="#problem" class="btn-magnetic">Iniciar Secuencia</a>
+        </div>
+    </section>
+
+    <!-- The Problem (Context) -->
+    <section id="problem">
+        <div class="container">
+            <h2 class="section-title">EL <span style="color: var(--copper-rust);">CAOS</span> ANALÓGICO</h2>
+            <div class="split-layout">
+                <div class="glass-panel">
+                    <h3 style="color: var(--copper-neon); margin-bottom: 1rem;">La Problemática</h3>
+                    <p style="margin-bottom: 1.5rem;">
+                        Históricamente, el grabado ha dependido de ácidos tóxicos y procesos empíricos ("a ojo").
+                        En los talleres tradicionales, variables críticas como el pH o la temperatura se ignoran,
+                        resultando en:
+                    </p>
+                    <ul style="list-style: none; font-family: 'Space Mono'; color: #aaa;">
+                        <li style="margin-bottom: 0.5rem;">> Emanaciones tóxicas nocivas</li>
+                        <li style="margin-bottom: 0.5rem;">> Resultados inconsistentes</li>
+                        <li style="margin-bottom: 0.5rem;">> Curva de aprendizaje lenta</li>
+                    </ul>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-number">50x</div>
-                    <div class="kpi-label">Más Rápido</div>
+                <div>
+                    <p
+                        style="font-size: 1.5rem; line-height: 1.4; border-left: 4px solid var(--cyan-electric); padding-left: 2rem;">
+                        "La enseñanza del grabado requiere una evolución. Del empirismo peligroso a la precisión
+                        científica."
+                    </p>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-number">3.2M</div>
-                    <div class="kpi-label">Parámetros</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Solution (Process) -->
+    <section id="process">
+        <div class="container split-layout">
+            <div class="glass-panel">
+                <h2 class="section-title">CONTROL <span style="color: var(--cyan-electric);">DIGITAL</span></h2>
+                <p style="margin-bottom: 1.5rem; color: #ccc;">
+                    Implementamos un sistema de <strong>Grabado Electrolítico de Bajo Voltaje</strong>.
+                    Utilizamos una solución salina de sulfato de cobre (CuSO₄) y una fuente de poder regulable.
+                </p>
+                <p style="margin-bottom: 1.5rem; color: #ccc;">
+                    A diferencia del ácido que muerde agresivamente, la electrólisis erosiona el metal átomo por átomo,
+                    guiada por la corriente eléctrica.
+                </p>
+                <div class="stat-row">
+                    <span>Voltaje Óptimo</span>
+                    <span class="stat-val">3.0 V</span>
+                </div>
+                <div class="stat-row">
+                    <span>pH Solución</span>
+                    <span class="stat-val">4.2</span>
                 </div>
             </div>
-            
-            <!-- Call to Action -->
-            <a href="#results" class="cta-button fade-in-up">Explorar Resultados</a>
-        </div>
-    </section>
 
-    <!-- Project Overview -->
-    <section class="section" id="overview">
-        <h2>Resumen del Proyecto</h2>
-        <div class="two-columns">
-            <div class="content-text">
-                <h3>Enfoque Revolucionario</h3>
-                <p>Nuestra investigación introduce una arquitectura novedosa que cambia fundamentalmente cómo los modelos de aprendizaje automático procesan y comprenden patrones de datos complejos. Al combinar diseños de redes neuronales de vanguardia con metodologías de entrenamiento innovadoras, hemos logrado resultados sin precedentes en múltiples conjuntos de datos de referencia.</p>
-                <p>La innovación central radica en nuestro mecanismo de atención adaptativo que se ajusta dinámicamente a diferentes tipos de datos de entrada, permitiendo un procesamiento más eficiente y preciso mientras mantiene la eficiencia computacional.</p>
-            </div>
-            <div class="content-image">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Diagrama de Resumen del Proyecto" loading="lazy">
+            <div class="model-container">
+                <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" auto-rotate
+                    camera-controls style="width: 100%; height: 100%; --poster-color: transparent;" shadow-intensity="2"
+                    exposure="0.5">
+                </model-viewer>
+                <div class="model-overlay">
+                    VISUALIZACIÓN DE MATRIZ // EJE Z
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Key Innovation -->
-    <section class="section" id="innovation">
-        <h2>Innovación Clave</h2>
-        <div class="two-columns">
-            <div class="content-image">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Diagrama de Flujo de Innovación" loading="lazy">
-            </div>
-            <div class="content-text">
-                <h3>Arquitectura Neural Adaptativa</h3>
-                <p>Nuestro avance proviene del desarrollo de una red neuronal auto-modificable que puede adaptar su estructura basándose en la complejidad y naturaleza de los datos de entrada. Este enfoque dinámico permite al modelo asignar recursos computacionales de manera más eficiente.</p>
-                <p>Las características clave incluyen:</p>
-                <ul>
-                    <li>Configuración dinámica de capas</li>
-                    <li>Mecanismos de atención adaptativos</li>
-                    <li>Optimización en tiempo real</li>
-                    <li>Aprendizaje por transferencia entre dominios</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Visual Results -->
-    <section class="section" id="results">
-        <h2>Resultados Visuales</h2>
-        <div class="two-columns">
-            <div class="content-text">
-                <h3>Comparación Antes y Después</h3>
-                <p>La transformación lograda por nuestro modelo es claramente visible en estas comparaciones de antes y después. Nuestro enfoque no solo mejora la precisión sino que también mejora la interpretabilidad de los resultados.</p>
-                <p>Las salidas mejoradas demuestran calidad superior en múltiples métricas incluyendo claridad, precisión y eficiencia computacional.</p>
-            </div>
-            <div class="content-image">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Entrada (Antes)" loading="lazy">
-            </div>
-        </div>
-        <div class="two-columns">
-            <div class="content-image">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Salida (Después)" loading="lazy">
-            </div>
-            <div class="content-text">
-                <h3>Calidad de Salida Mejorada</h3>
-                <p>Nuestro modelo produce salidas con métricas de calidad significativamente mejoradas. Los resultados mejorados muestran mejor preservación de detalles, reducción de ruido y mejor fidelidad general.</p>
-                <p>Las mejoras de rendimiento incluyen un aumento de velocidad de 50x mientras se mantiene una precisión del 98.7% en todos los escenarios de prueba.</p>
+    <!-- Methodology (Timeline) -->
+    <section id="methodology">
+        <div class="container">
+            <h2 class="section-title" style="text-align: center;">METODOLOGÍA</h2>
+            <div class="timeline">
+                <div class="timeline-node">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <span class="node-date">FASE 1: DIAGNÓSTICO</span>
+                        <h3>Análisis de Necesidades</h3>
+                        <p>Evaluación del conocimiento tecnológico en alumnos de Arte y Diseño. Identificación de
+                            riesgos en procesos tradicionales.</p>
+                    </div>
+                </div>
+                <div class="timeline-node">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <span class="node-date">FASE 2: PROTOTIPADO</span>
+                        <h3>Hardware Libre</h3>
+                        <p>Selección de Arduino y Raspberry Pi para el monitoreo. Diseño de circuitos para sensores de
+                            pH y temperatura.</p>
+                    </div>
+                </div>
+                <div class="timeline-node">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <span class="node-date">FASE 3: EXPERIMENTACIÓN</span>
+                        <h3>Pruebas Controladas</h3>
+                        <p>Registro de corrosión vs tiempo/voltaje. Creación de tablas de referencia (e.g., 3.0V @ 15min
+                            = 0.40mm).</p>
+                    </div>
+                </div>
+                <div class="timeline-node">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <span class="node-date">FASE 4: IMPLEMENTACIÓN</span>
+                        <h3>Manual Técnico</h3>
+                        <p>Desarrollo de guías estandarizadas y capacitación docente en la ENES Morelia.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Section -->
-    <section class="section" id="gallery">
-        <h2>Galería de Investigación</h2>
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Ejemplo de Investigación 1" loading="lazy">
-                <div class="gallery-caption">Ejemplo 1: Reconocimiento de Patrones Complejos</div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Ejemplo de Investigación 2" loading="lazy">
-                <div class="gallery-caption">Ejemplo 2: Procesamiento Multi-Modal</div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://picsum.photos/1920/1080.webp" alt="Ejemplo de Investigación 3" loading="lazy">
-                <div class="gallery-caption">Ejemplo 3: Análisis en Tiempo Real</div>
+    <!-- Data / Results -->
+    <section id="data">
+        <div class="container">
+            <h2 class="section-title" style="text-align: right;">RESULTADOS</h2>
+
+            <div class="split-layout">
+                <div style="order: 2;">
+                    <div class="glass-panel">
+                        <h3 style="color: var(--acid-green); margin-bottom: 1rem;">Impacto Educativo</h3>
+                        <ul style="list-style: none; margin-bottom: 2rem;">
+                            <li style="margin-bottom: 1rem;">
+                                <strong style="color: #fff;">> Seguridad:</strong> Eliminación del 100% de vapores
+                                ácidos en el taller.
+                            </li>
+                            <li style="margin-bottom: 1rem;">
+                                <strong style="color: #fff;">> Precisión:</strong> Reproducibilidad garantizada mediante
+                                control de voltaje.
+                            </li>
+                            <li style="margin-bottom: 1rem;">
+                                <strong style="color: #fff;">> Transdisciplina:</strong> Estudiantes de arte aprendiendo
+                                electrónica y análisis de datos.
+                            </li>
+                        </ul>
+                        <p style="font-family: 'Space Mono'; font-size: 0.8rem; color: #666;">
+                            ESTADO DEL SISTEMA: NOMINAL<br>
+                            EFICIENCIA: 98.7%
+                        </p>
+                    </div>
+                </div>
+                <div style="order: 1; background: rgba(0,0,0,0.5); padding: 2rem; border: 1px solid #333;">
+                    <canvas id="techChart"></canvas>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Quantitative Analysis -->
-    <section class="section" id="analysis">
-        <h2>Análisis Cuantitativo</h2>
-        <div class="content-text text-center mb-3">
-            <p>Nuestra evaluación integral en múltiples benchmarks demuestra mejoras consistentes en métricas clave de rendimiento.</p>
-        </div>
-        <div class="chart-container">
-            <div class="chart-wrapper">
-                <canvas id="performanceChart"></canvas>
+    <!-- Download / Footer -->
+    <section id="download" style="min-height: 50vh; align-items: center;">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 2rem; color: #666; margin-bottom: 2rem;">ACCESO A LA INVESTIGACIÓN</h2>
+
+            <a href="assets/data/PAPIME.zip" class="btn-magnetic" download>
+                DESCARGAR MANUAL COMPLETO .ZIP
+            </a>
+
+            <div style="margin-top: 4rem; font-family: 'Space Mono'; font-size: 0.8rem; color: #444;">
+                ENES MORELIA // LABORATORIO E101<br>
+                IGNACIO IRETA © 2024
             </div>
         </div>
     </section>
 
-    <!-- Interactive Demo -->
-    <section class="section" id="demo">
-        <h2>Demo Interactivo</h2>
-        
-        <!-- Video Demonstration -->
-        <div class="content-text text-center mb-3">
-            <h3>Demostración en Video</h3>
-            <p>Observa nuestro modelo en acción con procesamiento y análisis en tiempo real.</p>
-        </div>
-        <div class="video-container">
-            <video controls preload="metadata" poster="https://picsum.photos/1200/675.webp">
-                <source src="assets/videos/hero-background.mp4" type="video/mp4">
-                Tu navegador no soporta la etiqueta de video.
-            </video>
-        </div>
-        
-        <!-- 3D Model Viewer -->
-        <div class="content-text text-center mb-3 mt-3">
-            <h3>Visualización de Modelo 3D</h3>
-            <p>Explora nuestra arquitectura de red neuronal en tres dimensiones.</p>
-        </div>
-        
-        <!-- 3D Model Viewer with Public Model -->
-        <model-viewer
-            id="modelViewer"
-            src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-            alt="Modelo 3D Interactivo - Visualización de Investigación"
-            auto-rotate
-            camera-controls
-            loading="eager"
-            reveal="auto"
-            environment-image="neutral"
-            shadow-intensity="1"
-            style="width: 100%; height: 500px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 1rem; border: 2px solid #e0e0e0;">
-            
-            <div slot="progress-bar" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #333; font-weight: bold; font-size: 1.1rem;">
-                🔄 Cargando Modelo 3D...
-            </div>
-            
-            <div slot="error" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #e74c3c; font-weight: bold; text-align: center;">
-                ❌ No se pudo cargar el modelo 3D<br>
-                <small style="color: #666;">Por favor verifica tu conexión a internet</small>
-            </div>
-            
-            <button slot="ar-button" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                Ver en AR
-            </button>
-        </model-viewer>
-        
-        <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
-            <p><strong>Modelo 3D Interactivo:</strong> Usa el ratón para rotar • Scroll para zoom • Arrastra para mover</p>
-            <p><em>Esto representa la visualización de nuestra arquitectura de red neuronal</em></p>
-        </div>
-    </section>
-
-    <!-- About the Team -->
-    <section class="section" id="team">
-        <h2>Sobre el Equipo</h2>
-        <div class="team-grid">
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/person1/256/256.webp" alt="Dra. Sarah Chen" class="team-photo" loading="lazy">
-                <h3>Dra. Sarah Chen</h3>
-                <p>Investigadora Principal</p>
-                <p>Se especializa en diseño de arquitecturas neuronales y algoritmos de optimización.</p>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/person2/256/256.webp" alt="Prof. Michael Rodriguez" class="team-photo" loading="lazy">
-                <h3>Prof. Michael Rodriguez</h3>
-                <p>Investigador Principal</p>
-                <p>Experto en teoría de aprendizaje automático y eficiencia computacional.</p>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/person3/256/256.webp" alt="Dra. Emily Johnson" class="team-photo" loading="lazy">
-                <h3>Dra. Emily Johnson</h3>
-                <p>Científica de Datos</p>
-                <p>Se enfoca en evaluación de benchmarks y análisis de rendimiento.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Citation -->
-    <section class="section">
-        <div class="citation-section">
-            <div class="citation-content">
-                <h2 style="color: #333; margin-bottom: 2rem; font-weight: 700;">Cómo citar este trabajo</h2>
-                <p style="margin-bottom: 1.5rem; color: #666;">Si usas nuestro trabajo en tu investigación, por favor cita:</p>
-                <pre id="citationText" class="citation-text">@article{investigacion_ia_revolucionaria_2024,
-  title={Investigación Revolucionaria en IA: Resultados Innovadores en Aprendizaje Automático},
-  author={Chen, Sarah and Rodriguez, Michael and Johnson, Emily},
-  journal={Revista de Investigación Avanzada en IA},
-  volume={15},
-  number={3},
-  pages={245--267},
-  year={2024},
-  publisher={Publicaciones de Investigación en IA},
-  doi={10.1000/xyz123}
-}</pre>
-                <button id="copyButton" class="copy-button" onclick="copyToClipboard()">
-                    Copiar Referencia
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
+
 </html>
