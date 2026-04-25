@@ -1,7 +1,7 @@
-import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=structured-molecules-9f823e6";
-import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=structured-molecules-9f823e6";
-import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=structured-molecules-9f823e6";
-import { drawWatercolorShape } from "./watercolor.js?v=structured-molecules-9f823e6";
+import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=free-float-wrap-76620a9";
+import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=free-float-wrap-76620a9";
+import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=free-float-wrap-76620a9";
+import { drawWatercolorShape } from "./watercolor.js?v=free-float-wrap-76620a9";
 
 function viewportTier(state) {
   if (state.width < 620) return MOLECULE_DENSITY.mobile;
@@ -621,6 +621,35 @@ function timeScaledLerp(current, target, amount, frameScale) {
   return lerp(current, target, 1 - Math.pow(1 - amount, frameScale));
 }
 
+function wrapMoleculePosition(molecule, state, padding) {
+  const minX = -padding;
+  const maxX = state.width + padding;
+  const minY = -padding;
+  const maxY = state.height + padding;
+  const spanX = maxX - minX;
+  const spanY = maxY - minY;
+
+  while (molecule.x < minX) {
+    molecule.originX += spanX;
+    molecule.x += spanX;
+  }
+  while (molecule.x > maxX) {
+    molecule.originX -= spanX;
+    molecule.x -= spanX;
+  }
+  while (molecule.y < minY) {
+    molecule.originY += spanY;
+    molecule.y += spanY;
+  }
+  while (molecule.y > maxY) {
+    molecule.originY -= spanY;
+    molecule.y -= spanY;
+  }
+
+  molecule.baseOriginX = molecule.originX;
+  molecule.baseOriginY = molecule.originY;
+}
+
 export function updateMolecules(state, now, deltaMs = 1000 / 60, { reducedMotion }) {
   if (reducedMotion) return;
 
@@ -647,43 +676,23 @@ export function updateMolecules(state, now, deltaMs = 1000 / 60, { reducedMotion
     }
 
     const speedBoost = 1 + molecule.heat * 2.35;
-    const t = now * band.speed * speedBoost + molecule.phase;
-    const currentMomentum = molecule.momentum * speedBoost;
-    molecule.baseOriginX +=
-      (molecule.velocityX * speedBoost + Math.sin(t * 0.37 + molecule.wander) * currentMomentum * 0.18) * deltaMs;
-    molecule.baseOriginY +=
-      (molecule.velocityY * speedBoost + Math.cos(t * 0.31 - molecule.wander) * currentMomentum * 0.16) * deltaMs;
-    const wanderX = Math.sin(t * 1.9 + molecule.wander) * band.drift;
-    const wanderY = Math.cos(t * 1.4 - molecule.wander) * band.drift;
-    const flowX = Math.sin((molecule.baseOriginY + now * 0.012) * 0.006) * band.drift * 0.25;
-    const flowY = Math.cos((molecule.baseOriginX - now * 0.01) * 0.005) * band.drift * 0.22;
+    const t = now * band.speed + molecule.phase;
+    const brownianX = Math.sin(t * 0.37 + molecule.wander) * molecule.momentum * 0.08;
+    const brownianY = Math.cos(t * 0.31 - molecule.wander) * molecule.momentum * 0.07;
 
-    molecule.originX = timeScaledLerp(molecule.originX, molecule.baseOriginX, 0.01, frameScale);
-    molecule.originY = timeScaledLerp(molecule.originY, molecule.baseOriginY, 0.01, frameScale);
-    molecule.thermalX = timeScaledLerp(molecule.thermalX, 0, 0.18, frameScale);
-    molecule.thermalY = timeScaledLerp(molecule.thermalY, 0, 0.18, frameScale);
+    molecule.originX += (molecule.velocityX * speedBoost + brownianX) * deltaMs;
+    molecule.originY += (molecule.velocityY * speedBoost + brownianY) * deltaMs;
+
+    const wanderX = Math.sin(t * 1.9 + molecule.wander) * band.drift * 0.7;
+    const wanderY = Math.cos(t * 1.4 - molecule.wander) * band.drift * 0.7;
+    const flowX = Math.sin((molecule.originY + now * 0.012) * 0.006) * band.drift * 0.18;
+    const flowY = Math.cos((molecule.originX - now * 0.01) * 0.005) * band.drift * 0.16;
 
     molecule.x = molecule.originX + wanderX + flowX;
     molecule.y = molecule.originY + wanderY + flowY;
     molecule.rotation += molecule.spin * (16 + molecule.heat * 24) * frameScale;
 
-    const wrapPadding = Math.max(110, molecule.radius * 2.3);
-    if (molecule.x < -wrapPadding) {
-      molecule.originX = state.width + wrapPadding;
-      molecule.baseOriginX = molecule.originX;
-    }
-    if (molecule.x > state.width + wrapPadding) {
-      molecule.originX = -wrapPadding;
-      molecule.baseOriginX = molecule.originX;
-    }
-    if (molecule.y < -wrapPadding) {
-      molecule.originY = state.height + wrapPadding;
-      molecule.baseOriginY = molecule.originY;
-    }
-    if (molecule.y > state.height + wrapPadding) {
-      molecule.originY = -wrapPadding;
-      molecule.baseOriginY = molecule.originY;
-    }
+    wrapMoleculePosition(molecule, state, Math.max(130, molecule.radius * 2.6));
   }
 
   state.pointer.influence *= Math.pow(POINTER.decay, frameScale);
