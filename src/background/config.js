@@ -1,0 +1,77 @@
+export const DPR_CAP = 2;
+
+export const MOLECULE_DENSITY = {
+  mobile: {
+    staticClusterScale: 0.9,
+    overlayAreaPerMolecule: 30000,
+    overlayMin: 18,
+    overlayMax: 38
+  },
+  tablet: {
+    staticClusterScale: 1.12,
+    overlayAreaPerMolecule: 24500,
+    overlayMin: 30,
+    overlayMax: 72
+  },
+  desktop: {
+    staticClusterScale: 1.34,
+    overlayAreaPerMolecule: 18500,
+    overlayMin: 58,
+    overlayMax: 118
+  }
+};
+
+export const PALETTE_KEYS = ["rose", "blue", "teal", "gold", "violet"];
+
+export const DEPTH_BANDS = [
+  {
+    name: "background",
+    count: 0.34,
+    radius: [20, 52],
+    alpha: [0.16, 0.28],
+    speed: 0.000075,
+    drift: 9,
+    outline: 0.22,
+    scale: 1.2
+  },
+  {
+    name: "midground",
+    count: 0.42,
+    radius: [12, 30],
+    alpha: [0.24, 0.42],
+    speed: 0.00013,
+    drift: 15,
+    outline: 0.5,
+    scale: 1
+  },
+  {
+    name: "foreground",
+    count: 0.24,
+    radius: [8, 22],
+    alpha: [0.34, 0.56],
+    speed: 0.00019,
+    drift: 22,
+    outline: 0.86,
+    scale: 0.9
+  }
+];
+
+export const POINTER = {
+  radius: 240,
+  decay: 0.965
+};
+
+export const REACTION = {
+  startOffset: 4600,
+  states: [
+    { name: "idle", duration: 5200 },
+    { name: "approach", duration: 3600 },
+    { name: "catalytic_cradle", duration: 2600 },
+    { name: "merge_wash", duration: 2200 },
+    { name: "release_catalyst", duration: 2600 },
+    { name: "product_dwell", duration: 6400 },
+    { name: "retro_cradle", duration: 2800 },
+    { name: "split", duration: 3600 },
+    { name: "rest", duration: 6800 }
+  ]
+};
