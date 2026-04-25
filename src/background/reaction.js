@@ -1,21 +1,25 @@
-import { REACTION } from "./config.js?v=free-float-wrap-76620a9";
+import { REACTION } from "./config.js?v=dense-heat-sizing-0a8f31c";
 import { drawMembraneArc, traceOrganicMass } from "./geometry.js";
-import { clamp, interpolatePoint, lerp, seededRandom, smoothstep } from "./random.js?v=free-float-wrap-76620a9";
-import { drawMolecule } from "./species.js?v=free-float-wrap-76620a9";
+import { clamp, interpolatePoint, lerp, seededRandom, smoothstep } from "./random.js?v=dense-heat-sizing-0a8f31c";
+import { drawMolecule } from "./species.js?v=dense-heat-sizing-0a8f31c";
 import { drawWatercolorShape } from "./watercolor.js";
 
 const STATE_INDEX = new Map(REACTION.states.map((state, index) => [state.name, index]));
 
 function createActor(random, key, radius, lobeCount, role = "substrate") {
+  const jitter = (amount) => lerp(-amount, amount, random());
+  const roleScale = role === "enzyme" ? 0.54 : role === "product" ? 0.44 : 0.4;
+  const roleAspect = role === "enzyme" ? 0.62 : role === "product" ? 0.74 : 0.7;
   const lobes = Array.from({ length: lobeCount }, (_, index) => {
-    const angle = (Math.PI * 2 * index) / lobeCount + lerp(-0.34, 0.34, random());
-    const distance = radius * lerp(0.08, 0.42, random());
+    const angle = (Math.PI * 2 * index) / lobeCount + jitter(0.18);
+    const distance = radius * lerp(0.14, role === "enzyme" ? 0.38 : 0.42, random());
+    const size = radius * roleScale * lerp(0.92, 1.08, random());
     return {
       x: Math.cos(angle) * distance,
       y: Math.sin(angle) * distance,
-      rx: radius * lerp(role === "enzyme" ? 0.44 : 0.38, role === "enzyme" ? 0.82 : 0.7, random()),
-      ry: radius * lerp(0.28, role === "product" ? 0.58 : 0.5, random()),
-      rotate: lerp(0, Math.PI, random())
+      rx: size,
+      ry: size * roleAspect * lerp(0.96, 1.04, random()),
+      rotate: angle + jitter(0.16)
     };
   });
 
@@ -84,10 +88,10 @@ export function createReaction(state) {
     stateIndex: STATE_INDEX.get("idle"),
     stateName: "idle",
     elapsed: 0,
-    a: createActor(random, "blue", 24, 4, "substrate"),
-    b: createActor(random, "rose", 23, 5, "substrate"),
-    c: createActor(random, "gold", 18, 6, "enzyme"),
-    d: createActor(random, "teal", 35, 7, "product")
+    a: createActor(random, "blue", 28, 4, "substrate"),
+    b: createActor(random, "rose", 27, 5, "substrate"),
+    c: createActor(random, "gold", 22, 6, "enzyme"),
+    d: createActor(random, "teal", 42, 7, "product")
   };
 
   advanceByOffset(reaction, REACTION.startOffset);
@@ -135,9 +139,9 @@ function positionsForState(reaction, state) {
     b: layout.bHome,
     c: layout.cHome,
     d: layout.dCore,
-    aAlpha: 0.54,
-    bAlpha: 0.54,
-    cAlpha: 0.5,
+    aAlpha: 0.62,
+    bAlpha: 0.62,
+    cAlpha: 0.58,
     dAlpha: 0,
     washAlpha: 0,
     splitWashAlpha: 0,
@@ -170,9 +174,9 @@ function positionsForState(reaction, state) {
         a: layout.aBound,
         b: layout.bBound,
         c: layout.cCradle,
-        aAlpha: 0.54 * (1 - p * 0.78),
-        bAlpha: 0.54 * (1 - p * 0.78),
-        dAlpha: p * 0.6,
+        aAlpha: 0.62 * (1 - p * 0.78),
+        bAlpha: 0.62 * (1 - p * 0.78),
+        dAlpha: p * 0.7,
         washAlpha: Math.sin(p * Math.PI) * 0.42,
         cradleAlpha: 0.58,
         pathPulse: 0.7
@@ -186,7 +190,7 @@ function positionsForState(reaction, state) {
         aAlpha: 0.08 * (1 - p),
         bAlpha: 0.08 * (1 - p),
         d: interpolatePoint(layout.dCore, layout.productRest, p),
-        dAlpha: 0.62,
+        dAlpha: 0.7,
         cradleAlpha: (1 - p) * 0.46,
         pathPulse: 0.52
       };
@@ -197,7 +201,7 @@ function positionsForState(reaction, state) {
         d: layout.productRest,
         aAlpha: 0,
         bAlpha: 0,
-        dAlpha: 0.62,
+        dAlpha: 0.7,
         pathPulse: 0.36
       };
     case "retro_cradle":
@@ -207,7 +211,7 @@ function positionsForState(reaction, state) {
         d: interpolatePoint(layout.productRest, layout.dCore, p),
         aAlpha: 0,
         bAlpha: 0,
-        dAlpha: 0.62,
+        dAlpha: 0.7,
         cradleAlpha: p * 0.58,
         pathPulse: 0.5 + p * 0.18
       };
@@ -218,9 +222,9 @@ function positionsForState(reaction, state) {
         b: interpolatePoint(layout.bBound, layout.bHome, p),
         c: interpolatePoint(layout.cCradle, layout.cHome, p),
         d: layout.dCore,
-        aAlpha: 0.54 * p,
-        bAlpha: 0.54 * p,
-        dAlpha: 0.62 * (1 - p),
+        aAlpha: 0.62 * p,
+        bAlpha: 0.62 * p,
+        dAlpha: 0.7 * (1 - p),
         splitWashAlpha: Math.sin(p * Math.PI) * 0.34,
         cradleAlpha: (1 - p) * 0.52,
         pathPulse: 0.58
