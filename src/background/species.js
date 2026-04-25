@@ -1,7 +1,7 @@
-import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=cursor-heat-42d267b";
-import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=cursor-heat-42d267b";
-import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=cursor-heat-42d267b";
-import { drawWatercolorShape } from "./watercolor.js?v=cursor-heat-42d267b";
+import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=structured-molecules-9f823e6";
+import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=structured-molecules-9f823e6";
+import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=structured-molecules-9f823e6";
+import { drawWatercolorShape } from "./watercolor.js?v=structured-molecules-9f823e6";
 
 function viewportTier(state) {
   if (state.width < 620) return MOLECULE_DENSITY.mobile;
@@ -450,6 +450,96 @@ export function drawStaticForegroundForms(targetCtx, state, options) {
   }
 }
 
+
+function makeLobe(x, y, rx, ry, rotate = 0) {
+  return { x, y, rx, ry, rotate };
+}
+
+function createReactionMoleculeShape(random, radius) {
+  const familyRoll = random();
+  const jitter = (amount) => lerp(-amount, amount, random());
+
+  if (familyRoll < 0.24) {
+    const bend = lerp(-0.24, 0.24, random());
+    return {
+      family: "substrate-a",
+      paletteKey: "blue",
+      lobes: [
+        makeLobe(-radius * 0.46, radius * bend + jitter(radius * 0.05), radius * 0.42, radius * 0.27, -0.18),
+        makeLobe(0, jitter(radius * 0.04), radius * 0.5, radius * 0.31, 0.08),
+        makeLobe(radius * 0.47, -radius * bend + jitter(radius * 0.05), radius * 0.38, radius * 0.25, 0.22)
+      ],
+      bonds: [[0, 1], [1, 2]],
+      granuleCount: 7
+    };
+  }
+
+  if (familyRoll < 0.48) {
+    const lobes = Array.from({ length: 5 }, (_, index) => {
+      const angle = -Math.PI / 2 + (index / 5) * Math.PI * 2 + jitter(0.08);
+      return makeLobe(
+        Math.cos(angle) * radius * 0.35,
+        Math.sin(angle) * radius * 0.32,
+        radius * lerp(0.28, 0.38, random()),
+        radius * lerp(0.22, 0.32, random()),
+        angle + Math.PI / 2
+      );
+    });
+    lobes.push(makeLobe(radius * 0.54, radius * 0.1, radius * 0.25, radius * 0.18, 0.42));
+    return {
+      family: "substrate-b",
+      paletteKey: random() < 0.62 ? "teal" : "violet",
+      lobes,
+      bonds: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 5]],
+      granuleCount: 9
+    };
+  }
+
+  if (familyRoll < 0.66) {
+    return {
+      family: "catalyst",
+      paletteKey: "gold",
+      lobes: [
+        makeLobe(-radius * 0.44, -radius * 0.04, radius * 0.42, radius * 0.24, -0.38),
+        makeLobe(-radius * 0.15, radius * 0.22, radius * 0.46, radius * 0.23, 0.06),
+        makeLobe(radius * 0.22, radius * 0.18, radius * 0.5, radius * 0.25, 0.26),
+        makeLobe(radius * 0.48, -radius * 0.08, radius * 0.34, radius * 0.2, -0.18),
+        makeLobe(radius * 0.04, -radius * 0.28, radius * 0.28, radius * 0.18, 0.08)
+      ],
+      bonds: [[0, 1], [1, 2], [2, 3], [1, 4], [2, 4]],
+      pocket: true,
+      granuleCount: 13
+    };
+  }
+
+  if (familyRoll < 0.86) {
+    return {
+      family: "product",
+      paletteKey: random() < 0.5 ? "teal" : "blue",
+      lobes: [
+        makeLobe(-radius * 0.5, -radius * 0.04, radius * 0.34, radius * 0.24, -0.18),
+        makeLobe(-radius * 0.18, radius * 0.03, radius * 0.42, radius * 0.29, 0.08),
+        makeLobe(radius * 0.18, radius * 0.02, radius * 0.42, radius * 0.29, -0.05),
+        makeLobe(radius * 0.52, radius * 0.08, radius * 0.33, radius * 0.23, 0.2),
+        makeLobe(radius * 0.03, -radius * 0.38, radius * 0.3, radius * 0.2, -0.1)
+      ],
+      bonds: [[0, 1], [1, 2], [2, 3], [1, 4], [2, 4]],
+      granuleCount: 10
+    };
+  }
+
+  return {
+    family: "fragment",
+    paletteKey: random() < 0.56 ? "violet" : "rose",
+    lobes: [
+      makeLobe(-radius * 0.2, 0, radius * 0.28, radius * 0.2, -0.1),
+      makeLobe(radius * 0.22, radius * 0.04, radius * 0.24, radius * 0.18, 0.2)
+    ],
+    bonds: [[0, 1]],
+    granuleCount: 5
+  };
+}
+
 export function createMolecules(state) {
   const area = state.width * state.height;
   const density = viewportTier(state);
@@ -471,21 +561,8 @@ export function createMolecules(state) {
     const count = Math.max(6, Math.round(total * band.count));
     for (let i = 0; i < count; i += 1) {
       const radius = lerp(band.radius[0], band.radius[1], random()) * band.scale;
-      const paletteKey = PALETTE_KEYS[Math.floor(random() * PALETTE_KEYS.length)];
-      const lobeCount = 3 + Math.floor(random() * 5);
-      const lobes = [];
-
-      for (let l = 0; l < lobeCount; l += 1) {
-        const angle = (Math.PI * 2 * l) / lobeCount + lerp(-0.5, 0.5, random());
-        const distance = radius * lerp(0.05, 0.46, random());
-        lobes.push({
-          x: Math.cos(angle) * distance,
-          y: Math.sin(angle) * distance,
-          rx: radius * lerp(0.36, 0.68, random()),
-          ry: radius * lerp(0.24, 0.5, random()),
-          rotate: lerp(0, Math.PI, random())
-        });
-      }
+      const shape = createReactionMoleculeShape(random, radius);
+      const { paletteKey, lobes, bonds, family, pocket } = shape;
 
       let originX = random() * state.width;
       let originY = random() * state.height;
@@ -511,7 +588,10 @@ export function createMolecules(state) {
         baseOriginY: originY,
         radius,
         paletteKey,
+        family,
         lobes,
+        bonds,
+        pocket,
         phase: random() * Math.PI * 2,
         wander: random() * Math.PI * 2,
         rotation: random() * Math.PI * 2,
@@ -524,7 +604,7 @@ export function createMolecules(state) {
         heat: 0,
         thermalX: 0,
         thermalY: 0,
-        granules: Array.from({ length: 7 + Math.floor(random() * 9) }, () => ({
+        granules: Array.from({ length: shape.granuleCount + Math.floor(random() * 4) }, () => ({
           x: lerp(-radius * 0.56, radius * 0.56, random()),
           y: lerp(-radius * 0.42, radius * 0.42, random()),
           r: lerp(0.7, 1.8, random()),
@@ -621,6 +701,25 @@ export function drawMolecule(targetCtx, paletteMap, molecule, x, y, rotation, al
   targetCtx.globalAlpha = alpha;
   targetCtx.fillStyle = palette.fill;
 
+  if (molecule.bonds?.length) {
+    targetCtx.save();
+    targetCtx.globalCompositeOperation = "source-over";
+    targetCtx.globalAlpha = alpha * 0.42;
+    targetCtx.strokeStyle = palette.stroke;
+    targetCtx.lineWidth = Math.max(0.75, molecule.radius * 0.045);
+    targetCtx.lineCap = "round";
+    for (const [from, to] of molecule.bonds) {
+      const a = molecule.lobes[from];
+      const b = molecule.lobes[to];
+      if (!a || !b) continue;
+      targetCtx.beginPath();
+      targetCtx.moveTo(a.x, a.y);
+      targetCtx.lineTo(b.x, b.y);
+      targetCtx.stroke();
+    }
+    targetCtx.restore();
+  }
+
   for (const lobe of molecule.lobes) {
     targetCtx.save();
     targetCtx.translate(lobe.x, lobe.y);
@@ -660,6 +759,16 @@ export function drawMolecule(targetCtx, paletteMap, molecule, x, y, rotation, al
     targetCtx.lineWidth = 0.8;
     targetCtx.beginPath();
     targetCtx.ellipse(0, 0, molecule.radius * 0.82, molecule.radius * 0.46, rotation * -0.2, 0, Math.PI * 2);
+    targetCtx.stroke();
+  }
+
+  if (molecule.pocket) {
+    targetCtx.globalCompositeOperation = "source-over";
+    targetCtx.globalAlpha = alpha * 0.34;
+    targetCtx.strokeStyle = palette.stroke;
+    targetCtx.lineWidth = Math.max(0.75, molecule.radius * 0.04);
+    targetCtx.beginPath();
+    targetCtx.arc(0, -molecule.radius * 0.02, molecule.radius * 0.48, 0.18, Math.PI * 1.18);
     targetCtx.stroke();
   }
 
