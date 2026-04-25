@@ -169,9 +169,9 @@ export function drawFieldLayer(layerCtx, state, { isDark }) {
     state.height * 0.24,
     state.width * 0.42
   );
-  leftWash.addColorStop(0, `rgba(201, 93, 115, ${haze})`);
+  leftWash.addColorStop(0, `rgba(126, 107, 167, ${haze * 0.7})`);
   leftWash.addColorStop(0.48, `rgba(79, 120, 189, ${haze * 0.54})`);
-  leftWash.addColorStop(1, "rgba(201, 93, 115, 0)");
+  leftWash.addColorStop(1, "rgba(126, 107, 167, 0)");
   layerCtx.fillStyle = leftWash;
   layerCtx.fillRect(0, 0, state.width, state.height);
 

@@ -8,11 +8,11 @@
   --line: rgba(55, 72, 78, 0.18);
   --line-strong: rgba(38, 52, 58, 0.34);
   --steel: #8f9da3;
-  --accent-rose: #c94a57;
-  --accent-blue: #286fb7;
-  --accent-teal: #43a7a0;
-  --accent-gold: #b58a38;
-  --accent-violet: #7d70b7;
+  --accent-rose: #87979e;
+  --accent-blue: #4f78bd;
+  --accent-teal: #3f968c;
+  --accent-gold: #b98636;
+  --accent-violet: #7e6ba7;
   --shadow: 0 1px 0 rgba(19, 32, 36, 0.12), 0 16px 40px rgba(71, 99, 108, 0.08);
 }
 
@@ -52,7 +52,7 @@ body {
   background:
     linear-gradient(120deg, rgba(255, 255, 255, 0.72), transparent 34%),
     linear-gradient(90deg, rgba(67, 167, 160, 0.13), transparent 26%, rgba(40, 111, 183, 0.1) 62%, transparent 100%),
-    linear-gradient(180deg, rgba(201, 74, 87, 0.055), transparent 38%),
+    linear-gradient(180deg, rgba(126, 107, 167, 0.045), transparent 38%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   overflow-x: hidden;
 }
@@ -382,7 +382,7 @@ section {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 18% 22%, rgba(201, 74, 87, 0.16) 0 10px, transparent 11px),
+    radial-gradient(ellipse at 18% 22%, rgba(126, 107, 167, 0.13) 0 10px, transparent 11px),
     radial-gradient(ellipse at 78% 18%, rgba(67, 167, 160, 0.17) 0 15px, transparent 16px),
     radial-gradient(ellipse at 82% 78%, rgba(40, 111, 183, 0.13) 0 12px, transparent 13px),
     repeating-linear-gradient(135deg, rgba(38, 52, 58, 0.032) 0 1px, transparent 1px 12px);
