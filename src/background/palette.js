@@ -1,29 +1,29 @@
 const DARK_STROKES = {
-  rose: "#b9c4c8",
-  blue: "#a7bce8",
-  teal: "#9ed1ca",
-  gold: "#e5c083",
-  violet: "#c1b4e5"
+  rose: "#dae6fe",
+  blue: "#b7d1f1",
+  teal: "#b7e9ea",
+  gold: "#79abd5",
+  violet: "#dbb2e5"
 };
 
 const LIGHT_STROKES = {
-  rose: "#465258",
-  blue: "#2d456d",
+  rose: "#3c719f",
+  blue: "#0e2869",
   teal: "#205a55",
-  gold: "#6d4a1f",
-  violet: "#51436c"
+  gold: "#0e2869",
+  violet: "#3c3e80"
 };
 
 const FALLBACKS = {
-  "--accent-rose": "#87979e",
-  "--accent-blue": "#4f78bd",
-  "--accent-teal": "#3f968c",
-  "--accent-gold": "#b98636",
-  "--accent-violet": "#7e6ba7",
-  "--ink": "#171b1d",
-  "--line-strong": "rgba(38, 52, 58, 0.34)",
-  "--bg": "#eef8f7",
-  "--bg-deep": "#dfe8e6"
+  "--accent-rose": "#95b2d4",
+  "--accent-blue": "#3c719f",
+  "--accent-teal": "#7ad5c3",
+  "--accent-gold": "#0e2869",
+  "--accent-violet": "#8979b4",
+  "--ink": "#0e2869",
+  "--line-strong": "rgba(14, 40, 105, 0.36)",
+  "--bg": "#f5fdf7",
+  "--bg-deep": "#dae6fe"
 };
 
 function cssVar(root, name) {

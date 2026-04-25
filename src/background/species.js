@@ -1,7 +1,7 @@
-import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=dense-heat-sizing-0a8f31c";
-import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=dense-heat-sizing-0a8f31c";
-import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=dense-heat-sizing-0a8f31c";
-import { drawWatercolorShape } from "./watercolor.js?v=dense-heat-sizing-0a8f31c";
+import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=palette-f0rPXTJ-58a1b5";
+import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=palette-f0rPXTJ-58a1b5";
+import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=palette-f0rPXTJ-58a1b5";
+import { drawWatercolorShape } from "./watercolor.js?v=palette-f0rPXTJ-58a1b5";
 
 function viewportTier(state) {
   if (state.width < 620) return MOLECULE_DENSITY.mobile;

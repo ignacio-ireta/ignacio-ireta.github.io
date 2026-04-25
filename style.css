@@ -1,19 +1,19 @@
 :root {
-  --bg: #eef8f7;
-  --bg-deep: #dfe8e6;
-  --surface: rgba(255, 255, 250, 0.72);
-  --surface-strong: rgba(255, 255, 253, 0.86);
-  --ink: #171b1d;
-  --muted: #4f5b60;
-  --line: rgba(55, 72, 78, 0.18);
-  --line-strong: rgba(38, 52, 58, 0.34);
-  --steel: #8f9da3;
-  --accent-rose: #87979e;
-  --accent-blue: #4f78bd;
-  --accent-teal: #3f968c;
-  --accent-gold: #b98636;
-  --accent-violet: #7e6ba7;
-  --shadow: 0 1px 0 rgba(19, 32, 36, 0.12), 0 16px 40px rgba(71, 99, 108, 0.08);
+  --bg: #f5fdf7;
+  --bg-deep: #dae6fe;
+  --surface: rgba(245, 253, 247, 0.74);
+  --surface-strong: rgba(239, 252, 255, 0.88);
+  --ink: #0e2869;
+  --muted: #3c719f;
+  --line: rgba(60, 113, 159, 0.2);
+  --line-strong: rgba(14, 40, 105, 0.36);
+  --steel: #95b2d4;
+  --accent-rose: #95b2d4;
+  --accent-blue: #3c719f;
+  --accent-teal: #7ad5c3;
+  --accent-gold: #0e2869;
+  --accent-violet: #8979b4;
+  --shadow: 0 1px 0 rgba(14, 40, 105, 0.12), 0 16px 40px rgba(88, 161, 181, 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,9 +50,9 @@ body {
   font-family: "Inter", system-ui, sans-serif;
   color: var(--ink);
   background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.72), transparent 34%),
-    linear-gradient(90deg, rgba(67, 167, 160, 0.13), transparent 26%, rgba(40, 111, 183, 0.1) 62%, transparent 100%),
-    linear-gradient(180deg, rgba(126, 107, 167, 0.045), transparent 38%),
+    linear-gradient(120deg, rgba(245, 253, 247, 0.78), transparent 34%),
+    linear-gradient(90deg, rgba(122, 213, 195, 0.16), transparent 26%, rgba(60, 113, 159, 0.14) 62%, transparent 100%),
+    linear-gradient(180deg, rgba(137, 121, 180, 0.07), transparent 38%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   overflow-x: hidden;
 }
@@ -64,10 +64,10 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(rgba(20, 34, 39, 0.07) 0.6px, transparent 0.7px),
-    radial-gradient(rgba(255, 255, 255, 0.34) 0.7px, transparent 0.8px),
-    linear-gradient(90deg, rgba(143, 157, 163, 0.07) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(143, 157, 163, 0.055) 1px, transparent 1px);
+    radial-gradient(rgba(14, 40, 105, 0.075) 0.6px, transparent 0.7px),
+    radial-gradient(rgba(239, 252, 255, 0.42) 0.7px, transparent 0.8px),
+    linear-gradient(90deg, rgba(60, 113, 159, 0.075) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(88, 161, 181, 0.06) 1px, transparent 1px);
   background-position: 0 0, 9px 7px, 0 0, 0 0;
   background-size: 18px 18px, 23px 23px, 96px 96px, 96px 96px;
   mix-blend-mode: multiply;

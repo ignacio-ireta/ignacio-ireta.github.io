@@ -1,9 +1,9 @@
-import { DPR_CAP } from "./config.js?v=dense-heat-sizing-0a8f31c";
-import { drawDepthGuides } from "./geometry.js?v=dense-heat-sizing-0a8f31c";
-import { readPalette } from "./palette.js?v=dense-heat-sizing-0a8f31c";
-import { createReaction, drawReaction } from "./reaction.js?v=dense-heat-sizing-0a8f31c";
-import { createMolecules, drawMoleculeField, drawStaticBiomolecularField, drawStaticForegroundForms } from "./species.js?v=dense-heat-sizing-0a8f31c";
-import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=dense-heat-sizing-0a8f31c";
+import { DPR_CAP } from "./config.js?v=palette-f0rPXTJ-58a1b5";
+import { drawDepthGuides } from "./geometry.js?v=palette-f0rPXTJ-58a1b5";
+import { readPalette } from "./palette.js?v=palette-f0rPXTJ-58a1b5";
+import { createReaction, drawReaction } from "./reaction.js?v=palette-f0rPXTJ-58a1b5";
+import { createMolecules, drawMoleculeField, drawStaticBiomolecularField, drawStaticForegroundForms } from "./species.js?v=palette-f0rPXTJ-58a1b5";
+import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=palette-f0rPXTJ-58a1b5";
 
 export const state = {
   width: 0,

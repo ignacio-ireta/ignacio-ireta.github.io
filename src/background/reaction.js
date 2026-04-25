@@ -1,7 +1,7 @@
-import { REACTION } from "./config.js?v=dense-heat-sizing-0a8f31c";
+import { REACTION } from "./config.js?v=palette-f0rPXTJ-58a1b5";
 import { drawMembraneArc, traceOrganicMass } from "./geometry.js";
-import { clamp, interpolatePoint, lerp, seededRandom, smoothstep } from "./random.js?v=dense-heat-sizing-0a8f31c";
-import { drawMolecule } from "./species.js?v=dense-heat-sizing-0a8f31c";
+import { clamp, interpolatePoint, lerp, seededRandom, smoothstep } from "./random.js?v=palette-f0rPXTJ-58a1b5";
+import { drawMolecule } from "./species.js?v=palette-f0rPXTJ-58a1b5";
 import { drawWatercolorShape } from "./watercolor.js";
 
 const STATE_INDEX = new Map(REACTION.states.map((state, index) => [state.name, index]));
