@@ -2,22 +2,22 @@ export const DPR_CAP = 2;
 
 export const MOLECULE_DENSITY = {
   mobile: {
-    staticClusterScale: 0.9,
-    overlayAreaPerMolecule: 30000,
-    overlayMin: 18,
-    overlayMax: 38
+    staticClusterScale: 1.16,
+    overlayAreaPerMolecule: 12000,
+    overlayMin: 42,
+    overlayMax: 90
   },
   tablet: {
-    staticClusterScale: 1.12,
-    overlayAreaPerMolecule: 24500,
-    overlayMin: 30,
-    overlayMax: 72
+    staticClusterScale: 1.46,
+    overlayAreaPerMolecule: 12000,
+    overlayMin: 64,
+    overlayMax: 138
   },
   desktop: {
-    staticClusterScale: 1.34,
-    overlayAreaPerMolecule: 18500,
-    overlayMin: 58,
-    overlayMax: 118
+    staticClusterScale: 1.82,
+    overlayAreaPerMolecule: 8500,
+    overlayMin: 120,
+    overlayMax: 240
   }
 };
 
@@ -57,11 +57,11 @@ export const DEPTH_BANDS = [
 ];
 
 export const POINTER = {
-  radius: 240,
-  heatGain: 0.045,
-  cooling: 0.055,
-  maxHeat: 1.65,
-  decay: 0.965
+  radius: 285,
+  heatGain: 0.095,
+  cooling: 0.034,
+  maxHeat: 2.4,
+  decay: 0.952
 };
 
 export const REACTION = {
