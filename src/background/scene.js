@@ -1,9 +1,8 @@
-import { DPR_CAP } from "./config.js?v=palette-f0rPXTJ-58a1b5";
-import { drawDepthGuides } from "./geometry.js?v=palette-f0rPXTJ-58a1b5";
-import { readPalette } from "./palette.js?v=palette-f0rPXTJ-58a1b5";
-import { createReaction, drawReaction } from "./reaction.js?v=palette-f0rPXTJ-58a1b5";
-import { createMolecules, drawMoleculeField, drawStaticBiomolecularField, drawStaticForegroundForms } from "./species.js?v=palette-f0rPXTJ-58a1b5";
-import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=palette-f0rPXTJ-58a1b5";
+import { DPR_CAP } from "./config.js?v=collision-chemistry-b240cafe";
+import { drawDepthGuides } from "./geometry.js?v=collision-chemistry-b240cafe";
+import { readPalette } from "./palette.js?v=collision-chemistry-b240cafe";
+import { createMolecules, drawMoleculeField, drawStaticBiomolecularField, drawStaticForegroundForms } from "./species.js?v=collision-chemistry-b240cafe";
+import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=collision-chemistry-b240cafe";
 
 export const state = {
   width: 0,
@@ -13,7 +12,7 @@ export const state = {
   molecules: [],
   layers: {},
   pointer: { x: 0, y: 0, active: false, influence: 0 },
-  reaction: null,
+  chemistry: null,
   seed: Math.floor(Math.random() * 2 ** 31)
 };
 
@@ -46,14 +45,12 @@ export function resizeScene(canvas, ctx, root, { isDark }) {
   drawStaticBiomolecularField(state.layers.field.ctx, state, { isDark });
   drawStaticForegroundForms(state.layers.foreground.ctx, state, { isDark });
   state.molecules = createMolecules(state);
-  state.reaction = createReaction(state);
 }
 
 export function drawScene(ctx, now, options) {
   ctx.clearRect(0, 0, state.width, state.height);
   ctx.drawImage(state.layers.field.canvas, 0, 0, state.width, state.height);
   drawMoleculeField(ctx, state);
-  drawReaction(ctx, state, now, options);
   ctx.drawImage(state.layers.foreground.canvas, 0, 0, state.width, state.height);
   ctx.drawImage(state.layers.paper.canvas, 0, 0, state.width, state.height);
 }

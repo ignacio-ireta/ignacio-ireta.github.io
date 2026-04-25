@@ -1,6 +1,5 @@
-import { drawScene, resizeScene, state } from "./scene.js?v=palette-f0rPXTJ-58a1b5";
-import { updateReaction } from "./reaction.js?v=palette-f0rPXTJ-58a1b5";
-import { updateMolecules } from "./species.js?v=palette-f0rPXTJ-58a1b5";
+import { drawScene, resizeScene, state } from "./scene.js?v=collision-chemistry-b240cafe";
+import { updateMolecules } from "./species.js?v=collision-chemistry-b240cafe";
 
 const canvas = document.getElementById("molecule-canvas");
 const ctx = canvas.getContext("2d");
@@ -47,7 +46,6 @@ function animate(now) {
   const options = mediaOptions();
 
   updateMolecules(state, now, deltaMs, options);
-  updateReaction(state, deltaMs, options);
   draw(now);
   animationFrame = requestAnimationFrame(animate);
 }

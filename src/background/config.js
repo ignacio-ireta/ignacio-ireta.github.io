@@ -63,18 +63,3 @@ export const POINTER = {
   maxHeat: 2.4,
   decay: 0.952
 };
-
-export const REACTION = {
-  startOffset: 4600,
-  states: [
-    { name: "idle", duration: 5200 },
-    { name: "approach", duration: 3600 },
-    { name: "catalytic_cradle", duration: 2600 },
-    { name: "merge_wash", duration: 2200 },
-    { name: "release_catalyst", duration: 2600 },
-    { name: "product_dwell", duration: 6400 },
-    { name: "retro_cradle", duration: 2800 },
-    { name: "split", duration: 3600 },
-    { name: "rest", duration: 6800 }
-  ]
-};
