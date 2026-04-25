@@ -1,5 +1,5 @@
 import { drawOrganicMass, drawSquiggle } from "./geometry.js";
-import { lerp, seededRandom } from "./random.js?v=palette-f0rPXTJ-58a1b5";
+import { lerp, seededRandom } from "./random.js?v=collision-chemistry-b240cafe";
 
 export function drawWatercolorShape(
   targetCtx,
