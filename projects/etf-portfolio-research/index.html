@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ETF Portfolio Research — José Ignacio Esparza</title>
+    <meta
+      name="description"
+      content="Overview page for ETF Portfolio Research: reproducible portfolio analytics, optimization, walk-forward backtesting, and report generation."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../style.css" />
+    <style>
+      body { overflow-x: hidden; }
+      .project-page { width: min(980px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0 5rem; }
+      .project-page .panel { padding: 1.5rem; }
+      .project-hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); gap: 1rem; align-items: stretch; margin-top: 0; }
+      .project-title { font-size: clamp(2.3rem, 6vw, 4.5rem); max-width: 12ch; }
+      .stack { display: grid; gap: 1rem; }
+      .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+      .metric strong { display: block; font-size: 1.2rem; margin-bottom: 0.35rem; }
+      .assay { position: relative; overflow: hidden; min-height: 100%; }
+      .assay-row { display: flex; align-items: center; gap: 0.65rem; color: var(--muted); line-height: 1.5; margin-top: 0.8rem; }
+      .assay-dot { width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 1px solid var(--line-strong); flex: 0 0 auto; }
+      .assay-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; margin-top: 1.2rem; }
+      .assay-cell { aspect-ratio: 1; border: 1px solid var(--line); background: rgba(255, 251, 238, 0.42); }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92rem; }
+      ul { color: var(--muted); line-height: 1.75; }
+      @media (max-width: 760px) {
+        .project-hero,
+        .metric-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="wordmark" href="../../">José Ignacio Esparza</a>
+        <nav>
+          <a href="../../#projects">Back to projects</a>
+          <a href="../../#contact">Connect</a>
+        </nav>
+      </header>
+
+      <main class="project-page">
+        <section class="project-hero">
+          <div class="stack">
+            <div class="section-heading">
+              <p class="eyebrow">Research system</p>
+              <h1 class="project-title">ETF Portfolio Research</h1>
+            </div>
+            <div class="panel">
+              <p>
+                A reproducible research pipeline for ETF portfolio construction,
+                optimization, walk-forward backtesting, reporting, and tracked
+                assumptions. The goal is not to produce magical answers; it is to
+                make portfolio decisions inspectable.
+              </p>
+            </div>
+          </div>
+          <div class="panel assay">
+            <p class="project-chip">System assay</p>
+            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-blue);"></span><span>candidate allocations</span></div>
+            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-gold);"></span><span>constraints and objectives</span></div>
+            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-teal);"></span><span>walk-forward evaluation</span></div>
+            <div class="assay-grid" aria-hidden="true">
+              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
+              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
+              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="stack" style="margin-top: 2rem;">
+          <div class="metric-grid">
+            <div class="panel metric">
+              <strong>Constrained optimization</strong>
+              <span>Universe definition, configurable objectives, and explicit constraint handling.</span>
+            </div>
+            <div class="panel metric">
+              <strong>Temporal validation</strong>
+              <span>Trailing-data-only evaluation to avoid lookahead bias.</span>
+            </div>
+            <div class="panel metric">
+              <strong>Generated artifacts</strong>
+              <span>HTML, Excel, figures, and JSON metrics generated from code-driven outputs.</span>
+            </div>
+            <div class="panel metric">
+              <strong>Assumptions made visible</strong>
+              <span>Modeling choices stay documented instead of disappearing into intuition.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="stack" style="margin-top: 2rem;">
+          <div class="panel">
+            <h2 style="margin-bottom: 1rem;">What the pipeline produces</h2>
+            <ul>
+              <li><code>reports/html/latest_report.html</code></li>
+              <li><code>reports/excel/optimized_portfolios.xlsx</code></li>
+              <li><code>reports/excel/portfolio_results.xlsx</code></li>
+              <li><code>reports/figures/*.png</code></li>
+              <li><code>reports/metrics/backtest_metrics.json</code></li>
+              <li><code>reports/runs/*.json</code></li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h2 style="margin-bottom: 1rem;">Why it matters</h2>
+            <p>
+              Portfolio discussions often hide assumptions behind confidence. This
+              project tries to do the opposite: expose the assumptions, version the
+              choices, and make results easier to challenge.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

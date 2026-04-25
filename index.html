@@ -1,116 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>José Ignacio Esparza — Dynamic systems</title>
+    <meta
+      name="description"
+      content="Personal site of José Ignacio Esparza — AI, data science, biology-inspired systems, research, and products built from curiosity."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="molecule-canvas" aria-hidden="true"></canvas>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="wordmark" href="#hero">José Ignacio Esparza</a>
+        <nav>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#interests">Interests</a>
+          <a href="#contact">Connect</a>
+        </nav>
+      </header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reed RSVP Reader - Privacy Policy</title>
-    <meta name="description" content="Privacy Policy for Reed RSVP Reader, a speed reading app for Android.">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span class="logo-text">R<span class="pivot">e</span>ed</span>
+      <main>
+        <section class="hero" id="hero">
+          <div class="hero-copy panel">
+            <p class="eyebrow">AI · data · research · living systems</p>
+            <h1>José Ignacio Esparza, in dynamic equilibrium.</h1>
+            <p class="lede">
+              I build tools and research systems that make hidden structure easier
+              to see: in models, markets, learning, biology, and the human process
+              of turning uncertainty into something inspectable.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#projects">See the work</a>
+              <a class="button secondary" href="https://www.linkedin.com/in/ignacio-ireta" target="_blank" rel="noopener">LinkedIn</a>
             </div>
-            <p class="tagline">RSVP Reader for Android</p>
-        </header>
+            <ul class="identity-list">
+              <li>ML + data science</li>
+              <li>Applied research</li>
+              <li>Biology-inspired aesthetics</li>
+              <li>Curiosity with engineering discipline</li>
+            </ul>
+          </div>
 
-        <main>
-            <h1>Privacy Policy</h1>
-            <p class="last-updated">Last updated: January 20, 2026</p>
+          <aside class="hero-note panel molecular-map">
+            <p class="note-label">Field notes</p>
+            <p>
+              A homepage as a small cellular cross-section: proteins drift, collide,
+              separate, and recombine into temporary structure.
+            </p>
+            <p>
+              The point is not decoration. It is a picture of how the work tends to
+              happen: local interactions, tracked assumptions, unstable equilibria,
+              and useful patterns emerging from motion.
+            </p>
+            <div class="micro-legend" aria-hidden="true">
+              <span style="--dot: var(--accent-rose)">biology</span>
+              <span style="--dot: var(--accent-blue)">models</span>
+              <span style="--dot: var(--accent-teal)">language</span>
+              <span style="--dot: var(--accent-gold)">markets</span>
+            </div>
+          </aside>
+        </section>
 
-            <section>
-                <h2>Introduction</h2>
-                <p>
-                    Reed RSVP Reader ("we", "our", or "the app") is committed to protecting your privacy.
-                    This Privacy Policy explains how we handle information when you use our Android application.
-                </p>
-            </section>
+        <section class="about section-grid" id="about">
+          <div class="section-heading">
+            <p class="eyebrow">Who I am</p>
+            <h2>A builder with research instincts.</h2>
+          </div>
+          <div class="panel section-card wide">
+            <p>
+              My interests span AI, cognition, memory, finance, health, languages,
+              and biological systems. The common thread is simple: I like poking at
+              the world until it reveals something interesting, then turning that
+              into something useful.
+            </p>
+            <p>
+              I'm especially drawn to work that sits between engineering,
+              experimentation, and interpretation — places where careful thinking
+              matters as much as implementation.
+            </p>
+          </div>
+        </section>
 
-            <section>
-                <h2>Information We Collect</h2>
-                <p>
-                    <strong>We do not collect any personal data.</strong> Reed is designed with privacy in mind:
-                </p>
-                <ul>
-                    <li>Your books and documents are stored <strong>only on your device</strong></li>
-                    <li>Reading progress and preferences are saved <strong>locally</strong></li>
-                    <li>No accounts or sign-ups are required</li>
-                    <li>No analytics or tracking are implemented by the app</li>
-                </ul>
-            </section>
+        <section class="projects" id="projects">
+          <div class="section-heading">
+            <p class="eyebrow">Selected work</p>
+            <h2>Different molecules, same instinct.</h2>
+          </div>
 
-            <section>
-                <h2>Data Storage</h2>
-                <p>
-                    All data associated with your use of Reed—including imported books, reading progress,
-                    and settings—is stored exclusively on your device's local storage. We have no access
-                    to this data, and it is never transmitted to any external servers.
-                </p>
-            </section>
+          <div class="project-grid">
+            <article class="project-card panel featured">
+              <div class="project-chip">Research system</div>
+              <h3>ETF Portfolio Research</h3>
+              <p>
+                A reproducible ETF portfolio research pipeline for optimization,
+                walk-forward backtesting, reporting, and tracked assumptions.
+              </p>
+              <ul>
+                <li>explicit assumptions</li>
+                <li>reproducible runs</li>
+                <li>code-driven reports</li>
+                <li>no hand-wavy backtests</li>
+              </ul>
+              <div class="project-links">
+                <a href="projects/etf-portfolio-research/">View project page</a>
+              </div>
+            </article>
 
-            <section>
-                <h2>Third-Party Services</h2>
-                <p>
-                    Reed is distributed through the Google Play Store. Google may collect certain data
-                    as part of their standard services (such as crash reports and basic usage statistics).
-                    This is governed by
-                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy
-                        Policy</a>.
-                </p>
-                <p>
-                    The app itself does not integrate any third-party analytics, advertising, or tracking services.
-                </p>
-            </section>
+            <article class="project-card panel">
+              <div class="project-chip">Android app</div>
+              <h3>Reed RSVP Reader</h3>
+              <p>
+                A speed-reading app for Android built around focus, localization,
+                and privacy-first reading.
+              </p>
+              <ul>
+                <li>EPUB / PDF / TXT</li>
+                <li>100–1000 WPM</li>
+                <li>4-language localization</li>
+                <li>device-local data</li>
+              </ul>
+              <div class="project-links">
+                <a href="https://play.google.com/store/apps/details?id=com.reed.rsvp" target="_blank" rel="noopener">Play Store</a>
+                <a href="reed/privacy/">Privacy policy</a>
+              </div>
+            </article>
 
-            <section>
-                <h2>Data Sharing</h2>
-                <p>
-                    We do not share, sell, or transfer any user data to third parties. Since we don't
-                    collect data in the first place, there is nothing to share.
-                </p>
-            </section>
+            <article class="project-card panel">
+              <div class="project-chip">Speech / audio</div>
+              <h3>VADT</h3>
+              <p>
+                A video accent detection project exploring speech, audio features,
+                and classification workflows.
+              </p>
+              <ul>
+                <li>audio pipelines</li>
+                <li>classification experiments</li>
+                <li>applied ML workflow design</li>
+              </ul>
+            </article>
+          </div>
+        </section>
 
-            <section>
-                <h2>Children's Privacy</h2>
-                <p>
-                    Reed does not knowingly collect any personal information from children. The app
-                    can be safely used by users of all ages as it does not collect any personal data.
-                </p>
-            </section>
+        <section class="interests section-grid" id="interests">
+          <div class="section-heading">
+            <p class="eyebrow">Research taste</p>
+              <h2>Domains with recurring attraction.</h2>
+          </div>
+          <div class="interest-grid">
+            <div class="panel interest-card">
+              <h3>Machine learning</h3>
+              <p>From classic supervised learning to more experimental modeling paths.</p>
+            </div>
+            <div class="panel interest-card">
+              <h3>Biology & systems</h3>
+              <p>Complex behavior emerging from simple interactions keeps pulling me in.</p>
+            </div>
+            <div class="panel interest-card">
+              <h3>Markets & decision-making</h3>
+              <p>Finance gets interesting when uncertainty, incentives, and modeling collide.</p>
+            </div>
+            <div class="panel interest-card">
+              <h3>Language & learning</h3>
+              <p>I love the mechanics of how minds absorb, encode, and transform information.</p>
+            </div>
+          </div>
+        </section>
 
-            <section>
-                <h2>Changes to This Policy</h2>
-                <p>
-                    We may update this Privacy Policy from time to time. Any changes will be posted
-                    on this page with an updated revision date. We encourage you to review this
-                    Privacy Policy periodically.
-                </p>
-            </section>
-
-            <section>
-                <h2>Contact Us</h2>
-                <p>
-                    If you have any questions about this Privacy Policy or the app, please contact us at:
-                </p>
-                <p class="contact-email">
-                    <a href="mailto:ignacio.ireta.ai@gmail.com">ignacio.ireta.ai@gmail.com</a>
-                </p>
-            </section>
-        </main>
-
-        <footer>
-            <p>&copy; 2026 Reed RSVP Reader. All rights reserved.</p>
-        </footer>
+        <section class="contact section-grid" id="contact">
+          <div class="section-heading">
+            <p class="eyebrow">Connect</p>
+            <h2>If this resonates, say hi.</h2>
+          </div>
+          <div class="panel section-card wide contact-card">
+            <a href="mailto:ignacio.ireta@outlook.com">ignacio.ireta@outlook.com</a>
+            <a href="https://www.linkedin.com/in/ignacio-ireta" target="_blank" rel="noopener">linkedin.com/in/ignacio-ireta</a>
+            <a href="https://github.com/ignacio-ireta" target="_blank" rel="noopener">github.com/ignacio-ireta</a>
+          </div>
+        </section>
+      </main>
     </div>
-</body>
 
+    <script src="script.js"></script>
+  </body>
 </html>
