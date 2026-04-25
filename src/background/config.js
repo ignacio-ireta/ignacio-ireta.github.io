@@ -58,6 +58,9 @@ export const DEPTH_BANDS = [
 
 export const POINTER = {
   radius: 240,
+  heatGain: 0.045,
+  cooling: 0.055,
+  maxHeat: 1.65,
   decay: 0.965
 };
 
