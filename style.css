@@ -306,7 +306,8 @@ h3 {
 }
 
 .identity-list,
-.project-card ul {
+.project-card ul,
+.paper-card ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
@@ -316,7 +317,8 @@ h3 {
 }
 
 .identity-list li,
-.project-card li {
+.project-card li,
+.paper-card li {
   padding: 0.45rem 0.62rem;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.48);
@@ -327,7 +329,8 @@ h3 {
 
 @media (prefers-color-scheme: dark) {
   .identity-list li,
-  .project-card li {
+  .project-card li,
+  .paper-card li {
     background: rgba(255, 255, 255, 0.03);
   }
 }
@@ -358,6 +361,7 @@ section {
 }
 
 .project-grid,
+.paper-grid,
 .interest-grid {
   display: grid;
   gap: 1rem;
@@ -367,14 +371,23 @@ section {
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
-.project-card {
-  grid-column: span 4;
+.paper-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-card,
+.paper-card {
   padding: 1.35rem;
   position: relative;
   overflow: hidden;
 }
 
+.project-card {
+  grid-column: span 4;
+}
+
 .project-card::before,
+.paper-card::before,
 .interest-card::before,
 .molecular-map::before {
   content: "";
@@ -390,6 +403,7 @@ section {
 }
 
 .project-card > *,
+.paper-card > *,
 .interest-card > *,
 .molecular-map > * {
   position: relative;
@@ -411,6 +425,11 @@ section {
 .contact-card a {
   font-weight: 600;
   color: var(--accent-blue);
+}
+
+.paper-card p {
+  color: var(--muted);
+  line-height: 1.75;
 }
 
 .interest-grid {
@@ -468,6 +487,7 @@ section {
     grid-column: span 6;
   }
 
+  .paper-grid,
   .interest-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -492,6 +512,7 @@ section {
   .hero-copy,
   .hero-note,
   .project-card,
+  .paper-card,
   .interest-card,
   .section-card {
     padding: 1.25rem;
@@ -502,6 +523,7 @@ section {
     grid-column: 1 / -1;
   }
 
+  .paper-grid,
   .interest-grid {
     grid-template-columns: 1fr;
   }

@@ -20,7 +20,7 @@
       #molecule-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.96; display: block; }
       .page-shell { position: relative; z-index: 1; }
     </style>
-    <link rel="stylesheet" href="style.css?v=collision-chemistry-b240cafe" />
+    <link rel="stylesheet" href="style.css?v=content-papers-nemotron-gemma" />
   </head>
   <body>
     <canvas id="molecule-canvas" aria-hidden="true"></canvas>
@@ -29,6 +29,7 @@
         <a class="wordmark" href="#hero">J. Ignacio Esparza</a>
         <nav>
           <a href="#about">About</a>
+          <a href="#papers">Papers</a>
           <a href="#projects">Projects</a>
           <a href="#interests">Interests</a>
           <a href="#contact">Connect</a>
@@ -96,6 +97,57 @@
               The projects here sit between engineering, experimentation, and
               interpretation, where careful thinking matters as much as implementation.
             </p>
+          </div>
+        </section>
+
+        <section class="papers" id="papers">
+          <div class="section-heading">
+            <p class="eyebrow">Recent papers</p>
+            <h2>Models worth watching closely.</h2>
+          </div>
+
+          <div class="paper-grid">
+            <article class="paper-card panel">
+              <div class="project-chip">Open agentic models</div>
+              <h3>NVIDIA Nemotron 3</h3>
+              <p>
+                A new open model family organized around production agents: long-context
+                reasoning, multimodal RAG, safety, voice, and efficient deployment. The
+                useful question is not only benchmark score, but how model families become
+                infrastructure for coordinated tool-using systems.
+              </p>
+              <ul>
+                <li>hybrid Mamba–Transformer MoE</li>
+                <li>agentic reasoning</li>
+                <li>multimodal RAG</li>
+                <li>safety models</li>
+              </ul>
+              <div class="project-links">
+                <a href="https://developer.nvidia.com/blog/building-nvidia-nemotron-3-agents-for-reasoning-multimodal-rag-voice-and-safety/" target="_blank" rel="noopener">NVIDIA overview</a>
+                <a href="https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Super-Technical-Report.pdf" target="_blank" rel="noopener">Technical report</a>
+              </div>
+            </article>
+
+            <article class="paper-card panel">
+              <div class="project-chip">Open multimodal models</div>
+              <h3>Google Gemma 4</h3>
+              <p>
+                Google’s latest Gemma line pushes intelligence-per-parameter, local-first
+                reasoning, and multimodal capability into smaller deployable models. It is
+                especially interesting as evidence that frontier workflows are moving toward
+                compact, specialized, hardware-aware systems.
+              </p>
+              <ul>
+                <li>E2B / E4B edge models</li>
+                <li>26B MoE + 31B dense</li>
+                <li>vision, audio, code</li>
+                <li>agentic workflows</li>
+              </ul>
+              <div class="project-links">
+                <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank" rel="noopener">Google announcement</a>
+                <a href="https://ai.google.dev/gemma/docs/core" target="_blank" rel="noopener">Model docs</a>
+              </div>
+            </article>
           </div>
         </section>
 
