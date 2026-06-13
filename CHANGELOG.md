@@ -17,10 +17,21 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Tests: `node:test` unit tests for `random.js`/`geometry.js` and a jsdom boot
   smoke test for the canvas background; an offline internal-link checker.
 - GitHub Actions CI running the quality gates and a dependency audit on push/PR.
+- ETF Portfolio Research showcase: the project page now leads with the live
+  interactive backtest report and an efficient-frontier explorer (lazy
+  click-to-load via `embed.js`), a metrics table rendered client-side from
+  `backtest_metrics.json`, a 12-figure gallery, and Excel/source downloads.
+  Curated report artifacts are committed under
+  `projects/etf-portfolio-research/reports/` (kept fresh by a deploy workflow in
+  the source repo), and the homepage card gained a "View source" link.
+- `docs/etf-outputs-contract.md` documenting the ETF artifact set, the
+  `backtest_metrics.json` schema, run-record provenance, and the sync contract.
 
 ### Changed
 
 - Encoded raw `&` as `&amp;` in homepage headings for valid HTML.
+- Replaced the description-only ETF Portfolio Research page with the interactive
+  showcase above.
 
 ### Removed
 

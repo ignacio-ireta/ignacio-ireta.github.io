@@ -10,27 +10,27 @@ Each section gets a verdict:
 
 ## Summary
 
-| §   | Topic                      | Verdict             | Status                             |
-| --- | -------------------------- | ------------------- | ---------------------------------- |
-| A   | Product definition & scope | DIRECT              | ✅ README                          |
-| B   | Repository structure       | ANALOG              | ✅ documented layout               |
-| C   | Version control            | DIRECT (scaled)     | ✅ + history cleanup               |
-| D   | Dependency & environment   | ANALOG              | ✅ dev-only deps, runtime zero-dep |
-| E   | Configuration              | ANALOG (mostly N/A) | ✅ `config.js` as the tunables     |
-| F   | Architecture & modularity  | ANALOG              | ✅ documented, already clean       |
-| G   | Input/output contracts     | ANALOG              | ✅ data + build contracts          |
-| H   | Error handling             | ANALOG (light)      | ✅ fail-safe degradation           |
-| I   | Logging & observability    | **N/A**             | n/a (no runtime)                   |
-| J   | Resumability & idempotency | **N/A**             | n/a (static serving)               |
-| K   | Testing strategy           | ANALOG (scaled)     | ✅ unit + smoke + link + HTML      |
-| L   | Testing documentation      | DIRECT              | ✅ docs/testing.md                 |
-| M   | Code quality gates         | ANALOG              | ✅ format/lint/type/audit          |
-| N   | CI/CD                      | ANALOG (CI only)    | ✅ GitHub Actions; CD n/a          |
-| O   | Documentation              | DIRECT              | ✅ README + docs/                  |
-| P   | Security & privacy         | ANALOG              | ✅ local-first, no secrets         |
-| Q   | Performance & scalability  | ANALOG              | ✅ documented budget               |
-| R   | Graceful interruption      | **N/A**             | n/a (no long process)              |
-| S   | Traceability               | ANALOG              | ✅ provenance chain                |
+| §   | Topic                      | Verdict             | Status                                     |
+| --- | -------------------------- | ------------------- | ------------------------------------------ |
+| A   | Product definition & scope | DIRECT              | ✅ README                                  |
+| B   | Repository structure       | ANALOG              | ✅ documented layout                       |
+| C   | Version control            | DIRECT (scaled)     | ✅ + history cleanup                       |
+| D   | Dependency & environment   | ANALOG              | ✅ dev-only deps, runtime zero-dep         |
+| E   | Configuration              | ANALOG (mostly N/A) | ✅ `config.js` as the tunables             |
+| F   | Architecture & modularity  | ANALOG              | ✅ documented, already clean               |
+| G   | Input/output contracts     | ANALOG              | ✅ data + build contracts                  |
+| H   | Error handling             | ANALOG (light)      | ✅ fail-safe degradation                   |
+| I   | Logging & observability    | **N/A**             | n/a (no runtime)                           |
+| J   | Resumability & idempotency | **N/A**             | n/a (static serving)                       |
+| K   | Testing strategy           | ANALOG (scaled)     | ✅ unit + smoke + link + HTML              |
+| L   | Testing documentation      | DIRECT              | ✅ docs/testing.md                         |
+| M   | Code quality gates         | ANALOG              | ✅ format/lint/type/audit                  |
+| N   | CI/CD                      | ANALOG              | ✅ CI gates; cross-repo CD in source repos |
+| O   | Documentation              | DIRECT              | ✅ README + docs/                          |
+| P   | Security & privacy         | ANALOG              | ✅ local-first, no secrets                 |
+| Q   | Performance & scalability  | ANALOG              | ✅ documented budget                       |
+| R   | Graceful interruption      | **N/A**             | n/a (no long process)                      |
+| S   | Traceability               | ANALOG              | ✅ provenance chain                        |
 
 ## A — Product definition & scope · DIRECT
 
@@ -103,9 +103,9 @@ Property/fuzz and full browser e2e are intentionally out of scope for a portfoli
 
 `npm run check` = Prettier (`format:check`) + ESLint + `tsc --checkJs` + `html-validate` + link check + tests. A `pre-commit` hook (simple-git-hooks + lint-staged) auto-fixes staged files. `npm audit` runs in CI as the dependency scan. Coverage gates are skipped as over-engineering here.
 
-## N — CI/CD · ANALOG (CI only)
+## N — CI/CD · ANALOG
 
-CI ([.github/workflows/ci.yml](../.github/workflows/ci.yml)) runs the quality gates + audit on every push/PR to `master`. **CD is N/A** — GitHub Pages auto-deploys `master`; adding a deploy workflow would be redundant. No version matrix (no runtime to test across versions).
+CI ([.github/workflows/ci.yml](../.github/workflows/ci.yml)) runs the quality gates + audit on every push/PR to `master`. **CD for this repo's own content stays N/A** — GitHub Pages auto-deploys `master`, so a deploy workflow here would be redundant. But the two sub-projects now have a genuine **cross-repo CD**: a deploy workflow in each source repo ([cdmx-convenience-map](https://github.com/ignacio-ireta/cdmx-convenience-map), [etf-portfolio-research](https://github.com/ignacio-ireta/etf-portfolio-research)) syncs fresh build/report artifacts into this repo and pushes to `master`, which Pages then redeploys — see [etf-outputs-contract.md](etf-outputs-contract.md). No version matrix (no runtime to test across versions).
 
 ## O — Documentation · DIRECT
 
@@ -130,6 +130,7 @@ The provenance chain:
 - Deployed site → the `master` commit Pages built from.
 - CDMX bundle → its commit in [cdmx-convenience-map](https://github.com/ignacio-ireta/cdmx-convenience-map) (recorded in [cdmx-data-contract.md](cdmx-data-contract.md)).
 - CDMX data → `score_metadata*.json`: `generated_at`, `source_urls`, input `gtfs_sha1`/`osm_sha1`, `coverage_percent`.
+- ETF outputs → the `etf-portfolio-research` commit that synced them (the bot commit message records `etf-portfolio-research@<sha>`); each report carries a `run_id` in `backtest_metrics.json` backed by a `runs/*.json` record (recorded in [etf-outputs-contract.md](etf-outputs-contract.md)).
 
 The one gap being closed: explicitly recording the bundle-hash ↔ source-commit link on each rebuild.
 
@@ -139,7 +140,8 @@ The one gap being closed: explicitly recording the bundle-hash ↔ source-commit
 - [x] LICENSE (MIT) + content/data rights clarified
 - [x] CONTRIBUTING with commit + style conventions
 - [x] CHANGELOG (Keep a Changelog)
-- [x] docs/: architecture, data contract, standards, testing
+- [x] docs/: architecture, data contract, ETF outputs contract, standards, testing
+- [x] ETF showcase: interactive report embed + metrics + figures; cross-repo CD wired in source repo
 - [x] Prettier + ESLint + tsc(checkJs) configured to match existing style
 - [x] Tests: unit + boot smoke + link + HTML validation
 - [x] CI on push/PR; dependency audit
