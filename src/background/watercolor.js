@@ -191,8 +191,24 @@ export function drawFieldLayer(layerCtx, state, { isDark }) {
 
   layerCtx.globalAlpha = darkHaze;
   layerCtx.fillStyle = isDark ? "#070a07" : "#5a5345";
-  drawOrganicMass(layerCtx, state.width * 0.84, state.height * 0.18, state.width * 0.28, state.height * 0.22, 12, 0.8);
-  drawOrganicMass(layerCtx, state.width * 0.17, state.height * 0.78, state.width * 0.24, state.height * 0.18, 10, 2.4);
+  drawOrganicMass(
+    layerCtx,
+    state.width * 0.84,
+    state.height * 0.18,
+    state.width * 0.28,
+    state.height * 0.22,
+    12,
+    0.8
+  );
+  drawOrganicMass(
+    layerCtx,
+    state.width * 0.17,
+    state.height * 0.78,
+    state.width * 0.24,
+    state.height * 0.18,
+    10,
+    2.4
+  );
   layerCtx.globalAlpha = 1;
 
   const compartments = [

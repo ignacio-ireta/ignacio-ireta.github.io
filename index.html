@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -15,10 +15,28 @@
       rel="stylesheet"
     />
     <style>
-      html { background: #f5fdf7; }
-      body { margin: 0; min-height: 100vh; background: #f5fdf7; }
-      #molecule-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.96; display: block; }
-      .page-shell { position: relative; z-index: 1; }
+      html {
+        background: #f5fdf7;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f5fdf7;
+      }
+      #molecule-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.96;
+        display: block;
+      }
+      .page-shell {
+        position: relative;
+        z-index: 1;
+      }
     </style>
     <link rel="stylesheet" href="style.css?v=collision-chemistry-b240cafe" />
   </head>
@@ -42,10 +60,9 @@
             <p class="hero-signature">José Ignacio Esparza</p>
             <h1>A working map of models, organisms, markets, and learning.</h1>
             <p class="lede">
-              This site collects small research systems, notes, and tools for making
-              uncertain structure easier to inspect. The emphasis is on careful
-              observation, reproducible traces, and useful forms that can keep being
-              revised.
+              This site collects small research systems, notes, and tools for making uncertain
+              structure easier to inspect. The emphasis is on careful observation, reproducible
+              traces, and useful forms that can keep being revised.
             </p>
             <div class="hero-actions">
               <a class="button primary" href="#projects">Browse projects</a>
@@ -63,13 +80,12 @@
           <aside class="hero-note panel molecular-map">
             <p class="note-label">Specimen field</p>
             <p>
-              The page opens as a small cellular cross-section: dense, labeled by
-              color, and alive with local interactions rather than spectacle.
+              The page opens as a small cellular cross-section: dense, labeled by color, and alive
+              with local interactions rather than spectacle.
             </p>
             <p>
-              It is a visual metaphor for the work: tracked assumptions, rough edges,
-              provisional groupings, and patterns that become useful only after
-              repeated inspection.
+              It is a visual metaphor for the work: tracked assumptions, rough edges, provisional
+              groupings, and patterns that become useful only after repeated inspection.
             </p>
             <div class="micro-legend" aria-hidden="true">
               <span style="--dot: var(--accent-violet)">biology</span>
@@ -87,14 +103,14 @@
           </div>
           <div class="panel section-card wide">
             <p>
-              Ignacio works across AI, cognition, memory, finance, health, languages,
-              and biological systems. The common thread is a preference for patient
-              inquiry: make the question visible, test the assumptions, then shape the
-              result into something another person can use.
+              Ignacio works across AI, cognition, memory, finance, health, languages, and biological
+              systems. The common thread is a preference for patient inquiry: make the question
+              visible, test the assumptions, then shape the result into something another person can
+              use.
             </p>
             <p>
-              The projects here sit between engineering, experimentation, and
-              interpretation, where careful thinking matters as much as implementation.
+              The projects here sit between engineering, experimentation, and interpretation, where
+              careful thinking matters as much as implementation.
             </p>
           </div>
         </section>
@@ -110,9 +126,9 @@
               <div class="project-chip">Interactive map</div>
               <h3>CDMX Convenience Map</h3>
               <p>
-                A static choropleth map for evaluating where to start an
-                apartment search in Mexico City — scoring postal codes and
-                colonias by commute, transit, groceries, gyms, and safety.
+                A static choropleth map for evaluating where to start an apartment search in Mexico
+                City — scoring postal codes and colonias by commute, transit, groceries, gyms, and
+                safety.
               </p>
               <ul>
                 <li>1,215 postal codes &times; 1,837 colonias</li>
@@ -122,7 +138,12 @@
               </ul>
               <div class="project-links">
                 <a href="projects/cdmx-map/">Try the map</a>
-                <a href="https://github.com/ignacio-ireta/cdmx-convenience-map" target="_blank" rel="noopener">View source</a>
+                <a
+                  href="https://github.com/ignacio-ireta/cdmx-convenience-map"
+                  target="_blank"
+                  rel="noopener"
+                  >View source</a
+                >
               </div>
             </article>
 
@@ -130,8 +151,8 @@
               <div class="project-chip">Research system</div>
               <h3>ETF Portfolio Research</h3>
               <p>
-                A reproducible ETF portfolio research pipeline for optimization,
-                walk-forward backtesting, reporting, and explicit assumptions.
+                A reproducible ETF portfolio research pipeline for optimization, walk-forward
+                backtesting, reporting, and explicit assumptions.
               </p>
               <ul>
                 <li>explicit assumptions</li>
@@ -148,8 +169,8 @@
               <div class="project-chip">Android app</div>
               <h3>Reed RSVP Reader</h3>
               <p>
-                A speed-reading app for Android built around focus, localization,
-                and privacy-first reading on-device.
+                A speed-reading app for Android built around focus, localization, and privacy-first
+                reading on-device.
               </p>
               <ul>
                 <li>EPUB / PDF / TXT</li>
@@ -158,7 +179,12 @@
                 <li>device-local data</li>
               </ul>
               <div class="project-links">
-                <a href="https://play.google.com/store/apps/details?id=com.reed.rsvp" target="_blank" rel="noopener">Play Store</a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.reed.rsvp"
+                  target="_blank"
+                  rel="noopener"
+                  >Play Store</a
+                >
                 <a href="reed/privacy/">Privacy policy</a>
               </div>
             </article>
@@ -167,8 +193,8 @@
               <div class="project-chip">LLM workflow</div>
               <h3>AIIRG</h3>
               <p>
-                A report-generation workflow for turning open-ended industry questions
-                into structured research outputs with Gemini, search, and document export.
+                A report-generation workflow for turning open-ended industry questions into
+                structured research outputs with Gemini, search, and document export.
               </p>
               <ul>
                 <li>research-to-report pipeline</li>
@@ -176,7 +202,9 @@
                 <li>document generation workflow</li>
               </ul>
               <div class="project-links">
-                <a href="https://github.com/ignacio-ireta/AIIRG" target="_blank" rel="noopener">View repo</a>
+                <a href="https://github.com/ignacio-ireta/AIIRG" target="_blank" rel="noopener"
+                  >View repo</a
+                >
               </div>
             </article>
           </div>
@@ -193,15 +221,15 @@
               <p>From classic supervised learning to more experimental modeling paths.</p>
             </div>
             <div class="panel interest-card">
-              <h3>Biology & systems</h3>
+              <h3>Biology &amp; systems</h3>
               <p>Complex behavior emerging from local interactions, constraints, and time.</p>
             </div>
             <div class="panel interest-card">
-              <h3>Markets & decision-making</h3>
+              <h3>Markets &amp; decision-making</h3>
               <p>Uncertainty, incentives, and model limits made visible enough to reason with.</p>
             </div>
             <div class="panel interest-card">
-              <h3>Language & learning</h3>
+              <h3>Language &amp; learning</h3>
               <p>How minds absorb, encode, revise, and transform information over time.</p>
             </div>
           </div>
@@ -214,8 +242,12 @@
           </div>
           <div class="panel section-card wide contact-card">
             <a href="mailto:ignacio.ireta@outlook.com">ignacio.ireta@outlook.com</a>
-            <a href="https://www.linkedin.com/in/ignacio-ireta" target="_blank" rel="noopener">linkedin.com/in/ignacio-ireta</a>
-            <a href="https://github.com/ignacio-ireta" target="_blank" rel="noopener">github.com/ignacio-ireta</a>
+            <a href="https://www.linkedin.com/in/ignacio-ireta" target="_blank" rel="noopener"
+              >linkedin.com/in/ignacio-ireta</a
+            >
+            <a href="https://github.com/ignacio-ireta" target="_blank" rel="noopener"
+              >github.com/ignacio-ireta</a
+            >
           </div>
         </section>
       </main>

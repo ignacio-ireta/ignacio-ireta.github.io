@@ -1,5 +1,14 @@
-import { DEPTH_BANDS, MOLECULE_DENSITY, PALETTE_KEYS, POINTER } from "./config.js?v=collision-chemistry-b240cafe";
-import { drawMembraneBand, traceOrganicMass, traceSquigglePath } from "./geometry.js?v=collision-chemistry-b240cafe";
+import {
+  DEPTH_BANDS,
+  MOLECULE_DENSITY,
+  PALETTE_KEYS,
+  POINTER
+} from "./config.js?v=collision-chemistry-b240cafe";
+import {
+  drawMembraneBand,
+  traceOrganicMass,
+  traceSquigglePath
+} from "./geometry.js?v=collision-chemistry-b240cafe";
 import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=collision-chemistry-b240cafe";
 import { drawWatercolorShape } from "./watercolor.js?v=collision-chemistry-b240cafe";
 
@@ -16,18 +25,39 @@ function contentSafeZones(state) {
 
   if (state.width < 720) {
     return [
-      { x: 8, y: top, width: state.width - 16, height: Math.min(660, state.height * 0.74), factor: 0.28, feather: 72 }
+      {
+        x: 8,
+        y: top,
+        width: state.width - 16,
+        height: Math.min(660, state.height * 0.74),
+        factor: 0.28,
+        feather: 72
+      }
     ];
   }
 
   if (state.width < 1040) {
     return [
-      { x: mainLeft, y: top, width: mainWidth, height: Math.min(780, state.height * 0.82), factor: 0.34, feather: 96 }
+      {
+        x: mainLeft,
+        y: top,
+        width: mainWidth,
+        height: Math.min(780, state.height * 0.82),
+        factor: 0.34,
+        feather: 96
+      }
     ];
   }
 
   return [
-    { x: mainLeft, y: top, width: mainWidth * 0.61, height: state.height * 0.76, factor: 0.3, feather: 108 },
+    {
+      x: mainLeft,
+      y: top,
+      width: mainWidth * 0.61,
+      height: state.height * 0.76,
+      factor: 0.3,
+      feather: 108
+    },
     {
       x: mainLeft + mainWidth * 0.62,
       y: state.height * 0.42,
@@ -104,7 +134,12 @@ export function drawProteinBlob(targetCtx, state, spec, options) {
       glazeAlpha: spec.alpha * 0.52,
       glazes: [
         { fill: palette.fill, alpha: spec.alpha * 0.12, x: spec.rx * 0.05, y: -spec.ry * 0.04 },
-        { fill: spec.glazeFill || palette.stroke, alpha: spec.alpha * 0.045, x: -spec.rx * 0.04, y: spec.ry * 0.04 }
+        {
+          fill: spec.glazeFill || palette.stroke,
+          alpha: spec.alpha * 0.045,
+          x: -spec.rx * 0.04,
+          y: spec.ry * 0.04
+        }
       ],
       edgeAlpha: spec.edgeAlpha ?? spec.alpha * 1.35,
       lineWidth: spec.lineWidth || 0.95,
@@ -137,7 +172,9 @@ function drawCrowdedProteinCluster(targetCtx, state, cluster, options) {
         ry: size * lerp(0.52, 0.95, random()),
         points: 9 + Math.floor(random() * 6),
         phase: random() * Math.PI * 2,
-        paletteKey: (cluster.paletteKeys || PALETTE_KEYS)[Math.floor(random() * (cluster.paletteKeys || PALETTE_KEYS).length)],
+        paletteKey: (cluster.paletteKeys || PALETTE_KEYS)[
+          Math.floor(random() * (cluster.paletteKeys || PALETTE_KEYS).length)
+        ],
         alpha: lerp(cluster.alpha[0], cluster.alpha[1], random()) * quiet,
         edgeAlpha: lerp(0.08, 0.2, random()),
         contours: random() > 0.55 ? 2 : 1,
@@ -164,7 +201,15 @@ function drawNucleicAcidStrand(targetCtx, state, strand, options) {
 
   targetCtx.globalAlpha = strand.alpha * 0.48;
   targetCtx.strokeStyle = state.palette.blue.stroke;
-  traceSquigglePath(targetCtx, 0, strand.amplitude * 0.52, strand.length, strand.amplitude * 0.84, strand.phase + 1.8, 34);
+  traceSquigglePath(
+    targetCtx,
+    0,
+    strand.amplitude * 0.52,
+    strand.length,
+    strand.amplitude * 0.84,
+    strand.phase + 1.8,
+    34
+  );
   targetCtx.stroke();
 
   targetCtx.globalAlpha = strand.alpha * 0.6;
@@ -191,15 +236,39 @@ function drawMembraneSection(targetCtx, state, membrane, options) {
   targetCtx.strokeStyle = membrane.stroke;
   targetCtx.globalAlpha = membrane.alpha;
   targetCtx.lineWidth = membrane.lineWidth;
-  drawMembraneBand(targetCtx, membrane.x, membrane.y, membrane.radius, membrane.start, membrane.end, membrane.gap);
+  drawMembraneBand(
+    targetCtx,
+    membrane.x,
+    membrane.y,
+    membrane.radius,
+    membrane.start,
+    membrane.end,
+    membrane.gap
+  );
 
   targetCtx.globalAlpha = membrane.alpha * 0.34;
   targetCtx.lineWidth = membrane.lineWidth + membrane.gap * 0.72;
-  drawMembraneBand(targetCtx, membrane.x, membrane.y, membrane.radius, membrane.start, membrane.end, membrane.gap * 0.18);
+  drawMembraneBand(
+    targetCtx,
+    membrane.x,
+    membrane.y,
+    membrane.radius,
+    membrane.start,
+    membrane.end,
+    membrane.gap * 0.18
+  );
 
   targetCtx.globalAlpha = membrane.alpha * 0.72;
   targetCtx.lineWidth = Math.max(0.75, membrane.lineWidth * 0.46);
-  drawMembraneBand(targetCtx, membrane.x, membrane.y, membrane.radius, membrane.start, membrane.end, membrane.gap * 1.55);
+  drawMembraneBand(
+    targetCtx,
+    membrane.x,
+    membrane.y,
+    membrane.radius,
+    membrane.start,
+    membrane.end,
+    membrane.gap * 1.55
+  );
 
   const span = membrane.end - membrane.start;
   const headCount = Math.max(10, Math.floor(Math.abs(span) * membrane.radius * 0.035));
@@ -241,7 +310,15 @@ function drawTransmembraneProtein(targetCtx, state, spec, options) {
       contours: [
         (ctx) => {
           ctx.beginPath();
-          ctx.ellipse(spec.x, spec.y, spec.rx * 0.42, spec.ry * 0.78, spec.rotation, 0, Math.PI * 2);
+          ctx.ellipse(
+            spec.x,
+            spec.y,
+            spec.rx * 0.42,
+            spec.ry * 0.78,
+            spec.rotation,
+            0,
+            Math.PI * 2
+          );
         }
       ],
       granulation: spec.granulation,
@@ -265,7 +342,9 @@ function clusteredPoint(random, state, anchors) {
 export function drawStaticBiomolecularField(targetCtx, state, options) {
   const darkFill = options.isDark ? "rgba(2, 8, 8, 0.48)" : "rgba(48, 42, 33, 0.28)";
   const darkStroke = options.isDark ? "rgba(226, 218, 196, 0.08)" : "rgba(54, 48, 37, 0.12)";
-  const random = seededRandom((state.seed || 0) ^ (8114 + Math.floor(state.width * 0.4) + Math.floor(state.height * 0.3)));
+  const random = seededRandom(
+    (state.seed || 0) ^ (8114 + Math.floor(state.width * 0.4) + Math.floor(state.height * 0.3))
+  );
   const density = viewportTier(state);
   const staticScale = density.staticClusterScale;
   const backgroundAnchors = [
@@ -296,7 +375,14 @@ export function drawStaticBiomolecularField(targetCtx, state, options) {
         contour: contourColor(options.isDark),
         alpha: (options.isDark ? 0.13 : 0.09) * quiet,
         glazeAlpha: (options.isDark ? 0.09 : 0.06) * quiet,
-        glazes: [{ fill: state.palette.violet.fill, alpha: (options.isDark ? 0.018 : 0.014) * quiet, x: 2, y: -2 }],
+        glazes: [
+          {
+            fill: state.palette.violet.fill,
+            alpha: (options.isDark ? 0.018 : 0.014) * quiet,
+            x: 2,
+            y: -2
+          }
+        ],
         edgeAlpha: 0.09 * quiet,
         lineWidth: 0.75,
         granulation: 0
@@ -397,9 +483,36 @@ export function drawStaticBiomolecularField(targetCtx, state, options) {
   for (const cluster of clusters) drawCrowdedProteinCluster(targetCtx, state, cluster, options);
 
   const strands = [
-    { x: state.width * 0.06, y: state.height * 0.64, length: state.width * 0.34, amplitude: 11, rotation: -0.18, phase: 0.6, alpha: options.isDark ? 0.15 : 0.18, width: 1.8 },
-    { x: state.width * 0.52, y: state.height * 0.18, length: state.width * 0.28, amplitude: 9, rotation: 0.26, phase: 2.8, alpha: options.isDark ? 0.14 : 0.16, width: 1.5 },
-    { x: state.width * 0.62, y: state.height * 0.82, length: state.width * 0.32, amplitude: 10, rotation: -0.42, phase: 4.1, alpha: options.isDark ? 0.13 : 0.15, width: 1.6 }
+    {
+      x: state.width * 0.06,
+      y: state.height * 0.64,
+      length: state.width * 0.34,
+      amplitude: 11,
+      rotation: -0.18,
+      phase: 0.6,
+      alpha: options.isDark ? 0.15 : 0.18,
+      width: 1.8
+    },
+    {
+      x: state.width * 0.52,
+      y: state.height * 0.18,
+      length: state.width * 0.28,
+      amplitude: 9,
+      rotation: 0.26,
+      phase: 2.8,
+      alpha: options.isDark ? 0.14 : 0.16,
+      width: 1.5
+    },
+    {
+      x: state.width * 0.62,
+      y: state.height * 0.82,
+      length: state.width * 0.32,
+      amplitude: 10,
+      rotation: -0.42,
+      phase: 4.1,
+      alpha: options.isDark ? 0.13 : 0.15,
+      width: 1.6
+    }
   ];
   for (const strand of strands) drawNucleicAcidStrand(targetCtx, state, strand, options);
 
@@ -428,9 +541,36 @@ export function drawStaticBiomolecularField(targetCtx, state, options) {
 
 export function drawStaticForegroundForms(targetCtx, state, options) {
   const forms = [
-    { x: state.width * 0.03, y: state.height * 0.88, rx: state.width * 0.16, ry: state.height * 0.12, paletteKey: "teal", phase: 0.8, alpha: options.isDark ? 0.13 : 0.16, seed: 771 },
-    { x: state.width * 0.92, y: state.height * 0.1, rx: state.width * 0.15, ry: state.height * 0.1, paletteKey: "violet", phase: 2.7, alpha: options.isDark ? 0.12 : 0.15, seed: 977 },
-    { x: state.width * 0.82, y: state.height * 0.96, rx: state.width * 0.18, ry: state.height * 0.1, paletteKey: "rose", phase: 4.2, alpha: options.isDark ? 0.11 : 0.14, seed: 1201 }
+    {
+      x: state.width * 0.03,
+      y: state.height * 0.88,
+      rx: state.width * 0.16,
+      ry: state.height * 0.12,
+      paletteKey: "teal",
+      phase: 0.8,
+      alpha: options.isDark ? 0.13 : 0.16,
+      seed: 771
+    },
+    {
+      x: state.width * 0.92,
+      y: state.height * 0.1,
+      rx: state.width * 0.15,
+      ry: state.height * 0.1,
+      paletteKey: "violet",
+      phase: 2.7,
+      alpha: options.isDark ? 0.12 : 0.15,
+      seed: 977
+    },
+    {
+      x: state.width * 0.82,
+      y: state.height * 0.96,
+      rx: state.width * 0.18,
+      ry: state.height * 0.1,
+      paletteKey: "rose",
+      phase: 4.2,
+      alpha: options.isDark ? 0.11 : 0.14,
+      seed: 1201
+    }
   ];
 
   for (const form of forms) {
@@ -449,7 +589,6 @@ export function drawStaticForegroundForms(targetCtx, state, options) {
     );
   }
 }
-
 
 function makeLobe(x, y, rx, ry, rotate = 0) {
   return { x, y, rx, ry, rotate };
@@ -482,7 +621,10 @@ function createReactionMoleculeShape(random, radius, forceFamily = null) {
         atom(0, jitter(radius * 0.035), 0.43, 0.74, 0.08),
         atom(radius * 0.47, -radius * bend + jitter(radius * 0.04), 0.38, 0.72, 0.22)
       ],
-      bonds: [[0, 1], [1, 2]],
+      bonds: [
+        [0, 1],
+        [1, 2]
+      ],
       granuleCount: 7
     };
   }
@@ -503,7 +645,14 @@ function createReactionMoleculeShape(random, radius, forceFamily = null) {
       family: "substrate-b",
       paletteKey: random() < 0.62 ? "teal" : "violet",
       lobes,
-      bonds: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 5]],
+      bonds: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [4, 0],
+        [1, 5]
+      ],
       granuleCount: 9
     };
   }
@@ -519,7 +668,13 @@ function createReactionMoleculeShape(random, radius, forceFamily = null) {
         atom(radius * 0.48, -radius * 0.08, 0.32, 0.66, -0.18),
         atom(radius * 0.04, -radius * 0.28, 0.28, 0.7, 0.08)
       ],
-      bonds: [[0, 1], [1, 2], [2, 3], [1, 4], [2, 4]],
+      bonds: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [1, 4],
+        [2, 4]
+      ],
       pocket: true,
       granuleCount: 13
     };
@@ -536,7 +691,13 @@ function createReactionMoleculeShape(random, radius, forceFamily = null) {
         atom(radius * 0.52, radius * 0.08, 0.32, 0.76, 0.2),
         atom(radius * 0.03, -radius * 0.38, 0.28, 0.76, -0.1)
       ],
-      bonds: [[0, 1], [1, 2], [2, 3], [1, 4], [2, 4]],
+      bonds: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [1, 4],
+        [2, 4]
+      ],
       granuleCount: 10
     };
   }
@@ -569,7 +730,11 @@ function applyMoleculeShape(molecule, shape, random, radius = molecule.radius) {
   molecule.lobes = shape.lobes;
   molecule.bonds = shape.bonds;
   molecule.pocket = shape.pocket;
-  molecule.granules = rebuildGranules(random, radius, shape.granuleCount + Math.floor(random() * 4));
+  molecule.granules = rebuildGranules(
+    random,
+    radius,
+    shape.granuleCount + Math.floor(random() * 4)
+  );
 }
 
 function placeMolecule(molecule, x, y) {
@@ -633,7 +798,9 @@ function freshChemistryState(state) {
   return {
     events: [],
     scanCooldownMs: 0,
-    random: seededRandom((state.seed || 0) ^ Math.floor(state.width * 31 + state.height * 37) ^ 0x51a7),
+    random: seededRandom(
+      (state.seed || 0) ^ Math.floor(state.width * 31 + state.height * 37) ^ 0x51a7
+    ),
     nextId: 1
   };
 }
@@ -676,17 +843,28 @@ function tryStartCollisionReaction(state) {
   const chemistry = state.chemistry;
   if (!chemistry || chemistry.events.length >= (state.width < 720 ? 1 : 2)) return;
 
-  const catalysts = state.molecules.filter((molecule) => availableForReaction(molecule, "catalyst"));
-  const substratesA = state.molecules.filter((molecule) => availableForReaction(molecule, "substrate-a"));
-  const substratesB = state.molecules.filter((molecule) => availableForReaction(molecule, "substrate-b"));
+  const catalysts = state.molecules.filter((molecule) =>
+    availableForReaction(molecule, "catalyst")
+  );
+  const substratesA = state.molecules.filter((molecule) =>
+    availableForReaction(molecule, "substrate-a")
+  );
+  const substratesB = state.molecules.filter((molecule) =>
+    availableForReaction(molecule, "substrate-b")
+  );
 
   for (const c of catalysts) {
-    const nearbyA = substratesA.find((a) => reactionDistance(a, c) < a.radius + c.radius + 44 + c.heat * 14);
+    const nearbyA = substratesA.find(
+      (a) => reactionDistance(a, c) < a.radius + c.radius + 44 + c.heat * 14
+    );
     if (!nearbyA) continue;
     const nearbyB = substratesB.find((b) => {
       const catalystDistance = reactionDistance(b, c);
       const substrateDistance = reactionDistance(b, nearbyA);
-      return catalystDistance < b.radius + c.radius + 48 + c.heat * 14 && substrateDistance < b.radius + nearbyA.radius + 76;
+      return (
+        catalystDistance < b.radius + c.radius + 48 + c.heat * 14 &&
+        substrateDistance < b.radius + nearbyA.radius + 76
+      );
     });
     if (!nearbyB) continue;
 
@@ -704,7 +882,12 @@ function reintroduceSubstrateB(molecule, state, random) {
   const x = side === 0 ? -padding : side === 1 ? state.width + padding : random() * state.width;
   const y = side === 2 ? -padding : side === 3 ? state.height + padding : random() * state.height;
   placeMolecule(molecule, x, y);
-  steerToward(molecule, state.width * lerp(0.25, 0.75, random()), state.height * lerp(0.22, 0.82, random()), lerp(0.012, 0.026, random()));
+  steerToward(
+    molecule,
+    state.width * lerp(0.25, 0.75, random()),
+    state.height * lerp(0.22, 0.82, random()),
+    lerp(0.012, 0.026, random())
+  );
   molecule.reactionOpacity = 0.52;
 }
 
@@ -756,7 +939,11 @@ function updateCollisionChemistry(state, deltaMs, frameScale) {
     const bTarget = { x: centerX + separation, y: centerY + lerp(-6, 0, approach) };
     const cTarget = { x: centerX + lerp(0, 38, release), y: centerY - lerp(38, 24, release) };
 
-    for (const [molecule, target] of [[event.a, aTarget], [event.b, bTarget], [event.c, cTarget]]) {
+    for (const [molecule, target] of [
+      [event.a, aTarget],
+      [event.b, bTarget],
+      [event.c, cTarget]
+    ]) {
       molecule.originX = timeScaledLerp(molecule.originX, target.x, 0.16, frameScale);
       molecule.originY = timeScaledLerp(molecule.originY, target.y, 0.16, frameScale);
       molecule.x = molecule.originX;
@@ -777,8 +964,10 @@ function updateCollisionChemistry(state, deltaMs, frameScale) {
     const productShape = createReactionMoleculeShape(random, productRadius, "product");
     applyMoleculeShape(event.a, productShape, random, productRadius);
     placeMolecule(event.a, centerX, centerY);
-    event.a.velocityX = (event.a.velocityX + event.b.velocityX) * 0.42 + lerp(-0.015, 0.015, random());
-    event.a.velocityY = (event.a.velocityY + event.b.velocityY) * 0.42 + lerp(-0.015, 0.015, random());
+    event.a.velocityX =
+      (event.a.velocityX + event.b.velocityX) * 0.42 + lerp(-0.015, 0.015, random());
+    event.a.velocityY =
+      (event.a.velocityY + event.b.velocityY) * 0.42 + lerp(-0.015, 0.015, random());
     event.a.momentum = Math.max(0.012, Math.hypot(event.a.velocityX, event.a.velocityY));
     event.a.productAgeMs = 0;
 
@@ -830,7 +1019,11 @@ export function createMolecules(state) {
       }
       const quiet = contentQuietFactor(state, originX, originY, radius);
       const speedRange =
-        band.name === "background" ? [0.0042, 0.0105] : band.name === "midground" ? [0.009, 0.022] : [0.015, 0.036];
+        band.name === "background"
+          ? [0.0042, 0.0105]
+          : band.name === "midground"
+            ? [0.009, 0.022]
+            : [0.015, 0.036];
       const initialMomentum = lerp(speedRange[0], speedRange[1], random());
       const velocityAngle = random() * Math.PI * 2;
 
@@ -928,7 +1121,11 @@ export function updateMolecules(state, now, deltaMs = 1000 / 60, { reducedMotion
     }
 
     if (fieldStrength > 0) {
-      molecule.heat = clamp(molecule.heat + fieldStrength * POINTER.heatGain * frameScale, 0, POINTER.maxHeat);
+      molecule.heat = clamp(
+        molecule.heat + fieldStrength * POINTER.heatGain * frameScale,
+        0,
+        POINTER.maxHeat
+      );
     } else {
       molecule.heat = timeScaledLerp(molecule.heat, 0, POINTER.cooling, frameScale);
     }
@@ -1026,7 +1223,15 @@ export function drawMolecule(targetCtx, paletteMap, molecule, x, y, rotation, al
     targetCtx.globalAlpha = alpha * 0.28;
     targetCtx.lineWidth = 0.8;
     targetCtx.beginPath();
-    targetCtx.ellipse(0, 0, molecule.radius * 0.82, molecule.radius * 0.46, rotation * -0.2, 0, Math.PI * 2);
+    targetCtx.ellipse(
+      0,
+      0,
+      molecule.radius * 0.82,
+      molecule.radius * 0.46,
+      rotation * -0.2,
+      0,
+      Math.PI * 2
+    );
     targetCtx.stroke();
   }
 

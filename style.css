@@ -51,7 +51,13 @@ body {
   color: var(--ink);
   background:
     linear-gradient(120deg, rgba(245, 253, 247, 0.78), transparent 34%),
-    linear-gradient(90deg, rgba(122, 213, 195, 0.16), transparent 26%, rgba(60, 113, 159, 0.14) 62%, transparent 100%),
+    linear-gradient(
+      90deg,
+      rgba(122, 213, 195, 0.16),
+      transparent 26%,
+      rgba(60, 113, 159, 0.14) 62%,
+      transparent 100%
+    ),
     linear-gradient(180deg, rgba(137, 121, 180, 0.07), transparent 38%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   overflow-x: hidden;
@@ -68,8 +74,16 @@ body::before {
     radial-gradient(rgba(239, 252, 255, 0.42) 0.7px, transparent 0.8px),
     linear-gradient(90deg, rgba(60, 113, 159, 0.075) 1px, transparent 1px),
     linear-gradient(0deg, rgba(88, 161, 181, 0.06) 1px, transparent 1px);
-  background-position: 0 0, 9px 7px, 0 0, 0 0;
-  background-size: 18px 18px, 23px 23px, 96px 96px, 96px 96px;
+  background-position:
+    0 0,
+    9px 7px,
+    0 0,
+    0 0;
+  background-size:
+    18px 18px,
+    23px 23px,
+    96px 96px,
+    96px 96px;
   mix-blend-mode: multiply;
   opacity: 0.72;
 }

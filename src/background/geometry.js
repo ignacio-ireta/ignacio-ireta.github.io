@@ -2,7 +2,8 @@ export function traceOrganicMass(targetCtx, x, y, rx, ry, points, phase) {
   targetCtx.beginPath();
   for (let i = 0; i <= points; i += 1) {
     const angle = (Math.PI * 2 * i) / points;
-    const swell = 0.82 + Math.sin(angle * 3.1 + phase) * 0.12 + Math.cos(angle * 5.2 - phase) * 0.08;
+    const swell =
+      0.82 + Math.sin(angle * 3.1 + phase) * 0.12 + Math.cos(angle * 5.2 - phase) * 0.08;
     const px = x + Math.cos(angle) * rx * swell;
     const py = y + Math.sin(angle) * ry * swell;
     if (i === 0) targetCtx.moveTo(px, py);

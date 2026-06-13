@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,24 +16,86 @@
     />
     <link rel="stylesheet" href="../../style.css?v=696b187" />
     <style>
-      body { overflow-x: hidden; }
-      .project-page { width: min(980px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0 5rem; }
-      .project-page .panel { padding: 1.5rem; }
-      .project-hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); gap: 1rem; align-items: stretch; margin-top: 0; }
-      .project-title { font-size: clamp(2.3rem, 6vw, 4.5rem); max-width: 12ch; }
-      .stack { display: grid; gap: 1rem; }
-      .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-      .metric strong { display: block; font-size: 1.2rem; margin-bottom: 0.35rem; }
-      .assay { position: relative; overflow: hidden; min-height: 100%; }
-      .assay-row { display: flex; align-items: center; gap: 0.65rem; color: var(--muted); line-height: 1.5; margin-top: 0.8rem; }
-      .assay-dot { width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 1px solid var(--line-strong); flex: 0 0 auto; }
-      .assay-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; margin-top: 1.2rem; }
-      .assay-cell { aspect-ratio: 1; border: 1px solid var(--line); background: rgba(255, 251, 238, 0.42); }
-      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92rem; }
-      ul { color: var(--muted); line-height: 1.75; }
+      body {
+        overflow-x: hidden;
+      }
+      .project-page {
+        width: min(980px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 3rem 0 5rem;
+      }
+      .project-page .panel {
+        padding: 1.5rem;
+      }
+      .project-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+        gap: 1rem;
+        align-items: stretch;
+        margin-top: 0;
+      }
+      .project-title {
+        font-size: clamp(2.3rem, 6vw, 4.5rem);
+        max-width: 12ch;
+      }
+      .stack {
+        display: grid;
+        gap: 1rem;
+      }
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+      .metric strong {
+        display: block;
+        font-size: 1.2rem;
+        margin-bottom: 0.35rem;
+      }
+      .assay {
+        position: relative;
+        overflow: hidden;
+        min-height: 100%;
+      }
+      .assay-row {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-top: 0.8rem;
+      }
+      .assay-dot {
+        width: 0.9rem;
+        height: 0.9rem;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        flex: 0 0 auto;
+      }
+      .assay-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.35rem;
+        margin-top: 1.2rem;
+      }
+      .assay-cell {
+        aspect-ratio: 1;
+        border: 1px solid var(--line);
+        background: rgba(255, 251, 238, 0.42);
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.92rem;
+      }
+      ul {
+        color: var(--muted);
+        line-height: 1.75;
+      }
       @media (max-width: 760px) {
         .project-hero,
-        .metric-grid { grid-template-columns: 1fr; }
+        .metric-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -56,31 +118,47 @@
             </div>
             <div class="panel">
               <p>
-                A reproducible research pipeline for ETF portfolio construction,
-                optimization, walk-forward backtesting, reporting, and tracked
-                assumptions. The goal is not to produce magical answers; it is to
-                make portfolio decisions inspectable.
+                A reproducible research pipeline for ETF portfolio construction, optimization,
+                walk-forward backtesting, reporting, and tracked assumptions. The goal is not to
+                produce magical answers; it is to make portfolio decisions inspectable.
               </p>
             </div>
           </div>
           <div class="panel assay">
             <p class="project-chip">System assay</p>
-            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-blue);"></span><span>candidate allocations</span></div>
-            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-gold);"></span><span>constraints and objectives</span></div>
-            <div class="assay-row"><span class="assay-dot" style="background: var(--accent-teal);"></span><span>walk-forward evaluation</span></div>
+            <div class="assay-row">
+              <span class="assay-dot" style="background: var(--accent-blue)"></span
+              ><span>candidate allocations</span>
+            </div>
+            <div class="assay-row">
+              <span class="assay-dot" style="background: var(--accent-gold)"></span
+              ><span>constraints and objectives</span>
+            </div>
+            <div class="assay-row">
+              <span class="assay-dot" style="background: var(--accent-teal)"></span
+              ><span>walk-forward evaluation</span>
+            </div>
             <div class="assay-grid" aria-hidden="true">
-              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
-              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
-              <span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span><span class="assay-cell"></span>
+              <span class="assay-cell"></span><span class="assay-cell"></span
+              ><span class="assay-cell"></span><span class="assay-cell"></span
+              ><span class="assay-cell"></span> <span class="assay-cell"></span
+              ><span class="assay-cell"></span><span class="assay-cell"></span
+              ><span class="assay-cell"></span><span class="assay-cell"></span>
+              <span class="assay-cell"></span><span class="assay-cell"></span
+              ><span class="assay-cell"></span><span class="assay-cell"></span
+              ><span class="assay-cell"></span>
             </div>
           </div>
         </section>
 
-        <section class="stack" style="margin-top: 2rem;">
+        <section class="stack" style="margin-top: 2rem">
           <div class="metric-grid">
             <div class="panel metric">
               <strong>Constrained optimization</strong>
-              <span>Universe definition, configurable objectives, and explicit constraint handling.</span>
+              <span
+                >Universe definition, configurable objectives, and explicit constraint
+                handling.</span
+              >
             </div>
             <div class="panel metric">
               <strong>Temporal validation</strong>
@@ -88,7 +166,9 @@
             </div>
             <div class="panel metric">
               <strong>Generated artifacts</strong>
-              <span>HTML, Excel, figures, and JSON metrics generated from code-driven outputs.</span>
+              <span
+                >HTML, Excel, figures, and JSON metrics generated from code-driven outputs.</span
+              >
             </div>
             <div class="panel metric">
               <strong>Assumptions made visible</strong>
@@ -97,9 +177,9 @@
           </div>
         </section>
 
-        <section class="stack" style="margin-top: 2rem;">
+        <section class="stack" style="margin-top: 2rem">
           <div class="panel">
-            <h2 style="margin-bottom: 1rem;">What the pipeline produces</h2>
+            <h2 style="margin-bottom: 1rem">What the pipeline produces</h2>
             <ul>
               <li><code>reports/html/latest_report.html</code></li>
               <li><code>reports/excel/optimized_portfolios.xlsx</code></li>
@@ -111,11 +191,11 @@
           </div>
 
           <div class="panel">
-            <h2 style="margin-bottom: 1rem;">Why it matters</h2>
+            <h2 style="margin-bottom: 1rem">Why it matters</h2>
             <p>
-              Portfolio discussions often hide assumptions behind confidence. This
-              project tries to do the opposite: expose the assumptions, version the
-              choices, and make results easier to challenge.
+              Portfolio discussions often hide assumptions behind confidence. This project tries to
+              do the opposite: expose the assumptions, version the choices, and make results easier
+              to challenge.
             </p>
           </div>
         </section>
