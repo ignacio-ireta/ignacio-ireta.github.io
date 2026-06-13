@@ -6,7 +6,7 @@
     <title>ETF Portfolio Research — José Ignacio Esparza</title>
     <meta
       name="description"
-      content="Overview page for ETF Portfolio Research: reproducible portfolio analytics, optimization, walk-forward backtesting, and report generation."
+      content="Interactive ETF portfolio research: a live walk-forward backtest dashboard, efficient-frontier explorer, benchmark metrics, and figures — generated from a reproducible, code-driven pipeline."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,81 +20,213 @@
         overflow-x: hidden;
       }
       .project-page {
-        width: min(980px, calc(100% - 2rem));
+        width: min(1100px, calc(100% - 2rem));
         margin: 0 auto;
-        padding: 3rem 0 5rem;
+        padding: 2.5rem 0 5rem;
       }
       .project-page .panel {
         padding: 1.5rem;
       }
       .project-hero {
-        display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
-        gap: 1rem;
-        align-items: stretch;
-        margin-top: 0;
+        margin-bottom: 2.5rem;
       }
       .project-title {
-        font-size: clamp(2.3rem, 6vw, 4.5rem);
-        max-width: 12ch;
+        font-size: clamp(2.3rem, 6vw, 4.25rem);
+        max-width: 16ch;
       }
-      .stack {
-        display: grid;
-        gap: 1rem;
-      }
-      .metric-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-      }
-      .metric strong {
-        display: block;
-        font-size: 1.2rem;
-        margin-bottom: 0.35rem;
-      }
-      .assay {
-        position: relative;
-        overflow: hidden;
-        min-height: 100%;
-      }
-      .assay-row {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-        color: var(--muted);
-        line-height: 1.5;
-        margin-top: 0.8rem;
-      }
-      .assay-dot {
-        width: 0.9rem;
-        height: 0.9rem;
-        border-radius: 50%;
-        border: 1px solid var(--line-strong);
-        flex: 0 0 auto;
-      }
-      .assay-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.35rem;
-        margin-top: 1.2rem;
-      }
-      .assay-cell {
-        aspect-ratio: 1;
-        border: 1px solid var(--line);
-        background: rgba(255, 251, 238, 0.42);
-      }
-      code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.92rem;
-      }
-      ul {
+      .project-lede {
+        max-width: 62ch;
+        margin: 1.2rem 0 1.6rem;
         color: var(--muted);
         line-height: 1.75;
+        font-size: 1.04rem;
       }
+      .embed-section {
+        margin-top: 2.5rem;
+      }
+
+      /* Interactive report embed: a framed, dark "specimen under glass". */
+      .report-embed {
+        padding: 0;
+        overflow: hidden;
+      }
+      .report-embed__frame {
+        position: relative;
+        width: 100%;
+        min-height: clamp(520px, 78vh, 900px);
+        background: #0e1117;
+      }
+      .report-embed--compact .report-embed__frame {
+        min-height: clamp(440px, 62vh, 700px);
+      }
+      .report-embed__iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: clamp(520px, 78vh, 900px);
+        border: 0;
+      }
+      .report-embed--compact .report-embed__iframe {
+        min-height: clamp(440px, 62vh, 700px);
+      }
+      .report-embed__poster {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+        text-align: center;
+        background: var(--surface-strong);
+        color: var(--ink);
+      }
+      .report-embed__poster:hover .report-embed__cta,
+      .report-embed__poster:focus-visible .report-embed__cta {
+        text-decoration: underline;
+      }
+      .report-embed__badge {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-teal);
+      }
+      .report-embed__cta {
+        font-size: 1.18rem;
+        font-weight: 600;
+        color: var(--accent-blue);
+      }
+      .report-embed__hint {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+      .report-embed__caption {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 0.95rem 1.5rem;
+        color: var(--muted);
+        line-height: 1.6;
+        border-top: 1px solid var(--line);
+        background: var(--surface);
+      }
+      .report-embed__launch {
+        font-weight: 600;
+        color: var(--accent-blue);
+        white-space: nowrap;
+      }
+
+      /* Metrics table */
+      .table-scroll {
+        overflow-x: auto;
+      }
+      table.metrics {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+        font-variant-numeric: tabular-nums;
+      }
+      table.metrics caption {
+        text-align: left;
+        color: var(--muted);
+        margin-bottom: 0.9rem;
+        line-height: 1.6;
+      }
+      table.metrics th,
+      table.metrics td {
+        padding: 0.55rem 0.7rem;
+        text-align: right;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      table.metrics thead th {
+        color: var(--muted);
+        font-weight: 600;
+        border-bottom: 1px solid var(--line-strong);
+      }
+      table.metrics th[scope="row"] {
+        text-align: left;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      table.metrics tbody tr.is-strategy {
+        background: rgba(122, 213, 195, 0.16);
+      }
+      table.metrics tbody tr.is-strategy th[scope="row"] {
+        color: var(--accent-gold);
+      }
+      .metrics-status {
+        margin: 0.9rem 0 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      /* Figure gallery */
+      .figure-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+      }
+      .figure-card {
+        padding: 0.75rem;
+        margin: 0;
+      }
+      .figure-card img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+      }
+      .figure-card figcaption {
+        margin-top: 0.55rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      /* Downloads & provenance */
+      .download-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.8rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .download-list a {
+        font-weight: 600;
+        color: var(--accent-blue);
+      }
+      .provenance {
+        margin: 1.4rem 0 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      .provenance code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.85rem;
+      }
+      .footer-note {
+        margin-top: 2.5rem;
+      }
+      .footer-note p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
       @media (max-width: 760px) {
-        .project-hero,
-        .metric-grid {
-          grid-template-columns: 1fr;
+        .report-embed__frame,
+        .report-embed__iframe {
+          min-height: clamp(420px, 70vh, 620px);
         }
       }
     </style>
@@ -111,95 +243,349 @@
 
       <main class="project-page">
         <section class="project-hero">
-          <div class="stack">
-            <div class="section-heading">
-              <p class="eyebrow">Research system</p>
-              <h1 class="project-title">ETF Portfolio Research</h1>
-            </div>
-            <div class="panel">
-              <p>
-                A reproducible research pipeline for ETF portfolio construction, optimization,
-                walk-forward backtesting, reporting, and tracked assumptions. The goal is not to
-                produce magical answers; it is to make portfolio decisions inspectable.
-              </p>
-            </div>
-          </div>
-          <div class="panel assay">
-            <p class="project-chip">System assay</p>
-            <div class="assay-row">
-              <span class="assay-dot" style="background: var(--accent-blue)"></span
-              ><span>candidate allocations</span>
-            </div>
-            <div class="assay-row">
-              <span class="assay-dot" style="background: var(--accent-gold)"></span
-              ><span>constraints and objectives</span>
-            </div>
-            <div class="assay-row">
-              <span class="assay-dot" style="background: var(--accent-teal)"></span
-              ><span>walk-forward evaluation</span>
-            </div>
-            <div class="assay-grid" aria-hidden="true">
-              <span class="assay-cell"></span><span class="assay-cell"></span
-              ><span class="assay-cell"></span><span class="assay-cell"></span
-              ><span class="assay-cell"></span> <span class="assay-cell"></span
-              ><span class="assay-cell"></span><span class="assay-cell"></span
-              ><span class="assay-cell"></span><span class="assay-cell"></span>
-              <span class="assay-cell"></span><span class="assay-cell"></span
-              ><span class="assay-cell"></span><span class="assay-cell"></span
-              ><span class="assay-cell"></span>
-            </div>
+          <p class="eyebrow">Research system</p>
+          <h1 class="project-title">ETF Portfolio Research</h1>
+          <p class="project-lede">
+            A reproducible pipeline that optimizes an ETF portfolio, walk-forward backtests it
+            against benchmarks, and renders the whole result as an interactive report — open it
+            below and inspect every assumption for yourself.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button primary"
+              href="reports/html/latest_report.html"
+              target="_blank"
+              rel="noopener"
+              >Open full report ↗</a
+            >
+            <a
+              class="button secondary"
+              href="https://github.com/ignacio-ireta/etf-portfolio-research"
+              target="_blank"
+              rel="noopener"
+              >View source ↗</a
+            >
           </div>
         </section>
 
-        <section class="stack" style="margin-top: 2rem">
-          <div class="metric-grid">
-            <div class="panel metric">
-              <strong>Constrained optimization</strong>
-              <span
-                >Universe definition, configurable objectives, and explicit constraint
-                handling.</span
-              >
-            </div>
-            <div class="panel metric">
-              <strong>Temporal validation</strong>
-              <span>Trailing-data-only evaluation to avoid lookahead bias.</span>
-            </div>
-            <div class="panel metric">
-              <strong>Generated artifacts</strong>
-              <span
-                >HTML, Excel, figures, and JSON metrics generated from code-driven outputs.</span
-              >
-            </div>
-            <div class="panel metric">
-              <strong>Assumptions made visible</strong>
-              <span>Modeling choices stay documented instead of disappearing into intuition.</span>
-            </div>
+        <section class="embed-section">
+          <div class="section-heading">
+            <p class="eyebrow">Interactive report</p>
+            <h2>The walk-forward backtest, live.</h2>
           </div>
+          <figure class="report-embed panel" data-embed>
+            <div class="report-embed__frame">
+              <button
+                type="button"
+                class="report-embed__poster"
+                data-embed-load
+                aria-describedby="report-caption"
+              >
+                <span class="report-embed__badge">Interactive · Plotly · 7.2 MB</span>
+                <span class="report-embed__cta">Load the interactive report</span>
+                <span class="report-embed__hint">Loads on click to keep this page fast</span>
+              </button>
+              <iframe
+                class="report-embed__iframe"
+                title="ETF portfolio walk-forward backtest — interactive Plotly dashboard"
+                data-src="reports/html/latest_report.html"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                hidden
+              ></iframe>
+            </div>
+            <figcaption id="report-caption" class="report-embed__caption">
+              <span
+                >Self-contained backtest dashboard: cumulative returns, drawdowns, rolling risk,
+                exposures, and benchmark comparisons.</span
+              >
+              <a
+                class="report-embed__launch"
+                href="reports/html/latest_report.html"
+                target="_blank"
+                rel="noopener"
+                >Open full screen ↗</a
+              >
+            </figcaption>
+          </figure>
         </section>
 
-        <section class="stack" style="margin-top: 2rem">
+        <section class="embed-section">
+          <div class="section-heading">
+            <p class="eyebrow">Optimization</p>
+            <h2>Efficient frontier explorer.</h2>
+          </div>
+          <figure class="report-embed report-embed--compact panel" data-embed>
+            <div class="report-embed__frame">
+              <button
+                type="button"
+                class="report-embed__poster"
+                data-embed-load
+                aria-describedby="frontier-caption"
+              >
+                <span class="report-embed__badge">Interactive · Plotly · 4.85 MB</span>
+                <span class="report-embed__cta">Load the frontier explorer</span>
+                <span class="report-embed__hint">Loads on click to keep this page fast</span>
+              </button>
+              <iframe
+                class="report-embed__iframe"
+                title="ETF portfolio efficient frontier — interactive Plotly explorer"
+                data-src="reports/html/frontier.html"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                hidden
+              ></iframe>
+            </div>
+            <figcaption id="frontier-caption" class="report-embed__caption">
+              <span
+                >Risk/return frontier across optimization objectives, with the selected portfolios
+                placed in context.</span
+              >
+              <a
+                class="report-embed__launch"
+                href="reports/html/frontier.html"
+                target="_blank"
+                rel="noopener"
+                >Open full screen ↗</a
+              >
+            </figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <div class="section-heading">
+            <p class="eyebrow">Performance</p>
+            <h2>Strategy vs. benchmarks.</h2>
+          </div>
           <div class="panel">
-            <h2 style="margin-bottom: 1rem">What the pipeline produces</h2>
-            <ul>
-              <li><code>reports/html/latest_report.html</code></li>
-              <li><code>reports/excel/optimized_portfolios.xlsx</code></li>
-              <li><code>reports/excel/portfolio_results.xlsx</code></li>
-              <li><code>reports/figures/*.png</code></li>
-              <li><code>reports/metrics/backtest_metrics.json</code></li>
-              <li><code>reports/runs/*.json</code></li>
+            <div class="table-scroll">
+              <table class="metrics" id="metrics-table">
+                <caption>
+                  Headline metrics over the full walk-forward backtest. Percentages are annualized
+                  where applicable; ratios are unitless. The optimized strategy is highlighted.
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Portfolio</th>
+                    <th scope="col">CAGR</th>
+                    <th scope="col">Sharpe</th>
+                    <th scope="col">Sortino</th>
+                    <th scope="col">Max DD</th>
+                    <th scope="col">Volatility</th>
+                    <th scope="col">Alpha</th>
+                    <th scope="col">Beta</th>
+                    <th scope="col">Calmar</th>
+                  </tr>
+                </thead>
+                <tbody id="metrics-body">
+                  <tr>
+                    <th scope="row">Loading metrics…</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="metrics-status" id="metrics-status" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-heading">
+            <p class="eyebrow">Charts</p>
+            <h2>Twelve views of the same portfolio.</h2>
+          </div>
+          <div class="figure-grid">
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/cumulative_returns.png"
+                alt="Cumulative growth of the optimized strategy versus its benchmarks"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Cumulative returns</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/drawdown.png"
+                alt="Historical drawdowns of the strategy over time"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Drawdowns</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/rolling_sharpe.png"
+                alt="Rolling Sharpe ratio over time"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Rolling Sharpe ratio</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/rolling_volatility.png"
+                alt="Rolling annualized volatility over time"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Rolling volatility</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/rolling_correlation.png"
+                alt="Rolling correlation of the strategy to the benchmark"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Rolling correlation</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/portfolio_weights.png"
+                alt="Portfolio composition weights over time"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Portfolio weights</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/asset_class_exposure.png"
+                alt="Portfolio exposure broken down by asset class"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Asset-class exposure</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/region_exposure.png"
+                alt="Portfolio exposure broken down by geographic region"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Regional exposure</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/weighted_expense_over_time.png"
+                alt="Weighted portfolio expense ratio over time"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Weighted expense ratio</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/benchmark_comparison.png"
+                alt="Strategy versus benchmark performance overlay"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Benchmark comparison</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/stress_periods.png"
+                alt="Strategy performance during historical market stress periods"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Stress periods</figcaption>
+            </figure>
+            <figure class="figure-card panel">
+              <img
+                src="reports/figures/efficient_frontier.png"
+                alt="Markowitz efficient frontier with the portfolios placed in context"
+                loading="lazy"
+                decoding="async"
+                width="2800"
+                height="1680"
+              />
+              <figcaption>Efficient frontier</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-heading">
+            <p class="eyebrow">Take it with you</p>
+            <h2>Downloads &amp; provenance.</h2>
+          </div>
+          <div class="panel">
+            <ul class="download-list">
+              <li>
+                <a href="reports/excel/optimized_portfolios.xlsx" download>Optimized portfolios</a>
+                — optimizer target weights and portfolio composition (.xlsx).
+              </li>
+              <li>
+                <a href="reports/excel/portfolio_results.xlsx" download>Portfolio results</a>
+                — per-period backtest holdings and performance (.xlsx).
+              </li>
+              <li>
+                <a
+                  href="https://github.com/ignacio-ireta/etf-portfolio-research"
+                  target="_blank"
+                  rel="noopener"
+                  >Source repository ↗</a
+                >
+                — the pipeline, configs, and methodology docs that produced everything on this page.
+              </li>
             </ul>
+            <p class="provenance">
+              Generated by run <code id="run-id">—</code> from the committed report artifacts.
+            </p>
           </div>
+        </section>
 
+        <section class="footer-note">
           <div class="panel">
-            <h2 style="margin-bottom: 1rem">Why it matters</h2>
             <p>
-              Portfolio discussions often hide assumptions behind confidence. This project tries to
-              do the opposite: expose the assumptions, version the choices, and make results easier
-              to challenge.
+              A reproducible research pipeline — optimization, walk-forward backtesting, and
+              code-driven reporting with tracked assumptions. The goal is not magical answers; it is
+              to make portfolio decisions inspectable.
+              <a
+                href="https://github.com/ignacio-ireta/etf-portfolio-research#readme"
+                target="_blank"
+                rel="noopener"
+                >Read the methodology ↗</a
+              >
             </p>
           </div>
         </section>
       </main>
     </div>
+
+    <script type="module" src="embed.js"></script>
   </body>
 </html>

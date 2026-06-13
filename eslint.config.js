@@ -9,8 +9,9 @@ export default [
   },
   js.configs.recommended,
   {
-    // Browser ES modules: the homepage canvas background.
-    files: ["src/**/*.js"],
+    // Browser ES modules: the homepage canvas background and the per-project
+    // page scripts (e.g. the ETF showcase's lazy-embed + metrics renderer).
+    files: ["src/**/*.js", "projects/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",

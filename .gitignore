@@ -31,3 +31,7 @@ logs/
 # this branch, so the CDMX map's built assets (projects/cdmx-map/assets/) and its
 # GeoJSON data (projects/cdmx-map/data/) must stay tracked. The source for that
 # app lives in github.com/ignacio-ireta/cdmx-convenience-map.
+#
+# Likewise, the ETF report artifacts (projects/etf-portfolio-research/reports/)
+# are committed so the showcase page can embed them same-origin. They are synced
+# in by CI from github.com/ignacio-ireta/etf-portfolio-research.
