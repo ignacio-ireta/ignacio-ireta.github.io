@@ -26,3 +26,8 @@ Thumbs.db
 # Logs
 logs/
 *.log
+
+# Intentionally committed (NOT ignored): GitHub Pages serves files straight from
+# this branch, so the CDMX map's built assets (projects/cdmx-map/assets/) and its
+# GeoJSON data (projects/cdmx-map/data/) must stay tracked. The source for that
+# app lives in github.com/ignacio-ireta/cdmx-convenience-map.
