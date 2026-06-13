@@ -1,0 +1,13 @@
+# Dependency + lockfiles
+node_modules/
+package-lock.json
+
+# CDMX map is built in a separate repo (ignacio-ireta/cdmx-convenience-map);
+# these are committed build artifacts + generated data, not hand-edited source.
+projects/cdmx-map/assets/
+projects/cdmx-map/data/
+projects/cdmx-map/index.html
+
+# Minified output
+**/*.min.js
+**/*.min.css

@@ -1,0 +1,22 @@
+{
+  "//": "Type-checking only (noEmit). We don't compile TS — we run `tsc --checkJs` over the vanilla-JS canvas background to catch type errors via JSDoc. Scope is currently the import-free leaf modules; the other modules import each other with `?v=` cache-bust query strings that tsc cannot resolve, so they are checked once those are addressed.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/background/config.js",
+    "src/background/geometry.js",
+    "src/background/palette.js",
+    "src/background/random.js"
+  ]
+}

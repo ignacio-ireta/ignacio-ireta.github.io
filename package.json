@@ -1,0 +1,50 @@
+{
+  "name": "ignacio-ireta-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal portfolio and field-notes site for José Ignacio Esparza, served by GitHub Pages.",
+  "homepage": "https://ignacio-ireta.github.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ignacio-ireta/ignacio-ireta.github.io.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "validate:html": "html-validate index.html projects/etf-portfolio-research/index.html reed/privacy/index.html",
+    "check:links": "node scripts/check-links.mjs",
+    "test": "node --test",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run validate:html && npm run check:links && npm run test",
+    "prepare": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "html-validate": "^8.0.0",
+    "jsdom": "^24.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.0.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,mjs}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{css,html,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}
