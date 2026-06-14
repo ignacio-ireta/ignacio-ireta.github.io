@@ -1,18 +1,19 @@
-import { DPR_CAP } from "./config.js?v=collision-chemistry-b240cafe";
-import { drawDepthGuides } from "./geometry.js?v=collision-chemistry-b240cafe";
-import { readPalette } from "./palette.js?v=collision-chemistry-b240cafe";
+import { DPR_CAP } from "./config.js?v=ballstick-haber-2fb700c3";
+import { drawDepthGuides } from "./geometry.js?v=ballstick-haber-2fb700c3";
+import { readPalette } from "./palette.js?v=ballstick-haber-2fb700c3";
 import {
   createMolecules,
   drawMoleculeField,
   drawStaticBiomolecularField,
   drawStaticForegroundForms
-} from "./species.js?v=collision-chemistry-b240cafe";
-import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=collision-chemistry-b240cafe";
+} from "./species.js?v=ballstick-haber-2fb700c3";
+import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=ballstick-haber-2fb700c3";
 
 export const state = {
   width: 0,
   height: 0,
   dpr: 1,
+  isDark: false,
   palette: {},
   molecules: [],
   layers: {},
@@ -31,6 +32,7 @@ function makeLayer(width, height, dpr) {
 }
 
 export function resizeScene(canvas, ctx, root, { isDark }) {
+  state.isDark = isDark;
   state.dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
   state.width = window.innerWidth;
   state.height = window.innerHeight;
@@ -53,6 +55,7 @@ export function resizeScene(canvas, ctx, root, { isDark }) {
 }
 
 export function drawScene(ctx, now, options) {
+  state.isDark = options.isDark;
   ctx.clearRect(0, 0, state.width, state.height);
   ctx.drawImage(state.layers.field.canvas, 0, 0, state.width, state.height);
   drawMoleculeField(ctx, state);

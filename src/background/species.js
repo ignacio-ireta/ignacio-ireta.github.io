@@ -1,16 +1,22 @@
 import {
+  CHEM,
+  COLLISION,
   DEPTH_BANDS,
+  ELEMENT_ATOM_SCALE,
+  ELEMENTS,
   MOLECULE_DENSITY,
   PALETTE_KEYS,
-  POINTER
-} from "./config.js?v=collision-chemistry-b240cafe";
+  POINTER,
+  SPECIES,
+  THERMAL
+} from "./config.js?v=ballstick-haber-2fb700c3";
 import {
   drawMembraneBand,
   traceOrganicMass,
   traceSquigglePath
-} from "./geometry.js?v=collision-chemistry-b240cafe";
-import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=collision-chemistry-b240cafe";
-import { drawWatercolorShape } from "./watercolor.js?v=collision-chemistry-b240cafe";
+} from "./geometry.js?v=ballstick-haber-2fb700c3";
+import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=ballstick-haber-2fb700c3";
+import { drawWatercolorShape } from "./watercolor.js?v=ballstick-haber-2fb700c3";
 
 function viewportTier(state) {
   if (state.width < 620) return MOLECULE_DENSITY.mobile;
@@ -590,193 +596,110 @@ export function drawStaticForegroundForms(targetCtx, state, options) {
   }
 }
 
-function makeLobe(x, y, rx, ry, rotate = 0) {
-  return { x, y, rx, ry, rotate };
+// ===========================================================================
+// Animated overlay: ball-and-stick molecules, elastic collisions, and a
+// catalysed reaction at equilibrium — the Haber process N2 + 3H2 ⇌ 2NH3 over
+// an iron catalyst. The molecule shapes, element colors, and reaction live in
+// config.js (ELEMENTS / SPECIES); everything below is reaction-agnostic.
+// ===========================================================================
+
+let moleculeUid = 0;
+
+function pickMoleculeFamily(random) {
+  // Weighted by SPECIES[*].weight so the field spawns near a lively mixture.
+  let total = 0;
+  for (const key in SPECIES) total += SPECIES[key].weight;
+  let roll = random() * total;
+  for (const key in SPECIES) {
+    roll -= SPECIES[key].weight;
+    if (roll <= 0) return key;
+  }
+  return "substrate-b";
 }
 
-function pickMoleculeFamily(familyRoll) {
-  if (familyRoll < 0.24) return "substrate-a";
-  if (familyRoll < 0.48) return "substrate-b";
-  if (familyRoll < 0.66) return "catalyst";
-  if (familyRoll < 0.86) return "product";
-  return "fragment";
-}
-
+// Resolve a SPECIES entry into a concrete molecule: atom positions and radii in
+// pixels (scaled by `radius`) plus the true visual extent (`boundingRadius`),
+// which doubles as the collision radius so physics matches what is drawn.
 function createReactionMoleculeShape(random, radius, forceFamily = null) {
-  const familyRoll = random();
-  const family = forceFamily || pickMoleculeFamily(familyRoll);
+  const family = forceFamily || pickMoleculeFamily(random);
+  const spec = SPECIES[family];
   const jitter = (amount) => lerp(-amount, amount, random());
-  const atom = (x, y, scale, aspect = 0.78, rotate = 0) => {
-    const size = radius * scale * lerp(0.94, 1.06, random());
-    return makeLobe(x, y, size, size * aspect * lerp(0.96, 1.04, random()), rotate + jitter(0.06));
-  };
+  let boundingRadius = radius * 0.4;
 
-  if (family === "substrate-a") {
-    const bend = lerp(-0.24, 0.24, random());
-    return {
-      family: "substrate-a",
-      paletteKey: "blue",
-      lobes: [
-        atom(-radius * 0.46, radius * bend + jitter(radius * 0.04), 0.38, 0.72, -0.18),
-        atom(0, jitter(radius * 0.035), 0.43, 0.74, 0.08),
-        atom(radius * 0.47, -radius * bend + jitter(radius * 0.04), 0.38, 0.72, 0.22)
-      ],
-      bonds: [
-        [0, 1],
-        [1, 2]
-      ],
-      granuleCount: 7
-    };
-  }
-
-  if (family === "substrate-b") {
-    const lobes = Array.from({ length: 5 }, (_, index) => {
-      const angle = -Math.PI / 2 + (index / 5) * Math.PI * 2 + jitter(0.08);
-      return atom(
-        Math.cos(angle) * radius * 0.35,
-        Math.sin(angle) * radius * 0.32,
-        0.31,
-        0.82,
-        angle + Math.PI / 2
-      );
-    });
-    lobes.push(atom(radius * 0.54, radius * 0.1, 0.23, 0.76, 0.42));
-    return {
-      family: "substrate-b",
-      paletteKey: random() < 0.62 ? "teal" : "violet",
-      lobes,
-      bonds: [
-        [0, 1],
-        [1, 2],
-        [2, 3],
-        [3, 4],
-        [4, 0],
-        [1, 5]
-      ],
-      granuleCount: 9
-    };
-  }
-
-  if (family === "catalyst") {
-    return {
-      family: "catalyst",
-      paletteKey: "gold",
-      lobes: [
-        atom(-radius * 0.44, -radius * 0.04, 0.39, 0.64, -0.38),
-        atom(-radius * 0.15, radius * 0.22, 0.42, 0.62, 0.06),
-        atom(radius * 0.22, radius * 0.18, 0.42, 0.62, 0.26),
-        atom(radius * 0.48, -radius * 0.08, 0.32, 0.66, -0.18),
-        atom(radius * 0.04, -radius * 0.28, 0.28, 0.7, 0.08)
-      ],
-      bonds: [
-        [0, 1],
-        [1, 2],
-        [2, 3],
-        [1, 4],
-        [2, 4]
-      ],
-      pocket: true,
-      granuleCount: 13
-    };
-  }
-
-  if (family === "product") {
-    return {
-      family: "product",
-      paletteKey: random() < 0.5 ? "teal" : "blue",
-      lobes: [
-        atom(-radius * 0.5, -radius * 0.04, 0.32, 0.76, -0.18),
-        atom(-radius * 0.18, radius * 0.03, 0.39, 0.78, 0.08),
-        atom(radius * 0.18, radius * 0.02, 0.39, 0.78, -0.05),
-        atom(radius * 0.52, radius * 0.08, 0.32, 0.76, 0.2),
-        atom(radius * 0.03, -radius * 0.38, 0.28, 0.76, -0.1)
-      ],
-      bonds: [
-        [0, 1],
-        [1, 2],
-        [2, 3],
-        [1, 4],
-        [2, 4]
-      ],
-      granuleCount: 10
-    };
-  }
+  const atoms = spec.atoms.map((atom) => {
+    const element = ELEMENTS[atom.el];
+    const ar = element.radius * ELEMENT_ATOM_SCALE * radius * lerp(0.97, 1.03, random());
+    const ax = atom.x * radius + jitter(radius * 0.015);
+    const ay = atom.y * radius + jitter(radius * 0.015);
+    boundingRadius = Math.max(boundingRadius, Math.hypot(ax, ay) + ar);
+    return { el: atom.el, x: ax, y: ay, r: ar };
+  });
 
   return {
-    family: "fragment",
-    paletteKey: random() < 0.56 ? "violet" : "rose",
-    lobes: [
-      atom(-radius * 0.2, 0, 0.24, 0.78, -0.1),
-      atom(radius * 0.22, radius * 0.04, 0.22, 0.78, 0.2)
-    ],
-    bonds: [[0, 1]],
-    granuleCount: 5
+    family,
+    paletteKey: spec.paletteKey,
+    role: spec.role,
+    atoms,
+    bonds: spec.bonds.map((bond) => ({ a: bond.a, b: bond.b, order: bond.order })),
+    boundingRadius
   };
 }
 
-function rebuildGranules(random, radius, count) {
-  return Array.from({ length: count }, () => ({
-    x: lerp(-radius * 0.56, radius * 0.56, random()),
-    y: lerp(-radius * 0.42, radius * 0.42, random()),
-    r: lerp(0.7, 1.8, random()),
-    a: lerp(0.07, 0.15, random())
-  }));
-}
-
-function applyMoleculeShape(molecule, shape, random, radius = molecule.radius) {
-  molecule.radius = radius;
+// Re-stamp a live molecule with a new shape (used when a reaction transmutes a
+// molecule in place — the array length never changes, so populations stay fixed).
+function applyMoleculeShape(molecule, shape) {
   molecule.paletteKey = shape.paletteKey;
   molecule.family = shape.family;
-  molecule.lobes = shape.lobes;
+  molecule.role = shape.role;
+  molecule.atoms = shape.atoms;
   molecule.bonds = shape.bonds;
-  molecule.pocket = shape.pocket;
-  molecule.granules = rebuildGranules(
-    random,
-    radius,
-    shape.granuleCount + Math.floor(random() * 4)
-  );
+  molecule.radius = shape.boundingRadius;
+  molecule.adsorbed = null;
+  return molecule;
 }
 
 function placeMolecule(molecule, x, y) {
-  molecule.originX = x;
-  molecule.originY = y;
-  molecule.baseOriginX = x;
-  molecule.baseOriginY = y;
   molecule.x = x;
   molecule.y = y;
 }
 
 function steerToward(molecule, x, y, speed) {
-  const dx = x - molecule.originX;
-  const dy = y - molecule.originY;
+  const dx = x - molecule.x;
+  const dy = y - molecule.y;
   const distance = Math.max(1, Math.hypot(dx, dy));
   molecule.velocityX = (dx / distance) * speed;
   molecule.velocityY = (dy / distance) * speed;
-  molecule.momentum = speed;
 }
 
-function seedReactiveTrios(molecules, state, random) {
-  const substratesA = molecules.filter((molecule) => molecule.family === "substrate-a");
-  const substratesB = molecules.filter((molecule) => molecule.family === "substrate-b");
-  const catalysts = molecules.filter((molecule) => molecule.family === "catalyst");
-  const trioCount = Math.min(
+function countRole(state, role) {
+  let n = 0;
+  for (const molecule of state.molecules) if (molecule.role === role) n += 1;
+  return n;
+}
+
+// Seed a few reactant + catalyst clusters so the first reactions fire quickly
+// instead of waiting on chance encounters in a sparse field.
+function seedReactiveClusters(molecules, state, random) {
+  const reactantsA = molecules.filter((m) => m.role === "reactantA");
+  const reactantsB = molecules.filter((m) => m.role === "reactantB");
+  const catalysts = molecules.filter((m) => m.role === "catalyst");
+  const clusters = Math.min(
     state.width < 620 ? 1 : state.width < 1040 ? 2 : 3,
-    substratesA.length,
-    substratesB.length,
+    reactantsA.length,
+    reactantsB.length,
     catalysts.length
   );
 
-  for (let i = 0; i < trioCount; i += 1) {
-    const a = substratesA[i];
-    const b = substratesB[i];
+  for (let i = 0; i < clusters; i += 1) {
+    const a = reactantsA[i];
+    const b = reactantsB[i];
     const c = catalysts[i];
-    if (!a || !b || !c) continue;
 
-    let centerX = lerp(state.width * 0.16, state.width * 0.86, random());
-    let centerY = lerp(state.height * 0.18, state.height * 0.84, random());
+    let centerX = lerp(state.width * 0.2, state.width * 0.8, random());
+    let centerY = lerp(state.height * 0.2, state.height * 0.8, random());
     for (let attempt = 0; attempt < 8; attempt += 1) {
-      const x = lerp(state.width * 0.14, state.width * 0.88, random());
-      const y = lerp(state.height * 0.16, state.height * 0.86, random());
+      const x = lerp(state.width * 0.14, state.width * 0.86, random());
+      const y = lerp(state.height * 0.16, state.height * 0.84, random());
       if (contentQuietFactor(state, x, y, 72) > 0.46) {
         centerX = x;
         centerY = y;
@@ -784,205 +707,24 @@ function seedReactiveTrios(molecules, state, random) {
       }
     }
 
-    const spread = lerp(58, 92, random());
-    placeMolecule(a, centerX - spread, centerY + lerp(-18, 22, random()));
-    placeMolecule(b, centerX + spread, centerY + lerp(-18, 22, random()));
-    placeMolecule(c, centerX + lerp(-18, 18, random()), centerY - spread * 0.58);
-    steerToward(a, centerX, centerY, lerp(0.018, 0.03, random()));
-    steerToward(b, centerX, centerY, lerp(0.018, 0.03, random()));
-    steerToward(c, centerX, centerY, lerp(0.012, 0.022, random()));
+    placeMolecule(c, centerX, centerY);
+    const spread = lerp(46, 78, random());
+    placeMolecule(a, centerX - spread, centerY + lerp(-12, 12, random()));
+    placeMolecule(b, centerX + spread, centerY + lerp(-12, 12, random()));
+    steerToward(a, centerX, centerY, lerp(0.012, 0.022, random()));
+    steerToward(b, centerX, centerY, lerp(0.012, 0.022, random()));
   }
 }
 
 function freshChemistryState(state) {
   return {
-    events: [],
-    scanCooldownMs: 0,
     random: seededRandom(
       (state.seed || 0) ^ Math.floor(state.width * 31 + state.height * 37) ^ 0x51a7
     ),
-    nextId: 1
+    nextId: 1,
+    forwardCooldownMs: 0,
+    reverseCooldownMs: 0
   };
-}
-
-function reactionDistance(a, b) {
-  return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function availableForReaction(molecule, family) {
-  return molecule.family === family && !molecule.reactionLock && !molecule.hidden;
-}
-
-function startCollisionReaction(state, a, b, c) {
-  const chemistry = state.chemistry;
-  const id = chemistry.nextId++;
-  a.reactionLock = id;
-  b.reactionLock = id;
-  c.reactionLock = id;
-  a.reactionOpacity = 1;
-  b.reactionOpacity = 1;
-  c.reactionOpacity = 1;
-  a.heat = POINTER.maxHeat;
-  b.heat = POINTER.maxHeat;
-  c.heat = POINTER.maxHeat * 0.72;
-
-  chemistry.events.push({
-    id,
-    a,
-    b,
-    c,
-    elapsedMs: 0,
-    durationMs: 3400,
-    centerX: (a.x + b.x + c.x) / 3,
-    centerY: (a.y + b.y + c.y) / 3,
-    seed: Math.floor(chemistry.random() * 2 ** 30)
-  });
-}
-
-function tryStartCollisionReaction(state) {
-  const chemistry = state.chemistry;
-  if (!chemistry || chemistry.events.length >= (state.width < 720 ? 1 : 2)) return;
-
-  const catalysts = state.molecules.filter((molecule) =>
-    availableForReaction(molecule, "catalyst")
-  );
-  const substratesA = state.molecules.filter((molecule) =>
-    availableForReaction(molecule, "substrate-a")
-  );
-  const substratesB = state.molecules.filter((molecule) =>
-    availableForReaction(molecule, "substrate-b")
-  );
-
-  for (const c of catalysts) {
-    const nearbyA = substratesA.find(
-      (a) => reactionDistance(a, c) < a.radius + c.radius + 44 + c.heat * 14
-    );
-    if (!nearbyA) continue;
-    const nearbyB = substratesB.find((b) => {
-      const catalystDistance = reactionDistance(b, c);
-      const substrateDistance = reactionDistance(b, nearbyA);
-      return (
-        catalystDistance < b.radius + c.radius + 48 + c.heat * 14 &&
-        substrateDistance < b.radius + nearbyA.radius + 76
-      );
-    });
-    if (!nearbyB) continue;
-
-    startCollisionReaction(state, nearbyA, nearbyB, c);
-    chemistry.scanCooldownMs = 500;
-    return;
-  }
-}
-
-function reintroduceSubstrateB(molecule, state, random) {
-  const shape = createReactionMoleculeShape(random, molecule.radius, "substrate-b");
-  applyMoleculeShape(molecule, shape, random, molecule.radius);
-  const side = Math.floor(random() * 4);
-  const padding = Math.max(90, molecule.radius * 2.8);
-  const x = side === 0 ? -padding : side === 1 ? state.width + padding : random() * state.width;
-  const y = side === 2 ? -padding : side === 3 ? state.height + padding : random() * state.height;
-  placeMolecule(molecule, x, y);
-  steerToward(
-    molecule,
-    state.width * lerp(0.25, 0.75, random()),
-    state.height * lerp(0.22, 0.82, random()),
-    lerp(0.012, 0.026, random())
-  );
-  molecule.reactionOpacity = 0.52;
-}
-
-function resetProductIfAged(molecule, state) {
-  if (molecule.family !== "product" || molecule.reactionLock) return;
-  molecule.productAgeMs = (molecule.productAgeMs || 0) + state.lastDeltaMs;
-  if (molecule.productAgeMs < 15000) return;
-
-  const random = state.chemistry?.random || Math.random;
-  const radius = clamp(molecule.radius * lerp(0.62, 0.78, random()), 10, 34);
-  const shape = createReactionMoleculeShape(random, radius, "substrate-a");
-  applyMoleculeShape(molecule, shape, random, radius);
-  molecule.productAgeMs = 0;
-  molecule.reactionOpacity = 1;
-}
-
-function updateCollisionChemistry(state, deltaMs, frameScale) {
-  if (!state.chemistry) state.chemistry = freshChemistryState(state);
-  state.lastDeltaMs = deltaMs;
-  const chemistry = state.chemistry;
-  const random = chemistry.random;
-
-  for (const molecule of state.molecules) {
-    if (molecule.reactionOpacity !== undefined && !molecule.reactionLock) {
-      molecule.reactionOpacity = timeScaledLerp(molecule.reactionOpacity, 1, 0.028, frameScale);
-    }
-    resetProductIfAged(molecule, state);
-  }
-
-  chemistry.scanCooldownMs -= deltaMs;
-  if (chemistry.scanCooldownMs <= 0) {
-    tryStartCollisionReaction(state);
-    chemistry.scanCooldownMs = 220;
-  }
-
-  chemistry.events = chemistry.events.filter((event) => {
-    event.elapsedMs += deltaMs;
-    const p = clamp(event.elapsedMs / event.durationMs, 0, 1);
-    const approach = smoothstep(clamp(p / 0.38, 0, 1));
-    const merge = smoothstep(clamp((p - 0.36) / 0.34, 0, 1));
-    const release = smoothstep(clamp((p - 0.72) / 0.28, 0, 1));
-    const centerX = lerp(event.centerX, (event.a.x + event.b.x + event.c.x) / 3, 0.05);
-    const centerY = lerp(event.centerY, (event.a.y + event.b.y + event.c.y) / 3, 0.05);
-    event.centerX = centerX;
-    event.centerY = centerY;
-
-    const separation = lerp(42, 8, approach);
-    const aTarget = { x: centerX - separation, y: centerY + lerp(9, 0, approach) };
-    const bTarget = { x: centerX + separation, y: centerY + lerp(-6, 0, approach) };
-    const cTarget = { x: centerX + lerp(0, 38, release), y: centerY - lerp(38, 24, release) };
-
-    for (const [molecule, target] of [
-      [event.a, aTarget],
-      [event.b, bTarget],
-      [event.c, cTarget]
-    ]) {
-      molecule.originX = timeScaledLerp(molecule.originX, target.x, 0.16, frameScale);
-      molecule.originY = timeScaledLerp(molecule.originY, target.y, 0.16, frameScale);
-      molecule.x = molecule.originX;
-      molecule.y = molecule.originY;
-      molecule.heat = clamp(molecule.heat + 0.025 * frameScale, 0, POINTER.maxHeat);
-    }
-
-    event.a.renderScale = 1 + merge * 0.32;
-    event.b.renderScale = 1 - merge * 0.24;
-    event.c.renderScale = 1 + Math.sin(p * Math.PI) * 0.16;
-    event.b.reactionOpacity = Math.max(0.08, 1 - merge * 0.9);
-    event.a.reactionOpacity = 1;
-    event.c.reactionOpacity = 1;
-
-    if (p < 1) return true;
-
-    const productRadius = clamp((event.a.radius + event.b.radius) * 0.72, 18, 58);
-    const productShape = createReactionMoleculeShape(random, productRadius, "product");
-    applyMoleculeShape(event.a, productShape, random, productRadius);
-    placeMolecule(event.a, centerX, centerY);
-    event.a.velocityX =
-      (event.a.velocityX + event.b.velocityX) * 0.42 + lerp(-0.015, 0.015, random());
-    event.a.velocityY =
-      (event.a.velocityY + event.b.velocityY) * 0.42 + lerp(-0.015, 0.015, random());
-    event.a.momentum = Math.max(0.012, Math.hypot(event.a.velocityX, event.a.velocityY));
-    event.a.productAgeMs = 0;
-
-    reintroduceSubstrateB(event.b, state, random);
-    event.c.velocityX += lerp(-0.012, 0.012, random());
-    event.c.velocityY += lerp(-0.012, 0.012, random());
-
-    for (const molecule of [event.a, event.b, event.c]) {
-      molecule.reactionLock = null;
-      molecule.renderScale = 1;
-      molecule.reactionOpacity = molecule === event.b ? 0.52 : 1;
-    }
-
-    return false;
-  });
 }
 
 export function createMolecules(state) {
@@ -1005,121 +747,339 @@ export function createMolecules(state) {
   for (const band of DEPTH_BANDS) {
     const count = Math.max(6, Math.round(total * band.count));
     for (let i = 0; i < count; i += 1) {
-      const radius = lerp(band.radius[0], band.radius[1], random()) * band.scale;
-      const shape = createReactionMoleculeShape(random, radius);
-      const { paletteKey, lobes, bonds, family, pocket } = shape;
+      const nominalRadius = lerp(band.radius[0], band.radius[1], random()) * band.scale;
+      const shape = createReactionMoleculeShape(random, nominalRadius);
 
-      let originX = random() * state.width;
-      let originY = random() * state.height;
+      let x = random() * state.width;
+      let y = random() * state.height;
       for (let attempt = 0; attempt < 7; attempt += 1) {
         const point = clusteredPoint(random, state, flowAnchors);
-        originX = point.x;
-        originY = point.y;
-        if (contentQuietFactor(state, originX, originY, radius) > 0.54 || random() < 0.18) break;
+        x = point.x;
+        y = point.y;
+        if (contentQuietFactor(state, x, y, shape.boundingRadius) > 0.54 || random() < 0.18) break;
       }
-      const quiet = contentQuietFactor(state, originX, originY, radius);
+      const quiet = contentQuietFactor(state, x, y, shape.boundingRadius);
       const speedRange =
         band.name === "background"
-          ? [0.0042, 0.0105]
+          ? [0.004, 0.011]
           : band.name === "midground"
-            ? [0.009, 0.022]
-            : [0.015, 0.036];
-      const initialMomentum = lerp(speedRange[0], speedRange[1], random());
-      const velocityAngle = random() * Math.PI * 2;
+            ? [0.008, 0.019]
+            : [0.013, 0.028];
+      const speed = lerp(speedRange[0], speedRange[1], random());
+      const angle = random() * Math.PI * 2;
 
       molecules.push({
+        uid: moleculeUid++,
         band,
-        x: originX,
-        y: originY,
-        originX,
-        originY,
-        baseOriginX: originX,
-        baseOriginY: originY,
-        radius,
-        paletteKey,
-        family,
-        lobes,
-        bonds,
-        pocket,
+        x,
+        y,
+        nominalRadius,
+        radius: shape.boundingRadius,
+        paletteKey: shape.paletteKey,
+        family: shape.family,
+        role: shape.role,
+        atoms: shape.atoms,
+        bonds: shape.bonds,
         phase: random() * Math.PI * 2,
-        wander: random() * Math.PI * 2,
         rotation: random() * Math.PI * 2,
-        spin: lerp(-0.00008, 0.00008, random()),
-        velocityX: Math.cos(velocityAngle) * initialMomentum,
-        velocityY: Math.sin(velocityAngle) * initialMomentum * lerp(0.62, 1, random()),
-        momentum: initialMomentum,
-        alpha: lerp(band.alpha[0], band.alpha[1], random()) * lerp(0.62, 1, quiet),
-        outline: random() < band.outline,
+        spin: lerp(-0.00009, 0.00009, random()),
+        velocityX: Math.cos(angle) * speed,
+        velocityY: Math.sin(angle) * speed,
+        alpha: lerp(band.alpha[0], band.alpha[1], random()) * lerp(0.72, 1, quiet),
         heat: 0,
-        thermalX: 0,
-        thermalY: 0,
-        reactionLock: null,
         reactionOpacity: 1,
         renderScale: 1,
-        productAgeMs: 0,
-        granules: rebuildGranules(random, radius, shape.granuleCount + Math.floor(random() * 4))
+        adsorbed: null
       });
     }
   }
 
-  const sorted = molecules.sort((a, b) => a.radius - b.radius);
-  seedReactiveTrios(sorted, state, random);
+  state.molecules = molecules;
   state.chemistry = freshChemistryState(state);
-  return sorted;
+  seedReactiveClusters(molecules, state, random);
+  return molecules;
 }
 
 function timeScaledLerp(current, target, amount, frameScale) {
   return lerp(current, target, 1 - Math.pow(1 - amount, frameScale));
 }
 
-function wrapMoleculePosition(molecule, state, padding) {
-  const minX = -padding;
-  const maxX = state.width + padding;
-  const minY = -padding;
-  const maxY = state.height + padding;
-  const spanX = maxX - minX;
-  const spanY = maxY - minY;
+// --- Physics -------------------------------------------------------------
 
-  while (molecule.x < minX) {
-    molecule.originX += spanX;
-    molecule.x += spanX;
+// Bounce a molecule off the viewport edges (the reaction "vessel").
+function reflectWalls(molecule, state) {
+  const r = molecule.radius;
+  const e = COLLISION.wallRestitution;
+  if (molecule.x < r) {
+    molecule.x = r;
+    molecule.velocityX = Math.abs(molecule.velocityX) * e;
+  } else if (molecule.x > state.width - r) {
+    molecule.x = state.width - r;
+    molecule.velocityX = -Math.abs(molecule.velocityX) * e;
   }
-  while (molecule.x > maxX) {
-    molecule.originX -= spanX;
-    molecule.x -= spanX;
+  if (molecule.y < r) {
+    molecule.y = r;
+    molecule.velocityY = Math.abs(molecule.velocityY) * e;
+  } else if (molecule.y > state.height - r) {
+    molecule.y = state.height - r;
+    molecule.velocityY = -Math.abs(molecule.velocityY) * e;
   }
-  while (molecule.y < minY) {
-    molecule.originY += spanY;
-    molecule.y += spanY;
-  }
-  while (molecule.y > maxY) {
-    molecule.originY -= spanY;
-    molecule.y -= spanY;
+}
+
+// Broad phase: a uniform spatial-hash grid keeps pair tests O(n). Each unordered
+// pair is visited once (n.uid > m.uid); narrow phase + reactions in interactPair.
+function resolveCollisions(state, now) {
+  const cell = COLLISION.cellSize;
+  const grid = new Map();
+  for (const molecule of state.molecules) {
+    const cx = Math.floor(molecule.x / cell);
+    const cy = Math.floor(molecule.y / cell);
+    molecule._cx = cx;
+    molecule._cy = cy;
+    const key = cx + "," + cy;
+    let bucket = grid.get(key);
+    if (!bucket) grid.set(key, (bucket = []));
+    bucket.push(molecule);
   }
 
-  molecule.baseOriginX = molecule.originX;
-  molecule.baseOriginY = molecule.originY;
+  for (const molecule of state.molecules) {
+    for (let ox = -1; ox <= 1; ox += 1) {
+      for (let oy = -1; oy <= 1; oy += 1) {
+        const bucket = grid.get(molecule._cx + ox + "," + (molecule._cy + oy));
+        if (!bucket) continue;
+        for (const other of bucket) {
+          if (other.uid <= molecule.uid) continue;
+          interactPair(molecule, other, state, now);
+        }
+      }
+    }
+  }
+
+  // Baseline speed cap for calm, elegant motion (heat can still burst harder),
+  // and a final wall clamp so de-overlap pushes and reaction nudges never leave
+  // a molecule outside the vessel for a frame.
+  const cap = COLLISION.maxSpeed;
+  for (const molecule of state.molecules) {
+    const sp = Math.hypot(molecule.velocityX, molecule.velocityY);
+    if (sp > cap) {
+      const k = cap / sp;
+      molecule.velocityX *= k;
+      molecule.velocityY *= k;
+    }
+    reflectWalls(molecule, state);
+  }
+}
+
+// Narrow phase for one pair: gentle catalyst attraction at range, elastic
+// impulse on overlap, and a reaction attempt on contact.
+function interactPair(a, b, state, now) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const dist = Math.hypot(dx, dy);
+  if (dist === 0) return;
+  const minDist = a.radius + b.radius;
+
+  const catalyst = a.role === "catalyst" ? a : b.role === "catalyst" ? b : null;
+  if (catalyst) {
+    const other = catalyst === a ? b : a;
+    if (
+      (other.role === "reactantA" || other.role === "reactantB") &&
+      dist < COLLISION.catalystPullRadius &&
+      dist > minDist
+    ) {
+      const pull = COLLISION.catalystPull * state.lastDeltaMs;
+      other.velocityX += ((catalyst.x - other.x) / dist) * pull;
+      other.velocityY += ((catalyst.y - other.y) / dist) * pull;
+    }
+  }
+
+  if (dist >= minDist) return;
+
+  const nx = dx / dist;
+  const ny = dy / dist;
+  const ma = a.radius * a.radius;
+  const mb = b.radius * b.radius;
+  const totalM = ma + mb;
+
+  // Positional de-overlap, split by inverse mass.
+  const overlap = minDist - dist;
+  a.x -= nx * overlap * (mb / totalM);
+  a.y -= ny * overlap * (mb / totalM);
+  b.x += nx * overlap * (ma / totalM);
+  b.y += ny * overlap * (ma / totalM);
+
+  // Impulse response along the contact normal (only if approaching).
+  const vn = (b.velocityX - a.velocityX) * nx + (b.velocityY - a.velocityY) * ny;
+  if (vn < 0) {
+    const j = (-(1 + COLLISION.restitution) * vn) / (1 / ma + 1 / mb);
+    a.velocityX -= (j / ma) * nx;
+    a.velocityY -= (j / ma) * ny;
+    b.velocityX += (j / mb) * nx;
+    b.velocityY += (j / mb) * ny;
+  }
+
+  tryReactionOnContact(a, b, state, now);
+}
+
+// --- Reaction chemistry --------------------------------------------------
+
+function adsorbReactant(catalyst, reactant, now) {
+  if (!catalyst.adsorbed) catalyst.adsorbed = { A: null, B: null, tA: 0, tB: 0 };
+  if (reactant.role === "reactantA") {
+    catalyst.adsorbed.A = reactant;
+    catalyst.adsorbed.tA = now;
+  } else {
+    catalyst.adsorbed.B = reactant;
+    catalyst.adsorbed.tB = now;
+  }
+}
+
+function tryReactionOnContact(a, b, state, now) {
+  const catalyst = a.role === "catalyst" ? a : b.role === "catalyst" ? b : null;
+  if (!catalyst) return;
+  const other = catalyst === a ? b : a;
+  if (other.role === "catalyst") return;
+
+  if (other.role === "reactantA" || other.role === "reactantB") {
+    adsorbReactant(catalyst, other, now);
+    maybeFireForward(catalyst, state, now);
+  } else if (other.role === "product") {
+    maybeFireReverse(other, catalyst, state);
+  }
+}
+
+function scarceReactantFamily(state) {
+  return countRole(state, "reactantA") <= countRole(state, "reactantB")
+    ? "substrate-a"
+    : "substrate-b";
+}
+
+// Reposition a freshly minted reactant just off the catalyst with a random kick
+// so it doesn't immediately re-adsorb.
+function nudgeReactantAway(molecule, catalyst, random) {
+  const dx = molecule.x - catalyst.x;
+  const dy = molecule.y - catalyst.y;
+  const d = Math.max(1, Math.hypot(dx, dy));
+  const push = catalyst.radius + molecule.radius + 6;
+  molecule.x = catalyst.x + (dx / d) * push;
+  molecule.y = catalyst.y + (dy / d) * push;
+  const speed = lerp(0.012, 0.026, random());
+  const angle = random() * Math.PI * 2;
+  molecule.velocityX = Math.cos(angle) * speed;
+  molecule.velocityY = Math.sin(angle) * speed;
+}
+
+// Brief heat + opacity "pop" on the molecules taking part in a reaction.
+function flashReaction(molecules) {
+  for (const molecule of molecules) {
+    const factor = molecule.role === "catalyst" ? 0.6 : 1;
+    molecule.heat = Math.max(molecule.heat, CHEM.flashHeat * factor);
+    molecule.reactionOpacity = CHEM.flashOpacity;
+    molecule.renderScale = 1.28;
+  }
+}
+
+// Forward: N2 + H2 →(Fe) NH3. Requires one of each reactant adsorbed on the same
+// catalyst within the adsorption window. Net effect: one reactant becomes the
+// product, the other is recycled into the scarcer reactant (population fixed).
+function maybeFireForward(catalyst, state, now) {
+  const chem = state.chemistry;
+  if (chem.forwardCooldownMs > 0) return;
+  const slot = catalyst.adsorbed;
+  if (!slot) return;
+  const A = slot.A;
+  const B = slot.B;
+  if (!A || !B) return;
+  if (A.role !== "reactantA" || B.role !== "reactantB") return;
+  if (now - slot.tA > CHEM.adsorbWindowMs || now - slot.tB > CHEM.adsorbWindowMs) return;
+
+  const random = chem.random;
+  const ma = A.radius * A.radius;
+  const mb = B.radius * B.radius;
+  const px = A.velocityX * ma + B.velocityX * mb;
+  const py = A.velocityY * ma + B.velocityY * mb;
+  const cx = (A.x + B.x) / 2;
+  const cy = (A.y + B.y) / 2;
+
+  // A becomes the product (NH3), carrying the combined momentum.
+  applyMoleculeShape(A, createReactionMoleculeShape(random, A.nominalRadius, "product"));
+  placeMolecule(A, cx, cy);
+  const newMass = A.radius * A.radius;
+  A.velocityX = (px / newMass) * 0.85;
+  A.velocityY = (py / newMass) * 0.85;
+  const ejx = A.x - catalyst.x;
+  const ejy = A.y - catalyst.y;
+  const ejd = Math.max(1, Math.hypot(ejx, ejy));
+  A.velocityX += (ejx / ejd) * 0.018;
+  A.velocityY += (ejy / ejd) * 0.018;
+
+  // B recycles into whichever reactant is now scarce, keeping the A/B balance.
+  applyMoleculeShape(
+    B,
+    createReactionMoleculeShape(random, B.nominalRadius, scarceReactantFamily(state))
+  );
+  nudgeReactantAway(B, catalyst, random);
+
+  flashReaction([A, B, catalyst]);
+  catalyst.adsorbed = null;
+  chem.forwardCooldownMs = CHEM.forwardCooldownMs;
+}
+
+// Reverse: NH3 →(Fe) N2 + H2. A product touching the catalyst decomposes back
+// into a reactant with a small probability — the exact inverse of the forward
+// step, so the two settle to a steady product fraction (visual equilibrium).
+function maybeFireReverse(product, catalyst, state) {
+  const chem = state.chemistry;
+  if (chem.reverseCooldownMs > 0) return;
+  const random = chem.random;
+  if (random() > CHEM.reverseProbOnContact) return;
+
+  applyMoleculeShape(
+    product,
+    createReactionMoleculeShape(random, product.nominalRadius, scarceReactantFamily(state))
+  );
+  nudgeReactantAway(product, catalyst, random);
+  flashReaction([product, catalyst]);
+  chem.reverseCooldownMs = CHEM.reverseCooldownMs;
+}
+
+function updateChemistryBookkeeping(state, deltaMs) {
+  const chem = state.chemistry;
+  if (chem.forwardCooldownMs > 0) chem.forwardCooldownMs -= deltaMs;
+  if (chem.reverseCooldownMs > 0) chem.reverseCooldownMs -= deltaMs;
+
+  const now = state.now;
+  for (const molecule of state.molecules) {
+    if (molecule.role !== "catalyst" || !molecule.adsorbed) continue;
+    const slot = molecule.adsorbed;
+    if (slot.A && (slot.A.role !== "reactantA" || now - slot.tA > CHEM.adsorbWindowMs)) {
+      slot.A = null;
+    }
+    if (slot.B && (slot.B.role !== "reactantB" || now - slot.tB > CHEM.adsorbWindowMs)) {
+      slot.B = null;
+    }
+  }
 }
 
 export function updateMolecules(state, now, deltaMs = 1000 / 60, { reducedMotion }) {
   if (reducedMotion) return;
+  if (!state.chemistry) state.chemistry = freshChemistryState(state);
 
   const frameScale = clamp(deltaMs / (1000 / 60), 0, 3);
+  state.now = now;
+  state.lastDeltaMs = deltaMs;
 
   for (const molecule of state.molecules) {
     const band = molecule.band;
-    let fieldStrength = 0;
 
+    // Pointer heat: molecules near the cursor warm up and speed up.
+    let fieldStrength = 0;
     if (state.pointer.active) {
       const dx = molecule.x - state.pointer.x;
       const dy = molecule.y - state.pointer.y;
       const distance = Math.hypot(dx, dy);
-      if (distance < POINTER.radius) {
-        const proximity = 1 - distance / POINTER.radius;
-        fieldStrength = smoothstep(proximity);
-      }
+      if (distance < POINTER.radius) fieldStrength = smoothstep(1 - distance / POINTER.radius);
     }
-
     if (fieldStrength > 0) {
       molecule.heat = clamp(
         molecule.heat + fieldStrength * POINTER.heatGain * frameScale,
@@ -1130,127 +1090,184 @@ export function updateMolecules(state, now, deltaMs = 1000 / 60, { reducedMotion
       molecule.heat = timeScaledLerp(molecule.heat, 0, POINTER.cooling, frameScale);
     }
 
-    const speedBoost = 1 + molecule.heat * 3.85;
-    const t = now * band.speed + molecule.phase;
-    const brownianX = Math.sin(t * 0.37 + molecule.wander) * molecule.momentum * 0.08;
-    const brownianY = Math.cos(t * 0.31 - molecule.wander) * molecule.momentum * 0.07;
+    // Brownian jitter keeps everything in gentle, constant thermal motion.
+    const kick = THERMAL.brownian * (1 + molecule.heat) * frameScale;
+    molecule.velocityX += (Math.random() - 0.5) * kick;
+    molecule.velocityY += (Math.random() - 0.5) * kick;
 
-    molecule.originX += (molecule.velocityX * speedBoost + brownianX) * deltaMs;
-    molecule.originY += (molecule.velocityY * speedBoost + brownianY) * deltaMs;
+    // Far background molecules keep a faint sinusoidal drift for depth ambiance.
+    if (band.name === "background") {
+      const t = now * band.speed + molecule.phase;
+      molecule.velocityX += Math.sin(t) * band.drift * 1e-6 * frameScale;
+      molecule.velocityY += Math.cos(t * 0.92) * band.drift * 1e-6 * frameScale;
+    }
 
-    const wanderX = Math.sin(t * 1.9 + molecule.wander) * band.drift * 0.7;
-    const wanderY = Math.cos(t * 1.4 - molecule.wander) * band.drift * 0.7;
-    const flowX = Math.sin((molecule.originY + now * 0.012) * 0.006) * band.drift * 0.18;
-    const flowY = Math.cos((molecule.originX - now * 0.01) * 0.005) * band.drift * 0.16;
-
-    molecule.x = molecule.originX + wanderX + flowX;
-    molecule.y = molecule.originY + wanderY + flowY;
+    const speedBoost = 1 + molecule.heat * THERMAL.heatSpeedGain;
+    molecule.x += molecule.velocityX * speedBoost * deltaMs;
+    molecule.y += molecule.velocityY * speedBoost * deltaMs;
     molecule.rotation += molecule.spin * (18 + molecule.heat * 44) * frameScale;
 
-    wrapMoleculePosition(molecule, state, Math.max(130, molecule.radius * 2.6));
+    reflectWalls(molecule, state);
+
+    if (molecule.reactionOpacity < 1) {
+      molecule.reactionOpacity = timeScaledLerp(molecule.reactionOpacity, 1, 0.05, frameScale);
+    }
+    if (molecule.renderScale !== 1) {
+      molecule.renderScale = timeScaledLerp(molecule.renderScale, 1, 0.06, frameScale);
+    }
   }
 
-  updateCollisionChemistry(state, deltaMs, frameScale);
+  resolveCollisions(state, now);
+  updateChemistryBookkeeping(state, deltaMs);
   state.pointer.influence *= Math.pow(POINTER.decay, frameScale);
 }
 
-export function drawMolecule(targetCtx, paletteMap, molecule, x, y, rotation, alpha, scale = 1) {
-  const palette = paletteMap[molecule.paletteKey];
-  if (!palette) return;
+// --- Rendering: ball-and-stick -------------------------------------------
+
+function hexToRgb(hex) {
+  let h = String(hex).trim();
+  if (h[0] === "#") h = h.slice(1);
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  const int = parseInt(h, 16) || 0;
+  return { r: (int >> 16) & 255, g: (int >> 8) & 255, b: int & 255 };
+}
+
+function mixToward(rgb, target, t) {
+  return {
+    r: Math.round(lerp(rgb.r, target, t)),
+    g: Math.round(lerp(rgb.g, target, t)),
+    b: Math.round(lerp(rgb.b, target, t))
+  };
+}
+
+function rgbStr(rgb, alpha = 1) {
+  return alpha >= 1
+    ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+    : `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+
+function elementBaseColor(el, paletteMap, isDark) {
+  if (el === "H") {
+    // Hydrogen reads near-white; a pale blue keeps it visible on a dark page.
+    return hexToRgb(isDark ? "#dbe7fb" : "#eef4fc");
+  }
+  if (el === "Fe") {
+    // Iron catalyst as polished steel — cool, on-palette, distinct from N's blue.
+    return hexToRgb(isDark ? "#aebfd8" : "#8ba2c0");
+  }
+  const entry = paletteMap[ELEMENTS[el] ? ELEMENTS[el].paletteKey : "blue"];
+  return hexToRgb(entry ? (isDark ? entry.stroke : entry.fill) : "#3c719f");
+}
+
+function elementColors(el, paletteMap, isDark) {
+  const base = elementBaseColor(el, paletteMap, isDark);
+  const metallic = el === "Fe";
+  return {
+    highlight: rgbStr(mixToward(base, 255, metallic ? 0.82 : 0.62)),
+    core: rgbStr(base),
+    rim: rgbStr(mixToward(base, 0, isDark ? 0.3 : 0.42)),
+    stroke: rgbStr(mixToward(base, 0, isDark ? 0.18 : 0.5), 0.85)
+  };
+}
+
+// Element colors only change when dark mode or the palette changes, so memoize
+// across frames instead of re-parsing hex for every atom.
+let elementColorKey = "";
+let elementColorCache = {};
+function getElementColors(paletteMap, isDark) {
+  const key = `${isDark}|${paletteMap.blue && paletteMap.blue.fill}|${paletteMap.blue && paletteMap.blue.stroke}`;
+  if (key !== elementColorKey) {
+    elementColorKey = key;
+    elementColorCache = {};
+    for (const el in ELEMENTS) elementColorCache[el] = elementColors(el, paletteMap, isDark);
+  }
+  return elementColorCache;
+}
+
+function drawAtomSphere(targetCtx, atom, colors) {
+  const r = atom.r;
+  const grad = targetCtx.createRadialGradient(
+    atom.x - r * 0.36,
+    atom.y - r * 0.4,
+    r * 0.1,
+    atom.x,
+    atom.y,
+    r * 1.02
+  );
+  grad.addColorStop(0, colors.highlight);
+  grad.addColorStop(0.5, colors.core);
+  grad.addColorStop(1, colors.rim);
+  targetCtx.fillStyle = grad;
+  targetCtx.beginPath();
+  targetCtx.arc(atom.x, atom.y, r, 0, Math.PI * 2);
+  targetCtx.fill();
+  targetCtx.lineWidth = Math.max(0.6, r * 0.12);
+  targetCtx.strokeStyle = colors.stroke;
+  targetCtx.stroke();
+}
+
+function drawBond(targetCtx, a, b, order, width, color) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  const gap = width * 1.2;
+  const offsets = order === 1 ? [0] : order === 2 ? [-gap * 0.5, gap * 0.5] : [-gap, 0, gap];
+  targetCtx.strokeStyle = color;
+  targetCtx.lineWidth = width;
+  for (const o of offsets) {
+    targetCtx.beginPath();
+    targetCtx.moveTo(a.x + nx * o, a.y + ny * o);
+    targetCtx.lineTo(b.x + nx * o, b.y + ny * o);
+    targetCtx.stroke();
+  }
+}
+
+export function drawMolecule(
+  targetCtx,
+  paletteMap,
+  molecule,
+  x,
+  y,
+  rotation,
+  alpha,
+  scale = 1,
+  isDark = false
+) {
+  if (!molecule.atoms) return;
+  const colors = getElementColors(paletteMap, isDark);
 
   targetCtx.save();
   targetCtx.translate(x, y);
   targetCtx.rotate(rotation);
   targetCtx.scale(scale, scale);
-  targetCtx.globalCompositeOperation = "multiply";
-  targetCtx.globalAlpha = alpha;
-  targetCtx.fillStyle = palette.fill;
+  targetCtx.globalCompositeOperation = "source-over";
+  targetCtx.globalAlpha = clamp(alpha, 0, 1);
+  targetCtx.lineCap = "round";
+  targetCtx.lineJoin = "round";
 
-  if (molecule.bonds?.length) {
-    targetCtx.save();
-    targetCtx.globalCompositeOperation = "source-over";
-    targetCtx.globalAlpha = alpha * 0.42;
-    targetCtx.strokeStyle = palette.stroke;
-    targetCtx.lineWidth = Math.max(0.75, molecule.radius * 0.045);
-    targetCtx.lineCap = "round";
-    for (const [from, to] of molecule.bonds) {
-      const a = molecule.lobes[from];
-      const b = molecule.lobes[to];
+  if (molecule.bonds && molecule.bonds.length) {
+    const bondWidth = Math.max(1.3, molecule.nominalRadius * 0.16);
+    const bondColor = isDark ? "rgba(207, 223, 252, 0.82)" : "rgba(20, 38, 84, 0.7)";
+    for (const bond of molecule.bonds) {
+      const a = molecule.atoms[bond.a];
+      const b = molecule.atoms[bond.b];
       if (!a || !b) continue;
-      targetCtx.beginPath();
-      targetCtx.moveTo(a.x, a.y);
-      targetCtx.lineTo(b.x, b.y);
-      targetCtx.stroke();
+      drawBond(targetCtx, a, b, bond.order, bondWidth, bondColor);
     }
-    targetCtx.restore();
   }
 
-  for (const lobe of molecule.lobes) {
-    targetCtx.save();
-    targetCtx.translate(lobe.x, lobe.y);
-    targetCtx.rotate(lobe.rotate);
-    targetCtx.beginPath();
-    targetCtx.ellipse(0, 0, lobe.rx, lobe.ry, 0, 0, Math.PI * 2);
-    targetCtx.fill();
-    targetCtx.restore();
-  }
-
-  targetCtx.globalAlpha = alpha;
-  targetCtx.globalCompositeOperation = "multiply";
-  for (const granule of molecule.granules) {
-    targetCtx.fillStyle = `rgba(43, 35, 24, ${granule.a})`;
-    targetCtx.beginPath();
-    targetCtx.arc(granule.x, granule.y, granule.r, 0, Math.PI * 2);
-    targetCtx.fill();
-  }
-
-  if (molecule.outline) {
-    targetCtx.globalCompositeOperation = "source-over";
-    targetCtx.globalAlpha = alpha * 0.82;
-    targetCtx.strokeStyle = palette.stroke;
-    targetCtx.lineWidth = 1.05;
-    for (let i = 0; i < molecule.lobes.length; i += 2) {
-      const lobe = molecule.lobes[i];
-      targetCtx.save();
-      targetCtx.translate(lobe.x, lobe.y);
-      targetCtx.rotate(lobe.rotate);
-      targetCtx.beginPath();
-      targetCtx.ellipse(0, 0, lobe.rx, lobe.ry, 0, 0, Math.PI * 2);
-      targetCtx.stroke();
-      targetCtx.restore();
-    }
-
-    targetCtx.globalAlpha = alpha * 0.28;
-    targetCtx.lineWidth = 0.8;
-    targetCtx.beginPath();
-    targetCtx.ellipse(
-      0,
-      0,
-      molecule.radius * 0.82,
-      molecule.radius * 0.46,
-      rotation * -0.2,
-      0,
-      Math.PI * 2
-    );
-    targetCtx.stroke();
-  }
-
-  if (molecule.pocket) {
-    targetCtx.globalCompositeOperation = "source-over";
-    targetCtx.globalAlpha = alpha * 0.34;
-    targetCtx.strokeStyle = palette.stroke;
-    targetCtx.lineWidth = Math.max(0.75, molecule.radius * 0.04);
-    targetCtx.beginPath();
-    targetCtx.arc(0, -molecule.radius * 0.02, molecule.radius * 0.48, 0.18, Math.PI * 1.18);
-    targetCtx.stroke();
+  for (const atom of molecule.atoms) {
+    drawAtomSphere(targetCtx, atom, colors[atom.el] || colors.N);
   }
 
   targetCtx.restore();
 }
 
 export function drawMoleculeField(targetCtx, state) {
+  const isDark = state.isDark || false;
   for (const molecule of state.molecules) {
-    if (molecule.hidden) continue;
     drawMolecule(
       targetCtx,
       state.palette,
@@ -1259,7 +1276,8 @@ export function drawMoleculeField(targetCtx, state) {
       molecule.y,
       molecule.rotation,
       molecule.alpha * (molecule.reactionOpacity ?? 1),
-      molecule.renderScale ?? 1
+      molecule.renderScale ?? 1,
+      isDark
     );
   }
 }

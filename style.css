@@ -274,7 +274,8 @@ h3 {
 .section-card p,
 .project-card p,
 .interest-card p,
-.hero-note p {
+.hero-note p,
+.experience-card p {
   color: var(--muted);
   line-height: 1.75;
 }
@@ -320,7 +321,8 @@ h3 {
 }
 
 .identity-list,
-.project-card ul {
+.project-card ul,
+.evidence-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
@@ -330,7 +332,8 @@ h3 {
 }
 
 .identity-list li,
-.project-card li {
+.project-card li,
+.evidence-list li {
   padding: 0.45rem 0.62rem;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.48);
@@ -341,7 +344,8 @@ h3 {
 
 @media (prefers-color-scheme: dark) {
   .identity-list li,
-  .project-card li {
+  .project-card li,
+  .evidence-list li {
     background: rgba(255, 255, 255, 0.03);
   }
 }
@@ -372,9 +376,59 @@ section {
 }
 
 .project-grid,
+.experience-grid,
 .interest-grid {
   display: grid;
   gap: 1rem;
+}
+
+.experience-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.experience-card {
+  grid-column: span 4;
+  padding: 1.5rem;
+}
+
+.experience-card.experience-lead {
+  grid-column: span 4;
+}
+
+.experience-kicker {
+  margin: 0 0 0.75rem;
+  color: var(--accent-blue) !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.evidence-list {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1.2rem;
+}
+
+.evidence-list li {
+  width: 100%;
+  line-height: 1.45;
+}
+
+.confidentiality-note {
+  max-width: 900px;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.availability-note {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink) !important;
+  font-weight: 600;
 }
 
 .project-grid {
@@ -478,7 +532,9 @@ section {
   }
 
   .project-card,
-  .project-card.featured {
+  .project-card.featured,
+  .experience-card,
+  .experience-card.experience-lead {
     grid-column: span 6;
   }
 
@@ -513,6 +569,11 @@ section {
 
   .project-card,
   .project-card.featured {
+    grid-column: 1 / -1;
+  }
+
+  .experience-card,
+  .experience-card.experience-lead {
     grid-column: 1 / -1;
   }
 
