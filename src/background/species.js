@@ -236,7 +236,7 @@ function drawNucleicAcidStrand(targetCtx, state, strand, options) {
   targetCtx.restore();
 }
 
-function drawMembraneSection(targetCtx, state, membrane, options) {
+function drawMembraneSection(targetCtx, state, membrane) {
   targetCtx.save();
   targetCtx.globalCompositeOperation = "multiply";
   targetCtx.strokeStyle = membrane.stroke;
@@ -438,7 +438,7 @@ export function drawStaticBiomolecularField(targetCtx, state, options) {
     }
   ];
 
-  for (const membrane of membranes) drawMembraneSection(targetCtx, state, membrane, options);
+  for (const membrane of membranes) drawMembraneSection(targetCtx, state, membrane);
 
   const clusters = [
     {
@@ -620,11 +620,11 @@ function pickMoleculeFamily(random) {
 // Resolve a SPECIES entry into a concrete molecule: atom positions and radii in
 // pixels (scaled by `radius`) plus the true visual extent (`boundingRadius`),
 // which doubles as the collision radius so physics matches what is drawn.
-function createReactionMoleculeShape(random, radius, forceFamily = null) {
+export function createReactionMoleculeShape(random, radius, forceFamily = null) {
   const family = forceFamily || pickMoleculeFamily(random);
   const spec = SPECIES[family];
   const jitter = (amount) => lerp(-amount, amount, random());
-  let boundingRadius = radius * 0.4;
+  let boundingRadius = spec.atoms.length ? radius * 0.4 : 0;
 
   const atoms = spec.atoms.map((atom) => {
     const element = ELEMENTS[atom.el];
@@ -658,6 +658,16 @@ function applyMoleculeShape(molecule, shape) {
   return molecule;
 }
 
+export function atomInventory(molecules) {
+  const inventory = {};
+  for (const molecule of molecules) {
+    for (const atom of molecule.atoms || []) {
+      inventory[atom.el] = (inventory[atom.el] || 0) + 1;
+    }
+  }
+  return inventory;
+}
+
 function placeMolecule(molecule, x, y) {
   molecule.x = x;
   molecule.y = y;
@@ -671,12 +681,6 @@ function steerToward(molecule, x, y, speed) {
   molecule.velocityY = (dy / distance) * speed;
 }
 
-function countRole(state, role) {
-  let n = 0;
-  for (const molecule of state.molecules) if (molecule.role === role) n += 1;
-  return n;
-}
-
 // Seed a few reactant + catalyst clusters so the first reactions fire quickly
 // instead of waiting on chance encounters in a sparse field.
 function seedReactiveClusters(molecules, state, random) {
@@ -686,13 +690,13 @@ function seedReactiveClusters(molecules, state, random) {
   const clusters = Math.min(
     state.width < 620 ? 1 : state.width < 1040 ? 2 : 3,
     reactantsA.length,
-    reactantsB.length,
+    Math.floor(reactantsB.length / 3),
     catalysts.length
   );
 
   for (let i = 0; i < clusters; i += 1) {
     const a = reactantsA[i];
-    const b = reactantsB[i];
+    const bs = reactantsB.slice(i * 3, i * 3 + 3);
     const c = catalysts[i];
 
     let centerX = lerp(state.width * 0.2, state.width * 0.8, random());
@@ -710,9 +714,11 @@ function seedReactiveClusters(molecules, state, random) {
     placeMolecule(c, centerX, centerY);
     const spread = lerp(46, 78, random());
     placeMolecule(a, centerX - spread, centerY + lerp(-12, 12, random()));
-    placeMolecule(b, centerX + spread, centerY + lerp(-12, 12, random()));
+    for (let j = 0; j < bs.length; j += 1) {
+      placeMolecule(bs[j], centerX + spread + j * 8, centerY + lerp(-22, 22, random()));
+    }
     steerToward(a, centerX, centerY, lerp(0.012, 0.022, random()));
-    steerToward(b, centerX, centerY, lerp(0.012, 0.022, random()));
+    for (const b of bs) steerToward(b, centerX, centerY, lerp(0.012, 0.022, random()));
   }
 }
 
@@ -832,6 +838,7 @@ function resolveCollisions(state, now) {
   const cell = COLLISION.cellSize;
   const grid = new Map();
   for (const molecule of state.molecules) {
+    if (molecule.role === "vacancy") continue;
     const cx = Math.floor(molecule.x / cell);
     const cy = Math.floor(molecule.y / cell);
     molecule._cx = cx;
@@ -843,6 +850,7 @@ function resolveCollisions(state, now) {
   }
 
   for (const molecule of state.molecules) {
+    if (molecule.role === "vacancy") continue;
     for (let ox = -1; ox <= 1; ox += 1) {
       for (let oy = -1; oy <= 1; oy += 1) {
         const bucket = grid.get(molecule._cx + ox + "," + (molecule._cy + oy));
@@ -924,13 +932,31 @@ function interactPair(a, b, state, now) {
 // --- Reaction chemistry --------------------------------------------------
 
 function adsorbReactant(catalyst, reactant, now) {
-  if (!catalyst.adsorbed) catalyst.adsorbed = { A: null, B: null, tA: 0, tB: 0 };
+  if (!catalyst.adsorbed) {
+    catalyst.adsorbed = { A: null, B: [], P: [], tA: 0 };
+  }
   if (reactant.role === "reactantA") {
     catalyst.adsorbed.A = reactant;
     catalyst.adsorbed.tA = now;
   } else {
-    catalyst.adsorbed.B = reactant;
-    catalyst.adsorbed.tB = now;
+    catalyst.adsorbed.B = catalyst.adsorbed.B.filter(
+      (entry) => now - entry.time <= CHEM.adsorbWindowMs && entry.molecule.role === "reactantB"
+    );
+    if (!catalyst.adsorbed.B.some((entry) => entry.molecule === reactant)) {
+      catalyst.adsorbed.B.push({ molecule: reactant, time: now });
+    }
+  }
+}
+
+function adsorbProduct(catalyst, product, now) {
+  if (!catalyst.adsorbed) {
+    catalyst.adsorbed = { A: null, B: [], P: [], tA: 0 };
+  }
+  catalyst.adsorbed.P = catalyst.adsorbed.P.filter(
+    (entry) => now - entry.time <= CHEM.adsorbWindowMs && entry.molecule.role === "product"
+  );
+  if (!catalyst.adsorbed.P.some((entry) => entry.molecule === product)) {
+    catalyst.adsorbed.P.push({ molecule: product, time: now });
   }
 }
 
@@ -944,14 +970,9 @@ function tryReactionOnContact(a, b, state, now) {
     adsorbReactant(catalyst, other, now);
     maybeFireForward(catalyst, state, now);
   } else if (other.role === "product") {
-    maybeFireReverse(other, catalyst, state);
+    adsorbProduct(catalyst, other, now);
+    maybeFireReverse(catalyst, state, now);
   }
-}
-
-function scarceReactantFamily(state) {
-  return countRole(state, "reactantA") <= countRole(state, "reactantB")
-    ? "substrate-a"
-    : "substrate-b";
 }
 
 // Reposition a freshly minted reactant just off the catalyst with a random kick
@@ -979,67 +1000,82 @@ function flashReaction(molecules) {
   }
 }
 
-// Forward: N2 + H2 →(Fe) NH3. Requires one of each reactant adsorbed on the same
-// catalyst within the adsorption window. Net effect: one reactant becomes the
-// product, the other is recycled into the scarcer reactant (population fixed).
+export function applyHaberForward(A, Bs, random) {
+  applyMoleculeShape(A, createReactionMoleculeShape(random, A.nominalRadius, "product"));
+  applyMoleculeShape(Bs[0], createReactionMoleculeShape(random, Bs[0].nominalRadius, "product"));
+  for (const molecule of Bs.slice(1)) {
+    applyMoleculeShape(
+      molecule,
+      createReactionMoleculeShape(random, molecule.nominalRadius, "vacancy")
+    );
+  }
+}
+
+export function applyHaberReverse(products, vacancies, random) {
+  applyMoleculeShape(
+    products[0],
+    createReactionMoleculeShape(random, products[0].nominalRadius, "substrate-a")
+  );
+  applyMoleculeShape(
+    products[1],
+    createReactionMoleculeShape(random, products[1].nominalRadius, "substrate-b")
+  );
+  for (const molecule of vacancies) {
+    applyMoleculeShape(
+      molecule,
+      createReactionMoleculeShape(random, molecule.nominalRadius, "substrate-b")
+    );
+  }
+}
+
+// Forward: N2 + 3 H2 →(Fe) 2 NH3. Two consumed slots become vacancies so the
+// collision array remains stable while atom counts stay exact.
 function maybeFireForward(catalyst, state, now) {
   const chem = state.chemistry;
   if (chem.forwardCooldownMs > 0) return;
   const slot = catalyst.adsorbed;
   if (!slot) return;
   const A = slot.A;
-  const B = slot.B;
-  if (!A || !B) return;
-  if (A.role !== "reactantA" || B.role !== "reactantB") return;
-  if (now - slot.tA > CHEM.adsorbWindowMs || now - slot.tB > CHEM.adsorbWindowMs) return;
+  const Bs = slot.B.filter((entry) => now - entry.time <= CHEM.adsorbWindowMs)
+    .map((entry) => entry.molecule)
+    .filter((molecule) => molecule.role === "reactantB")
+    .slice(0, 3);
+  if (!A || Bs.length < 3) return;
+  if (A.role !== "reactantA" || now - slot.tA > CHEM.adsorbWindowMs) return;
 
   const random = chem.random;
-  const ma = A.radius * A.radius;
-  const mb = B.radius * B.radius;
-  const px = A.velocityX * ma + B.velocityX * mb;
-  const py = A.velocityY * ma + B.velocityY * mb;
-  const cx = (A.x + B.x) / 2;
-  const cy = (A.y + B.y) / 2;
-
-  // A becomes the product (NH3), carrying the combined momentum.
-  applyMoleculeShape(A, createReactionMoleculeShape(random, A.nominalRadius, "product"));
-  placeMolecule(A, cx, cy);
-  const newMass = A.radius * A.radius;
-  A.velocityX = (px / newMass) * 0.85;
-  A.velocityY = (py / newMass) * 0.85;
-  const ejx = A.x - catalyst.x;
-  const ejy = A.y - catalyst.y;
-  const ejd = Math.max(1, Math.hypot(ejx, ejy));
-  A.velocityX += (ejx / ejd) * 0.018;
-  A.velocityY += (ejy / ejd) * 0.018;
-
-  // B recycles into whichever reactant is now scarce, keeping the A/B balance.
-  applyMoleculeShape(
-    B,
-    createReactionMoleculeShape(random, B.nominalRadius, scarceReactantFamily(state))
-  );
-  nudgeReactantAway(B, catalyst, random);
-
-  flashReaction([A, B, catalyst]);
+  const cx = (A.x + Bs.reduce((sum, molecule) => sum + molecule.x, 0)) / 4;
+  const cy = (A.y + Bs.reduce((sum, molecule) => sum + molecule.y, 0)) / 4;
+  applyHaberForward(A, Bs, random);
+  for (const product of [A, Bs[0]]) {
+    placeMolecule(product, cx, cy);
+    nudgeReactantAway(product, catalyst, random);
+  }
+  flashReaction([A, ...Bs, catalyst]);
   catalyst.adsorbed = null;
   chem.forwardCooldownMs = CHEM.forwardCooldownMs;
 }
 
-// Reverse: NH3 →(Fe) N2 + H2. A product touching the catalyst decomposes back
-// into a reactant with a small probability — the exact inverse of the forward
-// step, so the two settle to a steady product fraction (visual equilibrium).
-function maybeFireReverse(product, catalyst, state) {
+// Reverse: 2 NH3 →(Fe) N2 + 3 H2, reactivating two vacancy slots.
+function maybeFireReverse(catalyst, state, now) {
   const chem = state.chemistry;
   if (chem.reverseCooldownMs > 0) return;
   const random = chem.random;
   if (random() > CHEM.reverseProbOnContact) return;
-
-  applyMoleculeShape(
-    product,
-    createReactionMoleculeShape(random, product.nominalRadius, scarceReactantFamily(state))
-  );
-  nudgeReactantAway(product, catalyst, random);
-  flashReaction([product, catalyst]);
+  const products = (catalyst.adsorbed?.P || [])
+    .filter((entry) => now - entry.time <= CHEM.adsorbWindowMs)
+    .map((entry) => entry.molecule)
+    .filter((molecule) => molecule.role === "product")
+    .slice(0, 2);
+  const vacancies = state.molecules.filter((molecule) => molecule.role === "vacancy").slice(0, 2);
+  if (products.length < 2 || vacancies.length < 2) return;
+  applyHaberReverse(products, vacancies, random);
+  for (const molecule of [...products, ...vacancies]) {
+    placeMolecule(molecule, catalyst.x, catalyst.y);
+    nudgeReactantAway(molecule, catalyst, random);
+  }
+  flashReaction([...products, ...vacancies, catalyst]);
+  catalyst.adsorbed = null;
   chem.reverseCooldownMs = CHEM.reverseCooldownMs;
 }
 
@@ -1055,9 +1091,12 @@ function updateChemistryBookkeeping(state, deltaMs) {
     if (slot.A && (slot.A.role !== "reactantA" || now - slot.tA > CHEM.adsorbWindowMs)) {
       slot.A = null;
     }
-    if (slot.B && (slot.B.role !== "reactantB" || now - slot.tB > CHEM.adsorbWindowMs)) {
-      slot.B = null;
-    }
+    slot.B = slot.B.filter(
+      (entry) => entry.molecule.role === "reactantB" && now - entry.time <= CHEM.adsorbWindowMs
+    );
+    slot.P = slot.P.filter(
+      (entry) => entry.molecule.role === "product" && now - entry.time <= CHEM.adsorbWindowMs
+    );
   }
 }
 

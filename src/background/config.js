@@ -143,6 +143,13 @@ export const SPECIES = {
       { a: 0, b: 2, order: 1 },
       { a: 0, b: 3, order: 1 }
     ]
+  },
+  vacancy: {
+    paletteKey: "blue",
+    role: "vacancy",
+    weight: 0,
+    atoms: [],
+    bonds: []
   }
 };
 
@@ -165,14 +172,12 @@ export const THERMAL = {
   heatSpeedGain: 3.85
 };
 
-// Forward (N2 + H2 →(Fe) NH3) and reverse (NH3 →(Fe) N2 + H2) reaction tuning.
-// Forward needs two reactants adsorbed on one catalyst (rare) so the field tends
-// toward reactants; a small per-contact reverse probability balances it back —
-// together they settle to a roughly constant product fraction (visual ⇌).
+// Forward and reverse reactions use the balanced Haber stoichiometry. Invisible
+// vacancy slots preserve a fixed simulation array while conserving every atom.
 export const CHEM = {
   forwardCooldownMs: 420, // global throttle between forward reactions
   reverseCooldownMs: 160, // global throttle between reverse reactions
-  reverseProbOnContact: 0.16, // chance an NH3 touching Fe decomposes
+  reverseProbOnContact: 0.16,
   adsorbWindowMs: 1500, // how long a catalyst remembers an adsorbed reactant
   flashHeat: 2.4, // heat spike applied to molecules in a reaction
   flashOpacity: 0.25 // opacity dip that relaxes back to 1 (a visible "pop")
