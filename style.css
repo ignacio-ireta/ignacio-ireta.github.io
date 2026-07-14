@@ -321,6 +321,7 @@ h3 {
 }
 
 .identity-list,
+.tech-stack,
 .project-card ul,
 .evidence-list {
   display: flex;
@@ -332,6 +333,7 @@ h3 {
 }
 
 .identity-list li,
+.tech-stack li,
 .project-card li,
 .evidence-list li {
   padding: 0.45rem 0.62rem;
@@ -344,6 +346,7 @@ h3 {
 
 @media (prefers-color-scheme: dark) {
   .identity-list li,
+  .tech-stack li,
   .project-card li,
   .evidence-list li {
     background: rgba(255, 255, 255, 0.03);
@@ -369,6 +372,10 @@ section {
 
 .section-card {
   padding: 1.6rem;
+}
+
+.tech-stack {
+  margin-top: 1.35rem;
 }
 
 .section-card.wide {
@@ -421,6 +428,33 @@ section {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.6;
+}
+
+.profile-facts {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.2rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.profile-facts div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.profile-facts dt {
+  color: var(--accent-blue);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.profile-facts dd {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .availability-note {
