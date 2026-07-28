@@ -80,6 +80,7 @@ Two sub-projects keep themselves current automatically: pushing new build artifa
 - [docs/architecture.md](docs/architecture.md) — site structure and the canvas-background module graph
 - [docs/cdmx-data-contract.md](docs/cdmx-data-contract.md) — GeoJSON/metadata schema and build provenance for the CDMX map
 - [docs/etf-outputs-contract.md](docs/etf-outputs-contract.md) — ETF report artifact set, metrics schema, and the cross-repo sync contract
+- [docs/enterprise-ml-case-study-plan.md](docs/enterprise-ml-case-study-plan.md) — disclosure-safe brief for the next Norway-facing portfolio case study
 - [docs/ENGINEERING-STANDARDS.md](docs/ENGINEERING-STANDARDS.md) — the engineering standards this repo follows, adapted for a static site
 - [docs/testing.md](docs/testing.md) — how to run and extend the tests
 - [CONTRIBUTING.md](CONTRIBUTING.md) — workflow and conventions
