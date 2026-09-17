@@ -1,4 +1,4 @@
-# Norway Homepage Audit — 2026-08-20
+# Norway Homepage Audit — 2026-09-17
 
 ## Objective
 
@@ -26,6 +26,17 @@ relevant repository history is:
 - `8021ffe` — Norway-facing homepage signals.
 - `f304f22` — Norway-facing portfolio metadata.
 - `f4c203f` — disclosure-safe enterprise ML case-study plan.
+
+## Technical readiness check — 2026-09-17
+
+`npm run check` passes on `master` at `2d514b6`: formatting, linting,
+JavaScript type checking, authored-page HTML validation, all 28 internal links,
+and 13 automated tests are green. The repository is clean and matches
+`origin/master` before this audit update.
+
+This confirms the public surface is healthy and the documented case-study commit
+can remain narrowly scoped. No framework migration, redesign, or additional
+portfolio scaffolding is needed first.
 
 ## Remaining gap
 
