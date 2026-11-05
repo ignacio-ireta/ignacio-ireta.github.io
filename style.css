@@ -470,7 +470,7 @@ section {
 }
 
 .project-card {
-  grid-column: span 4;
+  grid-column: span 6;
   padding: 1.35rem;
   position: relative;
   overflow: hidden;
@@ -499,7 +499,56 @@ section {
 }
 
 .project-card.featured {
-  grid-column: span 5;
+  grid-column: 1 / -1;
+}
+
+/* The spotlight: the featured project with a preview of its interface beside the copy. */
+.project-card.spotlight {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1.75rem;
+  align-items: center;
+  padding: 1.6rem;
+}
+
+.spotlight-note {
+  font-size: 0.92rem;
+  border-left: 2px solid var(--accent-teal);
+  padding-left: 0.75rem;
+}
+
+.spotlight-preview {
+  display: block;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 160ms ease;
+}
+
+.spotlight-preview:hover {
+  transform: translateY(-2px);
+}
+
+.spotlight-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.project-meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-preview {
+    transition: none;
+  }
+
+  .spotlight-preview:hover {
+    transform: none;
+  }
 }
 
 .project-links {
@@ -566,10 +615,14 @@ section {
   }
 
   .project-card,
-  .project-card.featured,
   .experience-card,
   .experience-card.experience-lead {
     grid-column: span 6;
+  }
+
+  .project-card.spotlight {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
 
   .interest-grid {

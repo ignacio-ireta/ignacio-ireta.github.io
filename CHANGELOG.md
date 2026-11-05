@@ -8,6 +8,12 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- dogma interactive demo at `projects/dogma/`, featured as the homepage's spotlight
+  project: dogma's real React interface on a captured API snapshot of a demo
+  learner, with Run/Submit graded in the browser by dogma's own static checks and
+  pytest collector under Pyodide (196 of 251 problems verified). Built by
+  `tools/dogma-demo/` (capture, verification, staged Vite build, leak check);
+  documented in `docs/dogma-demo.md`; guarded by `tests/dogma-demo.test.mjs`.
 - Project documentation: `README.md`, `CONTRIBUTING.md`, `LICENSE` (MIT), and
   `docs/` (`architecture.md`, `cdmx-data-contract.md`, `ENGINEERING-STANDARDS.md`,
   `testing.md`).
@@ -29,6 +35,8 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Homepage project grid: the featured card is now a full-width spotlight with a
+  preview image; the other project cards form a two-column grid.
 - Encoded raw `&` as `&amp;` in homepage headings for valid HTML.
 - Replaced the description-only ETF Portfolio Research page with the interactive
   showcase above.
