@@ -1,0 +1,13 @@
+{
+  "name": "dogma-demo-build",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Builds the static dogma demo into projects/dogma/ (see README.md). Not part of the site's runtime.",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "pyodide": "314.0.7"
+  }
+}

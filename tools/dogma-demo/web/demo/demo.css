@@ -1,0 +1,107 @@
+/* The demo badge. Uses dogma's own tokens (styles/tokens.css), so it reads as part of the app. */
+.demo-badge {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 50;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: min(23rem, calc(100vw - 2 * var(--space-4)));
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.demo-badge__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-outline);
+  border-radius: 999px;
+  background: var(--color-violet-soft);
+  box-shadow: var(--shadow-action);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.demo-badge__toggle:hover {
+  background: var(--color-surface);
+}
+
+.demo-badge__toggle:focus-visible,
+.demo-badge__back:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.demo-badge__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--color-coral);
+  border: 1px solid var(--color-outline);
+}
+
+.demo-badge__chevron {
+  font-size: 0.75rem;
+}
+
+.demo-badge__body {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-float);
+  font-family: var(--font-reading);
+  line-height: 1.55;
+}
+
+.demo-badge__body p,
+.demo-badge__body ul {
+  margin: 0 0 var(--space-3);
+}
+
+.demo-badge__body ul {
+  padding-left: var(--space-5);
+}
+
+.demo-badge__body li + li {
+  margin-top: var(--space-1);
+}
+
+.demo-badge__title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+.demo-badge__runtime {
+  color: var(--color-text-muted);
+}
+
+.demo-badge__runtime span {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.demo-badge__back {
+  color: var(--color-link);
+  font-weight: 600;
+}
+
+@media (max-width: 40rem) {
+  .demo-badge {
+    right: var(--space-3);
+    bottom: var(--space-3);
+    left: var(--space-3);
+    max-width: none;
+  }
+
+  .demo-badge__body {
+    max-height: 60dvh;
+    overflow-y: auto;
+  }
+}

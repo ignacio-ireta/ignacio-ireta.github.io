@@ -35,3 +35,7 @@ logs/
 # Likewise, the ETF report artifacts (projects/etf-portfolio-research/reports/)
 # are committed so the showcase page can embed them same-origin. They are synced
 # in by CI from github.com/ignacio-ireta/etf-portfolio-research.
+
+# dogma demo build scratch (snapshot, staged web app, Vite output). The published result is
+# projects/dogma/, which IS committed: see tools/dogma-demo/README.md.
+tools/dogma-demo/.build/
