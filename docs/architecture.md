@@ -4,14 +4,15 @@ A static, server-less site. GitHub Pages serves the working tree of `master` ver
 
 ## Site structure
 
-| Area                               | What it is                 | Build step                                                                                                                                             |
-| ---------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `index.html` + `style.css`         | Homepage (portfolio)       | none — hand-written                                                                                                                                    |
-| `src/background/`                  | Animated canvas background | none — native ES modules via `<script type="module">`                                                                                                  |
-| `projects/dogma/`                  | dogma interactive demo     | **built here from a private checkout** by `tools/dogma-demo/build.mjs`; committed output, see [dogma-demo.md](dogma-demo.md)                           |
-| `projects/cdmx-map/`               | React + Leaflet map        | **built elsewhere** ([cdmx-convenience-map](https://github.com/ignacio-ireta/cdmx-convenience-map)); only the Vite output + GeoJSON are committed here |
-| `projects/etf-portfolio-research/` | Project page               | none — static HTML                                                                                                                                     |
-| `reed/privacy/`                    | App privacy policy         | none — static HTML                                                                                                                                     |
+| Area                               | What it is                 | Build step                                                                                                                                                                    |
+| ---------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html` + `style.css`         | Homepage (portfolio)       | none — hand-written                                                                                                                                                           |
+| `src/background/`                  | Animated canvas background | none — native ES modules via `<script type="module">`                                                                                                                         |
+| `projects/enterprise-ml-delivery/` | Enterprise case studies    | none — static HTML; styles live in `style.css` (`.case-*`, `.pipeline-*`)                                                                                                     |
+| `projects/dogma/`                  | dogma interactive demo     | **built here from a local checkout of [dogma](https://github.com/ignacio-ireta/dogma)** by `tools/dogma-demo/build.mjs`; committed output, see [dogma-demo.md](dogma-demo.md) |
+| `projects/cdmx-map/`               | React + Leaflet map        | **built elsewhere** ([cdmx-convenience-map](https://github.com/ignacio-ireta/cdmx-convenience-map)); only the Vite output + GeoJSON are committed here                        |
+| `projects/etf-portfolio-research/` | Project page               | none — static HTML                                                                                                                                                            |
+| `reed/privacy/`                    | App privacy policy         | none — static HTML                                                                                                                                                            |
 
 Pages are linked with relative paths and validated offline by `scripts/check-links.mjs`.
 

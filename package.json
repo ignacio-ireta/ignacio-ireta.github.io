@@ -18,7 +18,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json",
-    "validate:html": "html-validate index.html projects/etf-portfolio-research/index.html reed/privacy/index.html",
+    "validate:html": "html-validate index.html projects/enterprise-ml-delivery/index.html projects/etf-portfolio-research/index.html reed/privacy/index.html",
     "check:links": "node scripts/check-links.mjs",
     "test": "node --test",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run validate:html && npm run check:links && npm run test",

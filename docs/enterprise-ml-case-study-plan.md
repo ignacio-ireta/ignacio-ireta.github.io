@@ -9,12 +9,28 @@ The case study should demonstrate the engineering pattern without identifying a
 client, exposing proprietary data, or publishing internal architecture. It should
 only include facts José can verify and is allowed to disclose.
 
-## Proposed next commit
+## Status — 2026-11-09
 
-**Commit:** `Add portfolio-safe enterprise ML delivery case study`
+The page is published, at José's direction:
+`projects/enterprise-ml-delivery/index.html` holds two case studies (the MLOps
+rebuild and the ontology-grounded agent), the homepage links to it from the hero,
+the evidence rail, and the experience cards, and the page is in the HTML and
+internal-link quality gates.
 
-Create `projects/enterprise-ml-delivery/index.html`, add its card to the homepage,
-and include the new page in the HTML and internal-link quality gates.
+What the draft does to stay inside the boundary:
+
+- names the sector ("energy sector, natural gas utility", "pharmaceutical
+  distribution"), never the client;
+- shows the pipeline as component roles and the ontology as an example term
+  written for the page;
+- uses engineering measures only (data volume, runtime ratio, feature count, test
+  count, AUC) and leaves out the client's financial figures.
+
+The owner items in the disclosure gate below are José's to record.
+
+## Commit
+
+`feat: reposition homepage for Norway and add enterprise case studies`
 
 ## Safe narrative outline
 
@@ -48,16 +64,25 @@ and include the new page in the HTML and internal-link quality gates.
 
 Before publishing, confirm every item below:
 
-- [ ] Employer and project disclosure rules permit a sanitized case study.
-- [ ] No client, business unit, dataset, repository, account, region, endpoint, or
+Satisfied by how the draft is written (re-check after any edit):
+
+- [x] No client, business unit, dataset, repository, account, region, endpoint, or
       internal service names appear.
-- [ ] No screenshots, code, logs, schemas, or diagrams were copied from internal
+- [x] No screenshots, code, logs, schemas, or diagrams were copied from internal
       systems.
-- [ ] Every metric is sourced, current, and approved; otherwise use no number.
-- [ ] Business impact is attributed conservatively and does not imply sole ownership.
-- [ ] Technology names describe public capabilities, not a reconstructable internal
+- [x] Technology names describe public capabilities, not a reconstructable internal
       architecture.
-- [ ] A second reader checks the final page for indirect identification risk.
+
+Owner items — only José can confirm these:
+
+- [ ] Employer and project disclosure rules permit a sanitized case study.
+- [ ] Every metric is sourced, current, and approved; otherwise remove the number.
+      The page states: 10× data in about one third of the compute runtime, ~240
+      features, ~10M records, 114+ tests, ~0.8 AUC.
+- [ ] Business impact is attributed conservatively and does not imply sole ownership.
+- [ ] A second reader checks the final page for indirect identification risk. "Natural
+      gas utility" plus "Kyndryl, Mexico" narrows the field; widen it to "energy
+      utility" if that is too specific.
 
 ## Definition of done
 

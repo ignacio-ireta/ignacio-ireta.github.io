@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise AI Delivery Case Studies — José Ignacio Esparza</title>
+    <meta
+      name="description"
+      content="Two enterprise case studies: a legacy R credit-risk model rebuilt as an AWS SageMaker pipeline, and an LLM agent made consistent with an RDF/Turtle ontology."
+    />
+    <meta property="og:title" content="Enterprise AI Delivery Case Studies" />
+    <meta
+      property="og:description"
+      content="A legacy R model rebuilt as an operated SageMaker pipeline, and an LLM agent grounded in an RDF/Turtle ontology."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://ignacio-ireta.github.io/projects/enterprise-ml-delivery/"
+    />
+    <link rel="canonical" href="https://ignacio-ireta.github.io/projects/enterprise-ml-delivery/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../style.css?v=norway-evidence-20261109" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="wordmark" href="../../">José Ignacio Esparza</a>
+        <nav>
+          <a href="#mlops-rebuild">MLOps rebuild</a>
+          <a href="#ontology-agent">Ontology agent</a>
+          <a href="../../#projects">Projects</a>
+          <a href="../../#contact">Connect</a>
+        </nav>
+      </header>
+
+      <main class="case-page">
+        <section class="case-hero">
+          <p class="eyebrow">Case studies · enterprise delivery at Kyndryl</p>
+          <h1>Two enterprise AI systems, from fragile to operated.</h1>
+          <p class="case-lede">
+            Since July 2025 I have worked as a forward-deployed Applications, Data &amp; AI
+            consultant at Kyndryl, placed inside client teams. These are the two engagements that
+            best show how I work: a production ML pipeline for an energy-sector client, and an LLM
+            agent for an enterprise knowledge problem.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#mlops-rebuild">MLOps rebuild</a>
+            <a class="button secondary" href="#ontology-agent">Ontology-grounded agent</a>
+          </div>
+          <div class="panel case-boundary">
+            <p>
+              <strong>What this page leaves out.</strong> Client names, datasets, schemas, source
+              code, and internal diagrams do not appear here. The diagrams show component roles, and
+              the Turtle example is written for this page. The numbers are engineering measures of
+              my own work.
+            </p>
+          </div>
+        </section>
+
+        <section class="case-section" id="mlops-rebuild">
+          <p class="eyebrow">Case study 1 · energy sector, natural gas utility</p>
+          <h2>A notebook-bound R model, rebuilt as an operated ML pipeline.</h2>
+
+          <dl class="case-results">
+            <div>
+              <dt>10&times; data</dt>
+              <dd>
+                processed in about one third of the compute runtime, measured from cloud billing
+                records
+              </dd>
+            </div>
+            <div>
+              <dt>~240 features</dt>
+              <dd>engineered across about 10 million records</dd>
+            </div>
+            <div>
+              <dt>114+ tests</dt>
+              <dd>automated, where the legacy code had none</dd>
+            </div>
+            <div>
+              <dt>~0.8 AUC</dt>
+              <dd>for the non-payment classifier on the rebuilt pipeline</dd>
+            </div>
+          </dl>
+
+          <h3>Context</h3>
+          <p>
+            The client&rsquo;s collections team relied on an XGBoost model that predicts which
+            customers will not pay. Credit losses were rising year over year, so the scores mattered
+            more each month. The model lived in undocumented R notebooks, with no automated tests
+            and no drift monitoring.
+          </p>
+
+          <h3>Constraints</h3>
+          <ul class="case-list">
+            <li>
+              The legacy code came with no documentation and no tests to check a rewrite against.
+            </li>
+            <li>The workflow had to make sense to engineers and to the people operating it.</li>
+            <li>
+              Deployment, validation, and failure behavior were part of the deliverable, not work
+              for later.
+            </li>
+          </ul>
+
+          <h3>What I built</h3>
+          <p>
+            I read the legacy notebooks until I could state what each step did, then rewrote the
+            workflow as a modular, config-driven Python package. Each stage runs as a step in AWS
+            SageMaker Pipelines. The infrastructure is declared in Terraform, and every training run
+            is tracked in MLflow.
+          </p>
+
+          <div class="panel">
+            <h3>Pipeline, by component role</h3>
+            <ol class="pipeline-flow">
+              <li><strong>Ingest</strong> customer and payment records</li>
+              <li><strong>Preprocess</strong> clean and validate</li>
+              <li><strong>Features</strong> ~240, driven by config</li>
+              <li><strong>Train</strong> XGBoost, tracked runs</li>
+              <li><strong>Infer</strong> non-payment scores</li>
+              <li><strong>Monitor</strong> data and model drift</li>
+            </ol>
+            <ul class="pipeline-rails">
+              <li>Terraform: infrastructure as code</li>
+              <li>MLflow: experiment tracking</li>
+              <li>Structured logging</li>
+              <li>Resumable runs</li>
+              <li>Automated test suite</li>
+            </ul>
+          </div>
+
+          <h3>What makes it operable</h3>
+          <div class="panel table-scroll">
+            <table class="case-table">
+              <caption>
+                The safeguards added around the model during the rebuild.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Concern</th>
+                  <th scope="col">Safeguard</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Correctness</th>
+                  <td>114+ automated tests over the pipeline code, where none existed</td>
+                </tr>
+                <tr>
+                  <th scope="row">Drift</th>
+                  <td>
+                    Population stability index, Kolmogorov&ndash;Smirnov, and chi-squared checks on
+                    data and model outputs
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Reproducibility</th>
+                  <td>Config-driven runs, each one tracked in MLflow</td>
+                </tr>
+                <tr>
+                  <th scope="row">Failure</th>
+                  <td>Explicit error handling, structured logs, and resumable runs</td>
+                </tr>
+                <tr>
+                  <th scope="row">Infrastructure</th>
+                  <td>Declared in Terraform, so changes are reviewable as code</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Result</h3>
+          <p>
+            The rebuilt pipeline processes ten times the data of the old implementation in about one
+            third of the compute runtime. I took that comparison from the cloud billing records
+            rather than from a benchmark of my own. The collections team now has scores it can use
+            to target its strategies, produced by a pipeline that reports when its inputs change.
+          </p>
+
+          <h3>What I learned</h3>
+          <ul class="case-list">
+            <li>
+              Translating the model code was the small part. The real work was recovering the
+              assumptions the notebooks never wrote down.
+            </li>
+            <li>
+              Reproducibility and handover quality decide whether a model stays in use. Accuracy
+              only gets it considered.
+            </li>
+            <li>
+              My earlier work in retail banking paid off here: knowing how payment delinquency
+              unfolds informed the feature engineering.
+            </li>
+          </ul>
+        </section>
+
+        <section class="case-section" id="ontology-agent">
+          <p class="eyebrow">Case study 2 · enterprise knowledge engineering</p>
+          <h2>An LLM agent that stopped contradicting itself across departments.</h2>
+
+          <h3>Context</h3>
+          <p>
+            An enterprise LLM agent answered the same question differently depending on which
+            department asked. The main cause was vocabulary: departments used the same business
+            terms with different meanings, and nothing told the agent which meaning applied.
+          </p>
+
+          <h3>What I built</h3>
+          <p>
+            I worked with the business department to write the shared terminology down as a formal
+            ontology in RDF/OWL, serialized as Turtle (<code>.ttl</code>). The agent receives the
+            ontology directly in its context. I also corrected the model and decoding-temperature
+            configuration, which had been adding variance of its own.
+          </p>
+
+          <pre class="case-code"><code>@prefix ex:   &lt;https://example.org/glossary#&gt; .
+@prefix owl:  &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .
+
+ex:ActiveCustomer a owl:Class ;
+    rdfs:subClassOf ex:Customer ;
+    rdfs:label "Active customer"@en ;
+    skos:altLabel "Current account"@en ;
+    skos:definition "A customer with an open contract and an invoice issued in the last 90 days."@en .</code></pre>
+          <p class="case-caption">
+            An illustrative term written for this page, not the client&rsquo;s vocabulary. One
+            definition, its synonyms, and its place in the hierarchy travel together.
+          </p>
+
+          <h3>In context, compared with retrieval</h3>
+          <p>
+            The obvious design was retrieval: index the glossary and fetch the relevant pieces per
+            question. I compared the two. Placing the whole ontology in the prompt gave more
+            consistent answers than retrieving fragments of it. A compact vocabulary fits in context
+            whole, so the model sees each term next to the terms it is defined against.
+          </p>
+
+          <h3>A tool the business could use</h3>
+          <p>
+            The people who own the terminology work on locked-down corporate machines where nothing
+            can be installed. I built a browser-based editor and visualizer for
+            <code>.ttl</code> files that needs no installation, so they could read and change the
+            ontology themselves.
+          </p>
+
+          <h3>Result</h3>
+          <ul class="case-list">
+            <li>The cross-department inconsistency disappeared in the proof of concept.</li>
+            <li>
+              The partnering business department backed adoption, on the strength of the proof of
+              concept and the editor.
+            </li>
+            <li>
+              The terminology now exists as a file people can review and change, rather than as
+              habits spread across teams.
+            </li>
+          </ul>
+
+          <h3>What I learned</h3>
+          <ul class="case-list">
+            <li>Test the simple design first. Retrieval was the default, and it was not needed.</li>
+            <li>
+              An agent&rsquo;s inconsistency is often the organization&rsquo;s inconsistency. Fixing
+              the vocabulary fixed the agent.
+            </li>
+            <li>A tool that runs where the users are allowed to run it gets adopted.</li>
+          </ul>
+        </section>
+
+        <section class="case-section">
+          <div class="panel">
+            <h2>Want the detail?</h2>
+            <p>
+              I can walk through the design decisions, the trade-offs I rejected, and what I would
+              do differently in a technical interview.
+            </p>
+            <div class="project-links">
+              <a href="mailto:ignacio.ireta@outlook.com">ignacio.ireta@outlook.com</a>
+              <a href="../../#projects">See the public projects</a>
+              <a href="../../">Back to the homepage</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

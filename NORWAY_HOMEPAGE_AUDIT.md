@@ -89,3 +89,38 @@ Bounded scope:
 
 These are deliberately parked. The next leverage point is one approved enterprise
 case study, not more homepage scaffolding.
+
+## Update — 2026-11-09
+
+The homepage was rebuilt around evidence, and the remaining gap named above now has
+a draft in the working tree.
+
+What changed:
+
+- **Hero:** role stated as applied AI and MLOps engineer, four measured results, and
+  an at-a-glance panel with language levels (English C1 with the TOEFL score,
+  Norwegian Bokmål A2–B1), education, all five target cities, and the permit route.
+- **Evidence rail:** directly under the hero, five links: the two enterprise case
+  studies and the three live demos. The map link opens Oslo.
+- **Experience:** cards organized by sector (energy, knowledge engineering,
+  pharmaceutical distribution) with the measured results, then earlier roles.
+- **Projects:** the map card names Oslo, Bergen, Stavanger, Trondheim, and Drammen
+  with a deep link per city; dossier has a card; Reed's card states the Norwegian
+  localization.
+- **Education & credentials:** added from user-confirmed facts (transcript, TOEFL
+  report, Georgia Tech admission). In-progress certifications are left off.
+- **Case studies:** `projects/enterprise-ml-delivery/index.html`, written without
+  client names.
+
+Corrections made on the way: "Norwegian intermediate" became "A2–B1", and
+"Stavanger" as the only named city became the full list of five.
+
+The September blocker is resolved: José directed publication on 2026-11-09, and the
+homepage and case-study page shipped together. The owner items in the disclosure
+gate in `docs/enterprise-ml-case-study-plan.md` remain his to record.
+
+The dogma repository became public the same day, so the homepage card links its
+source.
+
+`npm run check` passes at this commit: formatting, lint, types, HTML validation
+of four pages, 51 internal links, 19 tests.

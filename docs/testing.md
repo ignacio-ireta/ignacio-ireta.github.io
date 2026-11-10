@@ -27,7 +27,7 @@ npm run format:check           # prettier --check
 | `tests/dogma-demo.test.mjs` | integrity | the committed dogma demo: its page assets exist, every catalog topic/problem has a snapshot file, start-up GETs are captured, runnable problems have public-test bundles, and no solution, hidden test, or level-4 hint ships |
 | `tests/boot.test.mjs`       | smoke     | `src/background/main.js` boots without throwing under a stubbed canvas + `matchMedia` (jsdom); asserts the canvas is sized and molecules are created                                                                          |
 | `scripts/check-links.mjs`   | link      | every relative `href`/`src` in authored HTML resolves on disk                                                                                                                                                                 |
-| `npm run validate:html`     | HTML      | `html-validate` on `index.html`, the ETF page, and the Reed privacy page                                                                                                                                                      |
+| `npm run validate:html`     | HTML      | `html-validate` on `index.html`, the case-study page, the ETF page, and the Reed privacy page                                                                                                                                 |
 
 ### How the boot smoke test works
 

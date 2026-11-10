@@ -1,7 +1,7 @@
 # dogma demo: build & publication contract
 
 `projects/dogma/` is an interactive demo of **dogma**, a local-first practice platform for ML,
-data science, and AI engineering (private repository). It is the dogma analogue of
+data science, and AI engineering ([source](https://github.com/ignacio-ireta/dogma)). It is the dogma analogue of
 [`cdmx-data-contract.md`](cdmx-data-contract.md) and
 [`etf-outputs-contract.md`](etf-outputs-contract.md): it says what is published, where it comes
 from, and how to refresh it.

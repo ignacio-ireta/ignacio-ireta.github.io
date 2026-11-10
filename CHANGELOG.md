@@ -8,6 +8,16 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Enterprise case-study page at `projects/enterprise-ml-delivery/`: the MLOps rebuild
+  of a legacy R credit-risk pipeline (energy sector) and the ontology-grounded LLM
+  agent, written without client names, data, or internal diagrams. Added to
+  `validate:html` and the internal-link check. The disclosure boundary it follows is recorded in
+  `docs/enterprise-ml-case-study-plan.md`.
+- Homepage evidence rail directly under the hero, linking the two case studies and
+  the three live demos (Norway convenience map, dogma, ETF research).
+- Homepage Education & credentials section (Georgia Tech OMSCS admission, UNAM
+  B.Sc., certifications, languages) and project cards for dossier and the
+  multi-city convenience map with per-city deep links.
 - dogma interactive demo at `projects/dogma/`, featured as the homepage's spotlight
   project: dogma's real React interface on a captured API snapshot of a demo
   learner, with Run/Submit graded in the browser by dogma's own static checks and
@@ -35,6 +45,12 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Homepage repositioned for Norway-facing applied AI / MLOps roles: new hero copy
+  with four measured results, an at-a-glance panel (languages with TOEFL score,
+  education, five target cities, permit route), and experience cards organized by
+  sector (energy, knowledge engineering, pharmaceutical distribution).
+- The CDMX Convenience Map card is now the Multi-City Convenience Map and names the
+  five Norwegian cities.
 - Homepage project grid: the featured card is now a full-width spotlight with a
   preview image; the other project cards form a two-column grid.
 - Encoded raw `&` as `&amp;` in homepage headings for valid HTML.
