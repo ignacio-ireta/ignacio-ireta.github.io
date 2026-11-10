@@ -45,6 +45,10 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Dev dependencies: `html-validate` 8 → 11 and patched transitive packages
+  (`js-yaml`, `fast-uri`, `brace-expansion`), so `npm audit` reports no
+  vulnerabilities and the CI audit step passes again. No authored HTML needed
+  changes under the new validator.
 - Homepage repositioned for Norway-facing applied AI / MLOps roles: new hero copy
   with four measured results, an at-a-glance panel (languages with TOEFL score,
   education, five target cities, permit route), and experience cards organized by
