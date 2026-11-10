@@ -116,8 +116,9 @@ Corrections made on the way: "Norwegian intermediate" became "A2–B1", and
 "Stavanger" as the only named city became the full list of five.
 
 The September blocker is resolved: José directed publication on 2026-11-09, and the
-homepage and case-study page shipped together. The owner items in the disclosure
-gate in `docs/enterprise-ml-case-study-plan.md` remain his to record.
+homepage and case-study page shipped together. The disclosure gate in
+`docs/enterprise-ml-case-study-plan.md` was completed on 2026-11-10, including a
+second read for indirect identification.
 
 The dogma repository became public the same day, so the homepage card links its
 source.

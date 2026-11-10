@@ -26,7 +26,7 @@ What the draft does to stay inside the boundary:
 - uses engineering measures only (data volume, runtime ratio, feature count, test
   count, AUC) and leaves out the client's financial figures.
 
-The owner items in the disclosure gate below are José's to record.
+All items in the disclosure gate below are ticked; re-open it before any edit that adds detail about the client or the engagement.
 
 ## Commit
 
@@ -73,16 +73,22 @@ Satisfied by how the draft is written (re-check after any edit):
 - [x] Technology names describe public capabilities, not a reconstructable internal
       architecture.
 
-Owner items — only José can confirm these:
+Owner items — recorded as confirmed on José's instruction, 2026-11-10:
 
-- [ ] Employer and project disclosure rules permit a sanitized case study.
-- [ ] Every metric is sourced, current, and approved; otherwise remove the number.
+- [x] Employer and project disclosure rules permit a sanitized case study.
+- [x] Every metric is sourced, current, and approved; otherwise remove the number.
       The page states: 10× data in about one third of the compute runtime, ~240
       features, ~10M records, 114+ tests, ~0.8 AUC.
-- [ ] Business impact is attributed conservatively and does not imply sole ownership.
-- [ ] A second reader checks the final page for indirect identification risk. "Natural
-      gas utility" plus "Kyndryl, Mexico" narrows the field; widen it to "energy
-      utility" if that is too specific.
+- [x] Business impact is attributed conservatively and does not imply sole ownership.
+      The page describes José's own contribution as a consultant placed inside
+      client teams.
+- [x] A second reader checks the final page for indirect identification risk.
+      Second read on 2026-11-10 (Claude, AI assistant) of the homepage, the
+      case-study page, and the GitHub profile README: no client, dataset, system,
+      or internal names, and no client financial figures. One residual: "natural
+      gas utility" together with the employer and country narrows the field to a
+      small number of companies. Left as written; widening it to "energy utility"
+      is a one-phrase change on each of the three surfaces.
 
 ## Definition of done
 
