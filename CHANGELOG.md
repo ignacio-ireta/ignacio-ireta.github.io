@@ -45,6 +45,12 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Claims checked against the projects and corrected (2026-11-10): the dogma demo
+  grades 196 of the 251 problems in the browser, and the homepage now says so;
+  Reed's card states 159 unit tests and describes its privacy precisely; the map
+  card no longer says a new city is a single file.
+- Reed privacy policy: new Network Access section. The app downloads a web page
+  when the user shares a link to it; nothing else uses the network.
 - Dev dependencies: `html-validate` 8 → 11 and patched transitive packages
   (`js-yaml`, `fast-uri`, `brace-expansion`), so `npm audit` reports no
   vulnerabilities and the CI audit step passes again. No authored HTML needed
