@@ -92,6 +92,7 @@ Two sub-projects keep themselves current automatically: pushing new build artifa
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md) — site structure and the canvas-background module graph
+- [docs/design-language.md](docs/design-language.md) — the design principles this site and its featured projects share
 - [docs/cdmx-data-contract.md](docs/cdmx-data-contract.md) — GeoJSON/metadata schema and build provenance for the CDMX map
 - [docs/etf-outputs-contract.md](docs/etf-outputs-contract.md) — ETF report artifact set, metrics schema, and the cross-repo sync contract
 - [docs/dogma-demo.md](docs/dogma-demo.md) — what the dogma demo publishes (and never publishes), in-browser grading, and how to refresh it
