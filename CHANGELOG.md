@@ -6,6 +6,23 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Homepage canvas background rebuilt as a closer model of the Haber–Bosch process.
+  Molecules are true-geometry 3D ball-and-stick models that tumble, lit and
+  depth-sorted per frame; gas speeds follow a Maxwell–Boltzmann distribution with
+  real mass ratios; and the reaction now runs step by step on the surface of iron
+  nanoparticles (dissociative adsorption, surface hopping, stepwise hydrogenation,
+  desorption — each reversible, atoms conserved exactly) instead of an instant
+  swap on contact. The cell-biology backdrop is replaced by gas washes and faded
+  studies of the iron lattice, with out-of-focus molecule layers for depth.
+- A height-only resize (mobile browser chrome, color-scheme switch) no longer
+  restarts the simulation.
+
+### Fixed
+
+- Dark mode: the page background no longer carries the light theme's pale wash.
+
 ### Added
 
 - Enterprise case-study page at `projects/enterprise-ml-delivery/`: the MLOps rebuild

@@ -58,7 +58,7 @@ No `src/`-package + `pyproject.toml` layout. The analog is the documented layout
 
 ## E — Configuration · ANALOG (mostly N/A)
 
-No CLI flags / env-driven config. The nearest analog is the documented tunables in `src/background/config.js` (density tiers, depth bands, pointer physics) and the CSS custom properties read by `palette.js`. Runtime log levels, input/output paths, etc. are N/A.
+No CLI flags / env-driven config. The nearest analog is the documented tunables in `src/background/config.js` (density tiers, molecular geometries, kinetics, pointer physics) and the CSS custom properties read by `palette.js`. Runtime log levels, input/output paths, etc. are N/A.
 
 ## F — Architecture & modularity · ANALOG
 
@@ -88,7 +88,7 @@ There is no multi-step run to resume; serving a static file is inherently idempo
 
 | Type                | Here                                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Unit                | `node:test` over the pure helpers (`random.js`, `geometry.js`)                                                |
+| Unit                | `node:test` over the pure helpers (`random.js`, `geometry.js`) and the simulation (`species.js`)              |
 | Integration / smoke | jsdom boot test: `main.js` boots without throwing under a stubbed canvas (also exercises §H)                  |
 | "e2e"-ish           | offline internal-link check + `html-validate` on authored pages                                               |
 | Golden-file         | _aspirational_ — a deterministic-seed canvas hash would need seed injection (`state.seed` uses `Math.random`) |

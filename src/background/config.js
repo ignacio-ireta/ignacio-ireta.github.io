@@ -1,60 +1,13 @@
 export const DPR_CAP = 2;
 
+// Everything in the simulation is laid out in ångströms and converted to pixels
+// by the tier's `scale` (px per Å), so bond lengths, atom sizes, and the iron
+// lattice all stay in true proportion to one another at every viewport size.
 export const MOLECULE_DENSITY = {
-  mobile: {
-    staticClusterScale: 1.16,
-    overlayAreaPerMolecule: 12000,
-    overlayMin: 42,
-    overlayMax: 90
-  },
-  tablet: {
-    staticClusterScale: 1.46,
-    overlayAreaPerMolecule: 12000,
-    overlayMin: 64,
-    overlayMax: 138
-  },
-  desktop: {
-    staticClusterScale: 1.82,
-    overlayAreaPerMolecule: 8500,
-    overlayMin: 120,
-    overlayMax: 240
-  }
+  mobile: { scale: 12, areaPerMolecule: 9500, min: 34, max: 64, catalysts: 2, far: 12, near: 2 },
+  tablet: { scale: 14, areaPerMolecule: 10500, min: 56, max: 100, catalysts: 3, far: 22, near: 3 },
+  desktop: { scale: 16, areaPerMolecule: 11500, min: 96, max: 180, catalysts: 4, far: 40, near: 4 }
 };
-
-export const PALETTE_KEYS = ["rose", "blue", "teal", "gold", "violet"];
-
-export const DEPTH_BANDS = [
-  {
-    name: "background",
-    count: 0.34,
-    radius: [18, 40],
-    alpha: [0.24, 0.4],
-    speed: 0.000075,
-    drift: 9,
-    outline: 0.22,
-    scale: 1.05
-  },
-  {
-    name: "midground",
-    count: 0.42,
-    radius: [13, 26],
-    alpha: [0.42, 0.66],
-    speed: 0.00013,
-    drift: 15,
-    outline: 0.5,
-    scale: 1
-  },
-  {
-    name: "foreground",
-    count: 0.24,
-    radius: [10, 20],
-    alpha: [0.66, 0.94],
-    speed: 0.00019,
-    drift: 22,
-    outline: 0.86,
-    scale: 0.95
-  }
-];
 
 export const POINTER = {
   radius: 285,
@@ -64,121 +17,147 @@ export const POINTER = {
   decay: 0.952
 };
 
-// --- Reaction chemistry: Haber process  N2 + 3 H2  ⇌  2 NH3  (Fe catalyst) ---
+// --- Reaction chemistry: Haber–Bosch  N2 + 3 H2  ⇌  2 NH3  over iron ---------
 //
-// The animated overlay depicts a catalysed reaction at equilibrium. Atoms are
-// drawn ball-and-stick (shaded spheres + bond sticks), molecules collide
-// elastically inside the viewport "vessel", and reactions fire on real contact
-// with the iron catalyst. Swapping the reaction is purely a matter of editing
-// ELEMENTS + SPECIES below — the renderer and physics are reaction-agnostic.
+// The overlay is a small molecular-dynamics sketch of heterogeneous catalysis.
+// Gas molecules tumble in 3D and collide elastically with their real relative
+// masses; the reaction itself runs on the surface of iron nanoparticles through
+// the elementary steps of the Langmuir–Hinshelwood mechanism (see KINETICS).
 
-// Per-element drawing data. `paletteKey` ties an element to one of the site's
-// accent colors; `radius` is a relative (CPK-ish) size, scaled at build time by
-// ELEMENT_ATOM_SCALE * the molecule's nominal radius. Hydrogen and iron get a
-// mode-aware override inside species.js (`elementColors`) so H reads near-white
-// and Fe reads as polished metal — both still drawn from the cool palette.
+// `mass` in u. `ball` is the drawn ball-and-stick radius in Å (iron is drawn at
+// its metallic radius so the lattice reads as a close-packed surface). Colors
+// are CPK adapted to the site's cool palette: N blue, H near-white, Fe steel.
 export const ELEMENTS = {
-  N: { paletteKey: "blue", radius: 0.95, label: "N" }, // CPK nitrogen → site blue
-  H: { paletteKey: "rose", radius: 0.52, label: "H" }, // CPK white → palest tone
-  Fe: { paletteKey: "gold", radius: 1.05, label: "Fe" }, // CPK iron → metallic steel
-  C: { paletteKey: "violet", radius: 0.9, label: "C" }, // reserved for reaction swaps
-  O: { paletteKey: "teal", radius: 0.92, label: "O" } // reserved (never red)
+  N: { mass: 14.007, ball: 0.37, light: "#2e62b5", dark: "#4f86e0" },
+  H: { mass: 1.008, ball: 0.25, light: "#eef2f8", dark: "#f1f4fa" },
+  Fe: { mass: 55.845, ball: 1.24, light: "#b3bfd0", dark: "#7d8ba2", metallic: true }
 };
 
-// Fraction of the molecule's nominal radius that one unit of element radius maps
-// to in pixels.
-export const ELEMENT_ATOM_SCALE = 0.5;
+// Experimental gas-phase geometries (Å / degrees).
+const NN_BOND = 1.098;
+const HH_BOND = 0.741;
+const NH_BOND = 1.012;
+const HNH_ANGLE = (106.67 * Math.PI) / 180;
 
-// Atom positions are normalized (× the molecule's nominal radius at build time).
-// `role` drives the reaction state machine; `weight` biases the spawn mix so the
-// field starts near a lively equilibrium (extra H2 nods at the 3:1 stoichiometry).
+// Ammonia is a trigonal pyramid: three H on a ring below the N apex. Positions
+// are relative to the center of mass so the molecule tumbles about it.
+const NH3_RING = (2 * NH_BOND * Math.sin(HNH_ANGLE / 2)) / Math.sqrt(3);
+const NH3_HEIGHT = Math.sqrt(NH_BOND * NH_BOND - NH3_RING * NH3_RING);
+const NH3_COM = (ELEMENTS.N.mass * NH3_HEIGHT) / (ELEMENTS.N.mass + 3 * ELEMENTS.H.mass);
+
+function ammoniaHydrogen(index) {
+  const angle = Math.PI / 2 + (index * Math.PI * 2) / 3;
+  return { el: "H", x: Math.cos(angle) * NH3_RING, y: Math.sin(angle) * NH3_RING, z: -NH3_COM };
+}
+
+// `collisionRadius` (Å) is the hard-disc radius used by the gas-phase physics;
+// `spin` scales the thermal tumbling rate (lighter rotors spin faster).
 export const SPECIES = {
-  "substrate-a": {
-    paletteKey: "blue",
-    role: "reactantA",
-    weight: 0.18,
+  N2: {
+    mass: 2 * ELEMENTS.N.mass,
+    formula: { N: 2 },
     atoms: [
-      { el: "N", x: -0.6, y: 0 },
-      { el: "N", x: 0.6, y: 0 }
+      { el: "N", x: -NN_BOND / 2, y: 0, z: 0 },
+      { el: "N", x: NN_BOND / 2, y: 0, z: 0 }
     ],
-    bonds: [{ a: 0, b: 1, order: 3 }] // N≡N triple bond
+    bonds: [{ a: 0, b: 1, order: 3 }], // N≡N
+    collisionRadius: 0.9,
+    spin: 1
   },
-  "substrate-b": {
-    paletteKey: "rose",
-    role: "reactantB",
-    weight: 0.4,
+  H2: {
+    mass: 2 * ELEMENTS.H.mass,
+    formula: { H: 2 },
     atoms: [
-      { el: "H", x: -0.44, y: 0 },
-      { el: "H", x: 0.44, y: 0 }
+      { el: "H", x: -HH_BOND / 2, y: 0, z: 0 },
+      { el: "H", x: HH_BOND / 2, y: 0, z: 0 }
     ],
-    bonds: [{ a: 0, b: 1, order: 1 }] // H–H single bond
+    bonds: [{ a: 0, b: 1, order: 1 }], // H–H
+    collisionRadius: 0.62,
+    spin: 1.7
   },
-  catalyst: {
-    paletteKey: "gold",
-    role: "catalyst",
-    weight: 0.17,
+  NH3: {
+    mass: ELEMENTS.N.mass + 3 * ELEMENTS.H.mass,
+    formula: { N: 1, H: 3 },
     atoms: [
-      { el: "Fe", x: 0, y: -0.62 },
-      { el: "Fe", x: -0.66, y: 0.46 },
-      { el: "Fe", x: 0.66, y: 0.46 }
-    ],
-    bonds: [
-      { a: 0, b: 1, order: 1 },
-      { a: 1, b: 2, order: 1 },
-      { a: 2, b: 0, order: 1 }
-    ]
-  },
-  product: {
-    paletteKey: "blue",
-    role: "product",
-    weight: 0.25,
-    atoms: [
-      { el: "N", x: 0, y: 0.04 }, // central nitrogen
-      { el: "H", x: 0, y: -0.86 }, // trigonal-pyramidal hydrogens (drawn flat)
-      { el: "H", x: -0.78, y: 0.52 },
-      { el: "H", x: 0.78, y: 0.52 }
+      { el: "N", x: 0, y: 0, z: NH3_HEIGHT - NH3_COM },
+      ammoniaHydrogen(0),
+      ammoniaHydrogen(1),
+      ammoniaHydrogen(2)
     ],
     bonds: [
       { a: 0, b: 1, order: 1 },
       { a: 0, b: 2, order: 1 },
       { a: 0, b: 3, order: 1 }
-    ]
-  },
-  vacancy: {
-    paletteKey: "blue",
-    role: "vacancy",
-    weight: 0,
-    atoms: [],
-    bonds: []
+    ],
+    collisionRadius: 1.12,
+    spin: 1.15
   }
 };
 
-// Elastic collisions: a uniform spatial-hash grid (cell ≥ pull radius) keeps the
-// broad phase O(n) at the desktop molecule cap. Restitution < 1 bleeds energy so
-// motion stays calm; maxSpeed caps the baseline velocity (heat can still burst).
-export const COLLISION = {
-  cellSize: 140,
-  restitution: 0.9,
-  wallRestitution: 0.84,
-  maxSpeed: 0.05, // px/ms baseline cap (heat/flash can exceed transiently)
-  catalystPullRadius: 120,
-  catalystPull: 0.0000016 // gentle attraction of reactants toward catalysts
+// Starting gas mixture (number fractions). Close to where the kinetics below
+// settle, with hydrogen in stoichiometric excess.
+export const GAS_MIX = { N2: 0.2, H2: 0.56, NH3: 0.24 };
+
+// Iron nanoparticles: a close-packed facet (rows of atoms, each row offset by
+// half a spacing) over a second layer. Adsorbates sit in the three-fold hollow
+// sites between surface atoms. `shapes` lists atoms per row.
+export const CATALYST = {
+  lattice: 2.48, // Fe–Fe nearest-neighbour distance, Å
+  shapes: {
+    mobile: [[2, 3, 2]],
+    tablet: [
+      [3, 4, 3],
+      [2, 3, 2]
+    ],
+    desktop: [
+      [2, 3, 2],
+      [3, 4, 3],
+      [2, 3, 2],
+      [2, 3, 4, 3]
+    ]
+  },
+  reach: 3.3, // Å: how far from the contact point an arriving molecule finds a site
+  pull: 0.000005, // px per ms²: weak attraction of nearby gas toward the metal
+  pullRange: 4.5, // Å beyond the particle's edge
+  spring: 0.0000009, // pull toward the particle's home position (per ms²)
+  damping: 0.0016, // per ms
+  wander: 0.00003, // random drift kick (px per ms^1.5)
+  spin: 0.000018 // rad per ms, sign randomised
 };
 
-// Thermal motion: tiny Brownian velocity jitter keeps molecules in constant
-// motion; heat (pointer / reaction flash) multiplies displacement speed.
+// Thermal motion. Each molecule is coupled to a Langevin thermostat, so speeds
+// follow a Maxwell–Boltzmann distribution with <v²> ∝ T / m: hydrogen moves
+// ~3.7× faster than nitrogen, as in a real gas. Temperature is dimensionless
+// (1 = ambient); pointer heat raises it locally.
 export const THERMAL = {
-  brownian: 0.00045,
-  heatSpeedGain: 3.85
+  speedN2: 0.00105, // rms speed of N2 at T = 1, Å per ms
+  coupling: 1 / 1100, // thermostat rate, per ms
+  spin: 0.00115, // rms tumbling rate at T = 1 for spin = 1, rad per ms
+  heatToTemp: 2.2 // T = 1 + heat * heatToTemp
 };
 
-// Forward and reverse reactions use the balanced Haber stoichiometry. Invisible
-// vacancy slots preserve a fixed simulation array while conserving every atom.
-export const CHEM = {
-  forwardCooldownMs: 420, // global throttle between forward reactions
-  reverseCooldownMs: 160, // global throttle between reverse reactions
-  reverseProbOnContact: 0.16,
-  adsorbWindowMs: 1500, // how long a catalyst remembers an adsorbed reactant
-  flashHeat: 2.4, // heat spike applied to molecules in a reaction
-  flashOpacity: 0.25 // opacity dip that relaxes back to 1 (a visible "pop")
+// Langmuir–Hinshelwood mechanism on the iron surface (* = free hollow site):
+//
+//   N2(g)  + 2*  ⇌  2 N*            dissociative adsorption (rate-limiting)
+//   H2(g)  + 2*  ⇌  2 H*            dissociative adsorption
+//   N*  + H*     ⇌  NH*  + *        stepwise hydrogenation
+//   NH* + H*     ⇌  NH2* + *
+//   NH2* + H*    ⇌  NH3* + *
+//   NH3*         ⇌  NH3(g) + *      desorption
+//
+// `stick` is the probability that a collision with free sites adsorbs. Surface
+// rates are per ms at T = 1 and scale as exp(Ea * (1 - 1/T)). The reverse steps
+// carry the larger activation energies, so heating the gas (pointer) speeds
+// everything up but shifts the equilibrium back toward N2 + H2 — Le Chatelier
+// for an exothermic reaction.
+export const KINETICS = {
+  stick: { N2: 0.9, H2: 0.4, NH3: 0.5 },
+  hop: { H: 1 / 450, N: 1 / 1800, ea: 0.5 },
+  hydrogenate: { rate: 1 / 650, ea: 0.3 },
+  dehydrogenate: { rate: 1 / 1500, ea: 1.2 },
+  desorbNH3: { rate: 1 / 1100, ea: 0.6 },
+  recombineH: { rate: 1 / 2200, ea: 0.8 },
+  recombineN: { rate: 1 / 2500, ea: 1.6 },
+  settleMs: 120, // time constant for adsorbates easing onto their sites
+  ghostBondMs: 420 // how long a dissociating bond stays visible
 };

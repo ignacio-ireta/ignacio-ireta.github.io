@@ -1,11 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  traceOrganicMass,
-  traceSquigglePath,
-  drawMembraneBand,
-  drawDepthGuides
-} from "../src/background/geometry.js";
+import { drawDepthGuides, hexLatticePoints, traceSmoothBlob } from "../src/background/geometry.js";
 
 // A canvas 2D context stub that counts how often each method is called, so we
 // can assert on the path commands a geometry helper issues without a real canvas.
@@ -28,30 +23,27 @@ function recordingCtx() {
   );
 }
 
-test("traceOrganicMass builds one closed path with a point per segment", () => {
+test("traceSmoothBlob builds one closed path with a curve per vertex", () => {
   const ctx = recordingCtx();
-  traceOrganicMass(ctx, 0, 0, 10, 10, 6, 0);
+  traceSmoothBlob(ctx, 0, 0, 10, 10, 6, 0);
   assert.equal(ctx.calls.beginPath, 1);
   assert.equal(ctx.calls.moveTo, 1);
-  assert.equal(ctx.calls.lineTo, 6);
+  assert.equal(ctx.calls.quadraticCurveTo, 6);
   assert.equal(ctx.calls.closePath, 1);
 });
 
-test("traceSquigglePath strokes an open path", () => {
-  const ctx = recordingCtx();
-  traceSquigglePath(ctx, 0, 0, 100, 10, 0, 4);
-  assert.equal(ctx.calls.beginPath, 1);
-  assert.equal(ctx.calls.moveTo, 1);
-  assert.equal(ctx.calls.lineTo, 4);
-  assert.equal(ctx.calls.closePath, undefined);
-});
+test("hexLatticePoints is close-packed: six neighbours one spacing away", () => {
+  const spacing = 10;
+  const points = hexLatticePoints(35, spacing);
+  assert.ok(points.every((point) => Math.hypot(point.x, point.y) <= 35));
+  assert.ok(points.some((point) => point.x === 0 && point.y === 0));
 
-test("drawMembraneBand draws two concentric arcs", () => {
-  const ctx = recordingCtx();
-  drawMembraneBand(ctx, 0, 0, 20, 0, Math.PI);
-  assert.equal(ctx.calls.beginPath, 2);
-  assert.equal(ctx.calls.arc, 2);
-  assert.equal(ctx.calls.stroke, 2);
+  const distances = points
+    .filter((point) => point.x !== 0 || point.y !== 0)
+    .map((point) => Math.hypot(point.x, point.y));
+  const nearest = Math.min(...distances);
+  assert.ok(Math.abs(nearest - spacing) < 1e-9);
+  assert.equal(distances.filter((distance) => Math.abs(distance - spacing) < 1e-9).length, 6);
 });
 
 test("drawDepthGuides is save/restore balanced and does not throw", () => {
