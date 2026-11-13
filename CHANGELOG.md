@@ -27,6 +27,9 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   rim, nitrogen blue for links, the catalyst's bronze for labels, and a deep navy
   dark scheme with its own accent colours. The graph-paper grid and the hard
   ovals inside cards give way to a vignette and soft corner light.
+- The case-study and ETF pages now run the same micrograph background as the
+  homepage, with their text on a frosted reading sheet; the ETF report posters
+  pick up the field's light.
 
 ### Fixed
 

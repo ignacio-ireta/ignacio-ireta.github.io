@@ -25,9 +25,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../../style.css?v=micrograph-palette-20261113" />
+    <link rel="stylesheet" href="../../style.css?v=micrograph-pages-20261113" />
   </head>
   <body>
+    <canvas id="molecule-canvas" aria-hidden="true"></canvas>
     <div class="page-shell">
       <header class="topbar">
         <a class="wordmark" href="../../">José Ignacio Esparza</a>
@@ -39,7 +40,7 @@
         </nav>
       </header>
 
-      <main class="case-page">
+      <main class="case-page reading-sheet">
         <section class="case-hero">
           <p class="eyebrow">Case studies · enterprise delivery at Kyndryl</p>
           <h1>Two enterprise AI systems, from fragile to operated.</h1>
@@ -291,5 +292,6 @@ ex:ActiveCustomer a owl:Class ;
         </section>
       </main>
     </div>
+    <script type="module" src="../../src/background/main.js?v=haber-micrograph-20261113"></script>
   </body>
 </html>

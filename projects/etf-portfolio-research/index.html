@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../../style.css?v=micrograph-palette-20261113" />
+    <link rel="stylesheet" href="../../style.css?v=micrograph-pages-20261113" />
     <style>
       body {
         overflow-x: hidden;
@@ -82,7 +82,12 @@
         cursor: pointer;
         font: inherit;
         text-align: center;
-        background: var(--surface-strong);
+        /* The same lit field as the page, held behind glass until the report loads. */
+        background:
+          radial-gradient(60% 70% at 14% 86%, var(--glow-teal), transparent 70%),
+          radial-gradient(55% 65% at 88% 12%, var(--glow-violet), transparent 70%),
+          radial-gradient(55% 65% at 78% 92%, var(--glow-amber), transparent 70%),
+          var(--surface-strong);
         color: var(--ink);
       }
       .report-embed__poster:hover .report-embed__cta,
@@ -94,7 +99,7 @@
         font-weight: 700;
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        color: var(--accent-teal);
+        color: var(--accent-copper);
       }
       .report-embed__cta {
         font-size: 1.18rem;
@@ -157,7 +162,7 @@
         color: var(--ink);
       }
       table.metrics tbody tr.is-strategy {
-        background: rgba(122, 213, 195, 0.16);
+        background: var(--glow-teal);
       }
       table.metrics tbody tr.is-strategy th[scope="row"] {
         color: var(--accent-gold);
@@ -232,6 +237,7 @@
     </style>
   </head>
   <body>
+    <canvas id="molecule-canvas" aria-hidden="true"></canvas>
     <div class="page-shell">
       <header class="topbar">
         <a class="wordmark" href="../../">José Ignacio Esparza</a>
@@ -241,7 +247,7 @@
         </nav>
       </header>
 
-      <main class="project-page">
+      <main class="project-page reading-sheet">
         <section class="project-hero">
           <p class="eyebrow">Research system</p>
           <h1 class="project-title">ETF Portfolio Research</h1>
@@ -587,5 +593,6 @@
     </div>
 
     <script type="module" src="embed.js"></script>
+    <script type="module" src="../../src/background/main.js?v=haber-micrograph-20261113"></script>
   </body>
 </html>

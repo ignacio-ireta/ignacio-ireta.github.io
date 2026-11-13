@@ -784,6 +784,23 @@ section {
   border-left: 2px solid var(--line-strong);
 }
 
+/* Long-form pages sit on a frosted sheet: the text stays readable while the
+   micrograph carries on in the margins and, blurred, underneath. */
+.reading-sheet {
+  position: relative;
+}
+
+.reading-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0 clamp(-3rem, -4vw, -1rem);
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg) 68%, transparent);
+  border-inline: 1px solid var(--line);
+  backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: var(--shadow);
+}
+
 /* Case-study pages (projects/enterprise-ml-delivery/). */
 .case-page {
   width: min(1000px, calc(100% - 2rem));
@@ -820,6 +837,10 @@ section {
 
 .case-page p {
   max-width: 68ch;
+}
+
+.case-page .eyebrow {
+  color: var(--accent-copper);
 }
 
 .case-lede {
