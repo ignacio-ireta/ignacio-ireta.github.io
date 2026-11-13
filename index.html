@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -56,7 +56,7 @@
         z-index: 1;
       }
     </style>
-    <link rel="stylesheet" href="style.css?v=micrograph-pages-20261113" />
+    <link rel="stylesheet" href="style.css?v=editorial-layout-20261113" />
   </head>
   <body>
     <canvas id="molecule-canvas" aria-hidden="true"></canvas>
@@ -72,9 +72,9 @@
         </nav>
       </header>
 
-      <main>
+      <main class="home">
         <section class="hero" id="hero">
-          <div class="hero-copy panel">
+          <div class="hero-copy">
             <p class="eyebrow">Applied AI &amp; MLOps engineer · forward-deployed</p>
             <p class="hero-signature">José Ignacio Esparza Ireta</p>
             <h1>Production ML and LLM systems that another team can run.</h1>
@@ -83,24 +83,6 @@
               with Terraform and MLflow, LLM agents grounded in RDF/OWL ontologies, and the tests,
               drift monitoring, and documentation that let someone else own the result.
             </p>
-            <dl class="hero-metrics">
-              <div>
-                <dt>10&times; data, ~&#8531; compute</dt>
-                <dd>legacy R model rebuilt on SageMaker Pipelines</dd>
-              </div>
-              <div>
-                <dt>~240 features</dt>
-                <dd>engineered across ~10M records</dd>
-              </div>
-              <div>
-                <dt>114+ tests</dt>
-                <dd>and drift detection, where none existed</dd>
-              </div>
-              <div>
-                <dt>5 Norwegian cities</dt>
-                <dd>scored by an open geodata pipeline</dd>
-              </div>
-            </dl>
             <div class="hero-actions">
               <a class="button primary" href="projects/enterprise-ml-delivery/"
                 >Read the case studies</a
@@ -110,7 +92,7 @@
             </div>
           </div>
 
-          <aside class="hero-note panel molecular-map">
+          <aside class="hero-note">
             <p class="note-label">At a glance</p>
             <h2>Open to applied AI and MLOps roles in Norway.</h2>
             <dl class="profile-facts">
@@ -143,42 +125,58 @@
             </dl>
           </aside>
 
+          <dl class="hero-metrics">
+            <div>
+              <dt>10&times; data, ~&#8531; compute</dt>
+              <dd>legacy R model rebuilt on SageMaker Pipelines</dd>
+            </div>
+            <div>
+              <dt>~240 features</dt>
+              <dd>engineered across ~10M records</dd>
+            </div>
+            <div>
+              <dt>114+ tests</dt>
+              <dd>and drift detection, where none existed</dd>
+            </div>
+            <div>
+              <dt>5 Norwegian cities</dt>
+              <dd>scored by an open geodata pipeline</dd>
+            </div>
+          </dl>
+
           <div class="evidence" id="evidence">
             <h2 class="evidence-heading">Evidence you can open</h2>
             <ul class="evidence-rail">
               <li>
-                <a class="evidence-card panel" href="projects/enterprise-ml-delivery/">
+                <a class="evidence-card" href="projects/enterprise-ml-delivery/">
                   <span class="evidence-kicker">Case study · energy sector</span>
                   <span class="evidence-title">MLOps rebuild of a credit-risk pipeline</span>
                   <span class="evidence-meta">R notebooks to SageMaker, Terraform, MLflow</span>
                 </a>
               </li>
               <li>
-                <a
-                  class="evidence-card panel"
-                  href="projects/enterprise-ml-delivery/#ontology-agent"
-                >
+                <a class="evidence-card" href="projects/enterprise-ml-delivery/#ontology-agent">
                   <span class="evidence-kicker">Case study · LLM agents</span>
                   <span class="evidence-title">Ontology-grounded enterprise agent</span>
                   <span class="evidence-meta">RDF/Turtle in context, compared with RAG</span>
                 </a>
               </li>
               <li>
-                <a class="evidence-card panel" href="projects/cdmx-map/?city=oslo">
+                <a class="evidence-card" href="projects/cdmx-map/?city=oslo">
                   <span class="evidence-kicker">Live demo · geospatial</span>
                   <span class="evidence-title">Convenience map of five Norwegian cities</span>
                   <span class="evidence-meta">Oslo, Bergen, Stavanger, Trondheim, Drammen</span>
                 </a>
               </li>
               <li>
-                <a class="evidence-card panel" href="projects/dogma/">
+                <a class="evidence-card" href="projects/dogma/">
                   <span class="evidence-kicker">Live demo · ML practice</span>
                   <span class="evidence-title">dogma, graded in your browser</span>
                   <span class="evidence-meta">196 of 251 problems run here, in WebAssembly</span>
                 </a>
               </li>
               <li>
-                <a class="evidence-card panel" href="projects/etf-portfolio-research/">
+                <a class="evidence-card" href="projects/etf-portfolio-research/">
                   <span class="evidence-kicker">Live demo · quant research</span>
                   <span class="evidence-title">ETF walk-forward backtest report</span>
                   <span class="evidence-meta">No-lookahead tests, efficient frontier</span>
@@ -193,7 +191,7 @@
             <p class="eyebrow">How I work</p>
             <h2>Make it concrete, test it, hand it over.</h2>
           </div>
-          <div class="panel section-card wide">
+          <div class="section-card wide">
             <p>
               Most of my work starts inside someone else&rsquo;s system: an undocumented model, a
               team that disagrees on what a term means, a process run by hand. I read what exists,
@@ -236,7 +234,7 @@
           </div>
 
           <div class="experience-grid">
-            <article class="experience-card panel experience-lead">
+            <article class="experience-card experience-lead">
               <p class="experience-kicker">Kyndryl · Energy sector, natural gas utility</p>
               <h3>A legacy R model became an operated ML pipeline.</h3>
               <p>
@@ -254,7 +252,7 @@
               </div>
             </article>
 
-            <article class="experience-card panel">
+            <article class="experience-card">
               <p class="experience-kicker">Kyndryl · Enterprise knowledge engineering</p>
               <h3>An LLM agent that gives every department the same answer.</h3>
               <p>
@@ -272,7 +270,7 @@
               </div>
             </article>
 
-            <article class="experience-card panel">
+            <article class="experience-card">
               <p class="experience-kicker">Kyndryl · Pharmaceutical distribution</p>
               <h3>A governance blueprint and a path into AI engineering.</h3>
               <p>
@@ -287,7 +285,7 @@
               </ul>
             </article>
 
-            <article class="experience-card panel">
+            <article class="experience-card">
               <p class="experience-kicker">Cinépolis · Global IT, ERP security</p>
               <h3>An 800-role access backlog, automated.</h3>
               <p>
@@ -300,7 +298,7 @@
               </ul>
             </article>
 
-            <article class="experience-card panel">
+            <article class="experience-card">
               <p class="experience-kicker">UNAM · Research intern, PAPIME PE402725</p>
               <h3>Sensor data from the lab bench to a public site.</h3>
               <p>
@@ -315,7 +313,7 @@
               </div>
             </article>
 
-            <article class="experience-card panel">
+            <article class="experience-card">
               <p class="experience-kicker">Scotiabank · Retail banking</p>
               <h3>Where the credit-risk intuition comes from.</h3>
               <p>
@@ -340,7 +338,7 @@
           </div>
 
           <div class="project-grid">
-            <article class="project-card panel featured spotlight">
+            <article class="project-card featured spotlight">
               <div class="spotlight-copy">
                 <div class="project-chip">Learning platform · interactive demo</div>
                 <h3>dogma</h3>
@@ -368,19 +366,29 @@
                   <span class="project-meta">FastAPI + React</span>
                 </div>
               </div>
-              <a class="spotlight-preview" href="projects/dogma/" tabindex="-1" aria-hidden="true">
-                <img
-                  src="images/dogma-demo.webp"
-                  alt=""
-                  width="1600"
-                  height="1000"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
+              <figure class="plate">
+                <a
+                  class="spotlight-preview"
+                  href="projects/dogma/"
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  <img
+                    src="images/dogma-demo.webp"
+                    alt=""
+                    width="1600"
+                    height="1000"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>
+                  <b>Fig. 1</b> dogma: a problem page with its starter code, ready to run.
+                </figcaption>
+              </figure>
             </article>
 
-            <article class="project-card panel featured spotlight flip">
+            <article class="project-card featured spotlight flip">
               <div class="spotlight-copy">
                 <div class="project-chip">Geospatial pipeline · interactive map</div>
                 <h3>Multi-City Convenience Map: Norway and Mexico</h3>
@@ -415,24 +423,29 @@
                   >
                 </div>
               </div>
-              <a
-                class="spotlight-preview"
-                href="projects/cdmx-map/?city=oslo"
-                tabindex="-1"
-                aria-hidden="true"
-              >
-                <img
-                  src="images/cdmx-map.webp"
-                  alt=""
-                  width="1600"
-                  height="1000"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
+              <figure class="plate">
+                <a
+                  class="spotlight-preview"
+                  href="projects/cdmx-map/?city=oslo"
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  <img
+                    src="images/cdmx-map.webp"
+                    alt=""
+                    width="1600"
+                    height="1000"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>
+                  <b>Fig. 2</b> Oslo: 505 postal areas scored by commute, transit, groceries, gyms.
+                </figcaption>
+              </figure>
             </article>
 
-            <article class="project-card panel">
+            <article class="project-card">
               <div class="project-chip">Research system · interactive report</div>
               <h3>ETF Portfolio Research</h3>
               <p>
@@ -456,7 +469,7 @@
               </div>
             </article>
 
-            <article class="project-card panel">
+            <article class="project-card">
               <div class="project-chip">Agent tooling · MCP server</div>
               <h3>dossier</h3>
               <p>
@@ -477,7 +490,7 @@
               </div>
             </article>
 
-            <article class="project-card panel">
+            <article class="project-card">
               <div class="project-chip">Android app · Norwegian localization</div>
               <h3>Reed RSVP Reader</h3>
               <p>
@@ -501,7 +514,7 @@
               </div>
             </article>
 
-            <article class="project-card panel">
+            <article class="project-card">
               <div class="project-chip">LLM workflow</div>
               <h3>AIIRG</h3>
               <p>
@@ -528,7 +541,7 @@
             <h2>Degrees, certifications, languages.</h2>
           </div>
           <div class="credential-grid">
-            <article class="panel credential-card">
+            <article class="credential-card">
               <p class="experience-kicker">M.S. · admitted, starts Spring 2027</p>
               <h3>Georgia Institute of Technology</h3>
               <p>
@@ -536,7 +549,7 @@
                 full-time work. Planned focus: machine learning and artificial intelligence.
               </p>
             </article>
-            <article class="panel credential-card">
+            <article class="credential-card">
               <p class="experience-kicker">B.Sc. · 2020–2026</p>
               <h3>UNAM, ENES Morelia</h3>
               <p>
@@ -546,7 +559,7 @@
                 Security, and Spatial Databases.
               </p>
             </article>
-            <article class="panel credential-card">
+            <article class="credential-card">
               <p class="experience-kicker">Certifications</p>
               <h3>Cloud and data</h3>
               <ul class="credential-list">
@@ -557,7 +570,7 @@
                 <li>DataCamp Associate Data Engineer</li>
               </ul>
             </article>
-            <article class="panel credential-card">
+            <article class="credential-card">
               <p class="experience-kicker">Languages</p>
               <h3>Three, one in progress</h3>
               <ul class="credential-list">
@@ -575,19 +588,19 @@
             <h2>Domains under observation.</h2>
           </div>
           <div class="interest-grid">
-            <div class="panel interest-card">
+            <div class="interest-card">
               <h3>Machine learning</h3>
               <p>From classic supervised learning to more experimental modeling paths.</p>
             </div>
-            <div class="panel interest-card">
+            <div class="interest-card">
               <h3>Biology &amp; systems</h3>
               <p>Complex behavior emerging from local interactions, constraints, and time.</p>
             </div>
-            <div class="panel interest-card">
+            <div class="interest-card">
               <h3>Markets &amp; decision-making</h3>
               <p>Uncertainty, incentives, and model limits made visible enough to reason with.</p>
             </div>
-            <div class="panel interest-card">
+            <div class="interest-card">
               <h3>Language &amp; learning</h3>
               <p>How minds absorb, encode, revise, and transform information over time.</p>
             </div>
@@ -599,7 +612,7 @@
             <p class="eyebrow">Connect</p>
             <h2>Let us build something useful.</h2>
           </div>
-          <div class="panel section-card wide contact-card">
+          <div class="section-card wide contact-card">
             <p>
               I am looking for applied AI, MLOps, and forward-deployed engineering roles in Norway.
               Write to me in English or Spanish.
@@ -614,6 +627,20 @@
             >
           </div>
         </section>
+
+        <footer class="colophon">
+          <p>
+            The background is a live simulation of the Haber&ndash;Bosch reaction, N&#8322; +
+            3H&#8322; &#8652; 2NH&#8323;, on iron: real bond lengths, real mass ratios, every atom
+            conserved. The scale bar is true to the simulation.
+            <a
+              href="https://github.com/ignacio-ireta/ignacio-ireta.github.io/blob/master/docs/architecture.md"
+              target="_blank"
+              rel="noopener"
+              >How it works</a
+            >
+          </p>
+        </footer>
       </main>
     </div>
 

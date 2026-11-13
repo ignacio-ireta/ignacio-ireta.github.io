@@ -18,7 +18,7 @@ Pages are linked with relative paths and validated offline by `scripts/check-lin
 
 ## Canvas background (`src/background/`)
 
-A small molecular-dynamics sketch of the **Haber–Bosch process — N₂ + 3H₂ ⇌ 2NH₃ over iron** — rendered on a single full-viewport `<canvas>` and styled as a micrograph: what a microscope would show if it could resolve molecules. Gas molecules tumble in 3D and collide elastically; the reaction itself runs on the surface of iron nanoparticles, step by step, and settles into a dynamic equilibrium. It is plain ES modules — no bundler — loaded by `index.html` and by the long-form pages (the case studies and the ETF page), where the text sits on a frosted `.reading-sheet` and the simulation shows in the margins:
+A small molecular-dynamics sketch of the **Haber–Bosch process — N₂ + 3H₂ ⇌ 2NH₃ over iron** — rendered on a single full-viewport `<canvas>` and styled as a micrograph: what a microscope would show if it could resolve molecules. Gas molecules tumble in 3D and collide elastically; the reaction itself runs on the surface of iron nanoparticles, step by step, and settles into a dynamic equilibrium. It is plain ES modules — no bundler — loaded by `index.html` and by the long-form pages (the case studies and the ETF page), where it shows in the margins. On every page the text sits in a clearing: a frosted band behind `main` whose edges are feathered with a mask, so there is no box around the content:
 
 ```html
 <script type="module" src="src/background/main.js?v=haber-micrograph-20261113"></script>

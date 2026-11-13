@@ -31,6 +31,14 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   homepage, with their text on a frosted reading sheet; the ETF report posters
   pick up the field's light.
 
+- Layout rebuilt without cards. Content sits in a feathered clearing over the
+  micrograph and is structured like a journal page: numbered section labels in a
+  sticky margin column, hairline rules, an index list for the evidence links, a
+  ledger for experience, captioned plates for the two demo screenshots, and
+  monospaced instrument-style labels (IBM Plex Mono). The case-study and ETF
+  pages follow the same treatment, and the homepage gains a one-line colophon
+  explaining the background.
+
 ### Fixed
 
 - Dark mode: the page background no longer carries the light theme's pale wash.
