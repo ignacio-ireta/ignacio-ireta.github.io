@@ -14,8 +14,12 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   real mass ratios; and the reaction now runs step by step on the surface of iron
   nanoparticles (dissociative adsorption, surface hopping, stepwise hydrogenation,
   desorption — each reversible, atoms conserved exactly) instead of an instant
-  swap on contact. The cell-biology backdrop is replaced by gas washes and faded
-  studies of the iron lattice, with out-of-focus molecule layers for depth.
+  swap on contact.
+- The backdrop is now a micrograph field instead of a cell-biology illustration:
+  uneven, slowly drifting illumination, the catalyst bed out of focus below the
+  focal plane, diffraction-ringed dust, a vignette, sensor grain, and a 1 nm scale
+  bar; bright-field in the light scheme and dark-field in the dark one. Iron is
+  drawn in warm bronze against the cool gas, and glows faintly.
 - A height-only resize (mobile browser chrome, color-scheme switch) no longer
   restarts the simulation.
 

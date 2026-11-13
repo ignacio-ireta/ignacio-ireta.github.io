@@ -18,10 +18,10 @@ Pages are linked with relative paths and validated offline by `scripts/check-lin
 
 ## Canvas background (`src/background/`)
 
-A small molecular-dynamics sketch of the **Haber–Bosch process — N₂ + 3H₂ ⇌ 2NH₃ over iron** — rendered on a single full-viewport `<canvas>` over a watercolor backdrop. Gas molecules tumble in 3D and collide elastically; the reaction itself runs on the surface of iron nanoparticles, step by step, and settles into a dynamic equilibrium. It is plain ES modules — no bundler — loaded by `index.html`:
+A small molecular-dynamics sketch of the **Haber–Bosch process — N₂ + 3H₂ ⇌ 2NH₃ over iron** — rendered on a single full-viewport `<canvas>` and styled as a micrograph: what a microscope would show if it could resolve molecules. Gas molecules tumble in 3D and collide elastically; the reaction itself runs on the surface of iron nanoparticles, step by step, and settles into a dynamic equilibrium. It is plain ES modules — no bundler — loaded by `index.html`:
 
 ```html
-<script type="module" src="src/background/main.js?v=haber-surface-20261113"></script>
+<script type="module" src="src/background/main.js?v=haber-micrograph-20261113"></script>
 ```
 
 The `?v=...` query string is a **manual cache-bust / version pin**: every internal import carries the same string so the whole module graph invalidates together when it changes. (It also currently prevents `tsc --checkJs` from resolving the cross-module imports — see [ENGINEERING-STANDARDS.md](ENGINEERING-STANDARDS.md) §G.)
@@ -32,17 +32,16 @@ The `?v=...` query string is a **manual cache-bust / version pin**: every intern
 main.js            entry point; boots on load, owns the rAF loop + event listeners
  ├─ scene.js       shared `state` + render orchestration (resizeScene / drawScene)
  │   ├─ config.js      tunable constants: density tiers, ELEMENTS, SPECIES geometries, CATALYST, THERMAL, KINETICS
- │   ├─ geometry.js    pure path/lattice helpers (smooth blobs, hex lattice points, flow ribbons)
- │   ├─ palette.js     reads CSS custom properties (with built-in fallbacks)
+ │   ├─ backdrop.js    the field of view: illumination, out-of-focus catalyst bed, bokeh, vignette, scale bar, grain
+ │   ├─ geometry.js    hex lattice points
  │   ├─ render.js      atom sprites, depth-sorted ball-and-stick drawing, particles, reaction cues
  │   ├─ species.js     the simulation: gas dynamics, iron particles, surface chemistry (no DOM)
- │   └─ watercolor.js  paper grain + the static backdrop (washes, blooms, lattice studies)
  └─ species.js
      ├─ config.js
      └─ random.js     seeded RNG + interpolation helpers (no imports)
 ```
 
-`config.js`, `geometry.js`, `palette.js`, and `random.js` are **leaf modules** (no imports) and are the ones type-checked. `species.js` touches neither the DOM nor the canvas, so the whole simulation runs under `node:test`.
+`config.js`, `geometry.js`, and `random.js` are **leaf modules** (no imports) and are the ones type-checked. `species.js` touches neither the DOM nor the canvas, so the whole simulation runs under `node:test`.
 
 ### Shared model: the `state` object
 
@@ -54,12 +53,11 @@ state = {
   height,
   dpr, // viewport + device pixel ratio (capped at DPR_CAP)
   isDark, // current color scheme
-  palette, // resolved colors from readPalette()
   molecules: [], // gas molecules: { species, x, y, vx, vy, q (orientation), w (angular velocity), ... }
   catalysts: [], // iron particles: { atoms[], sites[], adsorbates[], ghosts[], ... }
   ambient: [], // out-of-focus molecules in front of / behind the reaction plane
   effects: [], // short-lived reaction cues
-  layers: {}, // cached offscreen canvases: paper, field
+  layers: {}, // the static field canvas + the grain tile
   pointer: { x, y, active, influence },
   chemistry, // seeded RNG + per-step event counters
   seed // per-load seed for deterministic procedural placement
@@ -90,25 +88,26 @@ Everything is laid out in ångströms and scaled to pixels by the viewport tier 
 
 Tunables live in `config.js` (`THERMAL`, `CATALYST`, `KINETICS`).
 
-### Rendering (`render.js`, `watercolor.js`)
+### Rendering (`render.js`, `backdrop.js`)
 
-- **Atoms** are pre-rendered sphere sprites (diffuse falloff, bounce light, specular glint, outline) lit from a light fixed in screen space, cached per element/size/color scheme. Colors are CPK adapted to the site palette: N blue, H near-white, Fe steel.
+- **Atoms** are pre-rendered sphere sprites (diffuse falloff, bounce light, specular glint, outline) lit from a light fixed in screen space, cached per element/size/color scheme. Colors follow CPK: N blue, H white, and Fe its orange, burnished toward bronze so the warm metal stands against the cool gas.
 - **Molecules** are projected from their quaternion each frame and painted back to front; bonds are drawn as two half-sticks in their atoms' colors, sorted so they tuck behind or in front of each atom as the molecule turns. N≡N is three thin sticks.
 - **Particles** draw both iron layers, then adsorbates with contact shadows; a dissociating bond lingers briefly as it breaks. A soft glow marks each N–H bond formed and a ring marks each NH₃ leaving the surface.
-- **Depth** — a smaller, fainter far layer and a few large bokeh molecules on a near layer bracket the reaction plane. They drift and tumble but take no part in the chemistry.
-- **Backdrop** — soft washes (cool blue toward teal), a few watercolor blooms, faded pencil studies of the iron lattice drawn at the same scale as the live particles, flow ribbons, and paper grain on top.
+- **Depth** — a smaller, fainter far layer and a few large bokeh molecules (bright-rimmed discs) on a near layer bracket the reaction plane. They drift and tumble but take no part in the chemistry.
+- **Optics** — each gas molecule carries the bright fringe a microscope leaves around a small object, and the iron glows faintly warm, breathing slowly and brightening with pointer heat. An N–H bond forming sparks gold; an NH₃ leaving the surface sends out a ring.
+- **Field** (`backdrop.js`) — bright-field in the light scheme, dark-field in the dark one. Drawn once: an unevenly lit field with pools of teal, violet, amber, and blue; the catalyst bed far below the focal plane (the iron lattice at the live particles' scale, blurred into warm discs); dust specks spread into diffraction-ringed discs; a vignette; and a 1 nm scale bar computed from the real px-per-Å scale. Drawn every frame: broad pools of light wandering on slow Lissajous paths, and sensor grain re-seated about eleven times a second. The canvas is opaque, so the field replaces the page background behind it.
 
 ### Render pipeline
 
-- **`resizeScene()`** (on load + resize) sizes the canvas, resolves the palette, and renders the two **static layers once** (paper, field) into offscreen canvases. A change of width starts a new simulation; a height-only change (mobile browser chrome, a color-scheme switch) keeps the running one.
-- **`drawScene()`** (each frame) composites: field layer → far molecules → iron particles → gas molecules → near molecules → paper layer.
+- **`resizeScene()`** (on load + resize) sizes the canvas and renders the **static field once** into an offscreen canvas. A change of width starts a new simulation; a height-only change (mobile browser chrome, a color-scheme switch) keeps the running one.
+- **`drawScene()`** (each frame) composites: field layer → drifting light → far molecules → iron particles → gas molecules → near molecules → grain.
 
 ### Lifecycle & performance
 
 `main.js` is the only stateful orchestrator:
 
 - A `requestAnimationFrame` loop drives `updateMolecules()` + `drawScene()`.
-- **Pauses** when the tab is hidden (`visibilitychange`) and respects `prefers-reduced-motion` (renders a static frame, no loop; surfaces are seeded with intermediates so the still shows the chemistry).
+- **Pauses** when the tab is hidden (`visibilitychange`) and respects `prefers-reduced-motion` (renders a static frame with fixed light and grain, no loop; surfaces are seeded with intermediates so the still shows the chemistry).
 - **Bounded cost:** device pixel ratio capped (`DPR_CAP`), molecule and particle counts scaled by viewport tier (`MOLECULE_DENSITY` mobile/tablet/desktop), sprites instead of per-frame gradients, and frame delta clamped (`Math.min(now - last, 120)`) to survive lag spikes.
 
 These properties are the site's "scalability statement" (see [ENGINEERING-STANDARDS.md](ENGINEERING-STANDARDS.md) §Q).

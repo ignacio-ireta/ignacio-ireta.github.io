@@ -13,10 +13,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src/background/config.js",
-    "src/background/geometry.js",
-    "src/background/palette.js",
-    "src/background/random.js"
-  ]
+  "include": ["src/background/config.js", "src/background/geometry.js", "src/background/random.js"]
 }

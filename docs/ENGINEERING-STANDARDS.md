@@ -58,11 +58,11 @@ No `src/`-package + `pyproject.toml` layout. The analog is the documented layout
 
 ## E — Configuration · ANALOG (mostly N/A)
 
-No CLI flags / env-driven config. The nearest analog is the documented tunables in `src/background/config.js` (density tiers, molecular geometries, kinetics, pointer physics) and the CSS custom properties read by `palette.js`. Runtime log levels, input/output paths, etc. are N/A.
+No CLI flags / env-driven config. The nearest analog is the documented tunables in `src/background/config.js` (density tiers, molecular geometries, kinetics, pointer physics) and the field colors in `src/background/backdrop.js`. Runtime log levels, input/output paths, etc. are N/A.
 
 ## F — Architecture & modularity · ANALOG
 
-The spec's "normalize through one intermediate model, keep rendering separable and testable" already holds: the background normalizes through the shared `state` object in `scene.js`, consumed by decoupled physics/geometry/palette/watercolor modules; the CDMX GeoJSON+metadata is that app's intermediate model. Documented in [architecture.md](architecture.md) — no refactor needed.
+The spec's "normalize through one intermediate model, keep rendering separable and testable" already holds: the background normalizes through the shared `state` object in `scene.js`, consumed by decoupled simulation/render/backdrop modules; the CDMX GeoJSON+metadata is that app's intermediate model. Documented in [architecture.md](architecture.md) — no refactor needed.
 
 ## G — Input/output contracts · ANALOG
 

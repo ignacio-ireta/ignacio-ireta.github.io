@@ -5,7 +5,7 @@ import { JSDOM } from "jsdom";
 // The cache-bust query string main.js uses to import its siblings. Importing
 // scene.js with the SAME specifier returns the same module instance main.js
 // booted, so we can inspect the state it produced.
-const V = "?v=haber-surface-20261113";
+const V = "?v=haber-micrograph-20261113";
 
 test("background app boots without throwing under a stubbed canvas", async () => {
   const dom = new JSDOM(

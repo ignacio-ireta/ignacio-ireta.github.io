@@ -1,6 +1,6 @@
-import { ELEMENTS, SPECIES } from "./config.js?v=haber-surface-20261113";
-import { clamp } from "./random.js?v=haber-surface-20261113";
-import { projectAtoms } from "./species.js?v=haber-surface-20261113";
+import { ELEMENTS, SPECIES } from "./config.js?v=haber-micrograph-20261113";
+import { clamp } from "./random.js?v=haber-micrograph-20261113";
+import { projectAtoms } from "./species.js?v=haber-micrograph-20261113";
 
 // ===========================================================================
 // Drawing for the Haber–Bosch simulation in species.js.
@@ -34,16 +34,23 @@ function rgba(rgb, alpha = 1) {
 // Tonal ramp for one element: highlight → base → shade → deep edge.
 function elementTones(el, isDark, dim = 0) {
   const element = ELEMENTS[el];
-  // Iron shades toward a softer slate in light mode so the particles sit on
-  // the pale page instead of punching through it.
-  const ink = isDark ? [4, 8, 18] : element.metallic ? [38, 56, 96] : [10, 26, 72];
+  // Iron shades toward umber and highlights toward cream, so it reads as warm
+  // metal against the cool gas and field.
+  const ink = element.metallic
+    ? isDark
+      ? [34, 14, 6]
+      : [96, 46, 20]
+    : isDark
+      ? [4, 8, 18]
+      : [10, 26, 72];
+  const white = element.metallic ? [255, 244, 222] : [255, 255, 255];
   let base = hexToRgb(isDark ? element.dark : element.light);
   if (dim) base = mix(base, ink, dim);
   // Hydrogen is near-white, so it takes a cool grey shade to read as a sphere.
   const shadeInk = el === "H" ? (isDark ? [70, 92, 140] : [92, 116, 164]) : ink;
   return {
     base,
-    highlight: mix(base, [255, 255, 255], element.metallic ? 0.72 : 0.6),
+    highlight: mix(base, white, element.metallic ? 0.74 : 0.6),
     shade: mix(base, shadeInk, el === "H" ? 0.5 : 0.42),
     deep: mix(base, shadeInk, el === "H" ? 0.78 : 0.7),
     outline: rgba(ink, isDark || el !== "N" ? 0.5 : 0.62),
@@ -130,13 +137,36 @@ function softSprite(el, radius, isDark, dpr, blur) {
     half,
     outer
   );
-  disc.addColorStop(0, rgba(mix(tones.base, [255, 255, 255], 0.35), 0.95));
-  disc.addColorStop(Math.max(0.05, (1 - blur) / (1 + blur)), rgba(tones.base, 0.9));
+  // Defocus spreads a point into a disc whose rim is brighter than its middle.
+  disc.addColorStop(0, rgba(tones.base, 0.62));
+  disc.addColorStop(0.66, rgba(tones.base, 0.56));
+  disc.addColorStop(0.86, rgba(mix(tones.base, [255, 255, 255], 0.4), 0.9));
   disc.addColorStop(1, rgba(tones.shade, 0));
   g.fillStyle = disc;
   g.fillRect(0, 0, half * 2, half * 2);
   return { canvas, half };
 }
+
+// Soft radial sprites, [light scheme, dark scheme]: contact shadows, the
+// bright halo optics put around a small object, heat, and reaction cues.
+const GLOW = {
+  shadow: [
+    [18, 26, 70],
+    [0, 0, 0]
+  ],
+  halo: [
+    [255, 255, 255],
+    [96, 150, 255]
+  ],
+  ember: [
+    [255, 150, 60],
+    [255, 138, 48]
+  ],
+  spark: [
+    [255, 214, 130],
+    [255, 222, 150]
+  ]
+};
 
 function glowSprite(radius, dpr, rgb) {
   const half = radius;
@@ -168,8 +198,7 @@ function sprite(kind, el, radius, state, option = 0) {
   if (!entry) {
     if (kind === "sphere") entry = sphereSprite(el, radius, state.isDark, state.dpr, option);
     else if (kind === "soft") entry = softSprite(el, radius, state.isDark, state.dpr, option);
-    else if (kind === "shadow") entry = glowSprite(radius, state.dpr, [6, 14, 40]);
-    else entry = glowSprite(radius, state.dpr, state.isDark ? [150, 235, 220] : [86, 196, 178]);
+    else entry = glowSprite(radius, state.dpr, GLOW[kind][state.isDark ? 1 : 0]);
     sprites.set(id, entry);
   }
   return entry;
@@ -248,7 +277,16 @@ function drawGasMolecule(ctx, molecule, state, shadow = true) {
   const y = molecule.y;
 
   if (shadow) {
-    ctx.globalAlpha = state.isDark ? 0.34 : 0.2;
+    // The bright fringe a microscope's optics leave around a small object.
+    ctx.globalAlpha = state.isDark ? 0.3 : 0.6;
+    stamp(
+      ctx,
+      sprite("halo", "", SPECIES[molecule.species].collisionRadius * scale * 2.1, state),
+      x,
+      y
+    );
+
+    ctx.globalAlpha = state.isDark ? 0.34 : 0.22;
     for (const atom of atoms) {
       const radius = ELEMENTS[atom.el].ball * scale;
       stamp(
@@ -261,8 +299,8 @@ function drawGasMolecule(ctx, molecule, state, shadow = true) {
   }
 
   if (molecule.heat > 0.05) {
-    ctx.globalAlpha = clamp(molecule.heat * 0.16, 0, 0.4);
-    stamp(ctx, sprite("glow", "", scale * 1.9, state), x, y);
+    ctx.globalAlpha = clamp(molecule.heat * 0.2, 0, 0.5);
+    stamp(ctx, sprite("ember", "", scale * 2.2, state), x, y);
   }
 
   const items = [];
@@ -311,7 +349,7 @@ function drawNearMolecule(ctx, molecule, state) {
 }
 
 // An iron nanoparticle and everything adsorbed on it.
-function drawCatalyst(ctx, catalyst, state) {
+function drawCatalyst(ctx, catalyst, state, time) {
   const { cos, sin, scale } = catalyst;
   const world = (lx, ly) => ({
     x: catalyst.x + lx * cos - ly * sin,
@@ -320,6 +358,15 @@ function drawCatalyst(ctx, catalyst, state) {
   const radius = catalyst.atomRadius;
   const top = catalyst.atoms.map((atom) => world(atom.lx, atom.ly));
   const under = catalyst.under.map((atom) => world(atom.lx, atom.ly));
+
+  // The metal runs hot: a slow-breathing glow that brightens with pointer heat.
+  const breath = 0.5 + 0.5 * Math.sin(time * 0.0011 + catalyst.id);
+  ctx.globalAlpha = clamp(
+    (state.isDark ? 0.2 : 0.26) + breath * 0.1 + catalyst.heat * 0.16,
+    0,
+    0.75
+  );
+  stamp(ctx, sprite("ember", "", catalyst.radius * 1.7, state), catalyst.x, catalyst.y);
 
   // Soft shadow under the whole particle, then the two atomic layers. Atoms
   // are painted top-to-bottom of the screen so the lit caps overlap evenly.
@@ -333,11 +380,6 @@ function drawCatalyst(ctx, catalyst, state) {
   for (const position of under.sort((p, q) => p.y - q.y)) stamp(ctx, deep, position.x, position.y);
   const metal = sprite("sphere", "Fe", radius, state);
   for (const position of top.sort((p, q) => p.y - q.y)) stamp(ctx, metal, position.x, position.y);
-
-  if (catalyst.heat > 0.05) {
-    ctx.globalAlpha = clamp(catalyst.heat * 0.14, 0, 0.36);
-    stamp(ctx, sprite("glow", "", catalyst.radius * 1.25, state), catalyst.x, catalyst.y);
-  }
 
   // Bonds still breaking after a dissociative adsorption.
   for (const ghost of catalyst.ghosts) {
@@ -382,8 +424,8 @@ function drawCatalyst(ctx, catalyst, state) {
 function drawEffect(ctx, effect, state, scale) {
   const t = effect.age / effect.duration;
   if (effect.kind === "bond") {
-    ctx.globalAlpha = (1 - t) * (1 - t) * (state.isDark ? 0.8 : 0.62);
-    stamp(ctx, sprite("glow", "", scale * 1.6, state), effect.x, effect.y, 0.7 + t * 0.9);
+    ctx.globalAlpha = (1 - t) * (1 - t) * (state.isDark ? 0.9 : 0.85);
+    stamp(ctx, sprite("spark", "", scale * 1.7, state), effect.x, effect.y, 0.7 + t * 0.9);
     return;
   }
   const ease = 1 - (1 - t) * (1 - t);
@@ -395,14 +437,14 @@ function drawEffect(ctx, effect, state, scale) {
   ctx.stroke();
 }
 
-export function drawMoleculeField(ctx, state) {
+export function drawMoleculeField(ctx, state, time = 0) {
   if (!state.catalysts) return;
   ctx.save();
   ctx.lineCap = "butt";
   for (const molecule of state.ambient) {
     if (molecule.depth === "far") drawGasMolecule(ctx, molecule, state, false);
   }
-  for (const catalyst of state.catalysts) drawCatalyst(ctx, catalyst, state);
+  for (const catalyst of state.catalysts) drawCatalyst(ctx, catalyst, state, time);
   const scale = state.catalysts.length ? state.catalysts[0].scale : 14;
   for (const effect of state.effects) {
     if (effect.kind === "bond") drawEffect(ctx, effect, state, scale);

@@ -1,9 +1,8 @@
-import { drawScene, resizeScene, state } from "./scene.js?v=haber-surface-20261113";
-import { updateMolecules } from "./species.js?v=haber-surface-20261113";
+import { drawScene, resizeScene, state } from "./scene.js?v=haber-micrograph-20261113";
+import { updateMolecules } from "./species.js?v=haber-micrograph-20261113";
 
 const canvas = document.getElementById("molecule-canvas");
 const ctx = canvas.getContext("2d");
-const root = document.documentElement;
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -27,7 +26,7 @@ function draw(now = performance.now()) {
 }
 
 function resize() {
-  resizeScene(canvas, ctx, root, mediaOptions());
+  resizeScene(canvas, ctx, mediaOptions());
   draw();
 }
 

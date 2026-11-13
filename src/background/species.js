@@ -7,8 +7,8 @@ import {
   POINTER,
   SPECIES,
   THERMAL
-} from "./config.js?v=haber-surface-20261113";
-import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=haber-surface-20261113";
+} from "./config.js?v=haber-micrograph-20261113";
+import { clamp, lerp, seededRandom, smoothstep } from "./random.js?v=haber-micrograph-20261113";
 
 // ===========================================================================
 // Haber–Bosch on iron, as a small molecular-dynamics sketch.
@@ -855,7 +855,7 @@ function createAmbient(state, tier, random) {
   const ambient = [];
   const layers = [
     { depth: "far", count: tier.far, scale: 0.6, speed: 0.5, alpha: [0.26, 0.42] },
-    { depth: "near", count: tier.near, scale: 2.7, speed: 0.9, alpha: [0.1, 0.16] }
+    { depth: "near", count: tier.near, scale: 2.7, speed: 0.9, alpha: [0.2, 0.32] }
   ];
   for (const layer of layers) {
     for (let i = 0; i < layer.count; i += 1) {

@@ -23,7 +23,7 @@ npm run format:check           # prettier --check
 | File                        | Kind              | Covers                                                                                                                                                                                                                        |
 | --------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tests/random.test.mjs`     | unit              | `clamp`, `lerp`, `smoothstep`, `seededRandom` (determinism + range), `interpolatePoint`                                                                                                                                       |
-| `tests/geometry.test.mjs`   | unit              | path commands issued by `traceSmoothBlob` and `drawDepthGuides` (via a recording-context stub); `hexLatticePoints` is close-packed                                                                                            |
+| `tests/geometry.test.mjs`   | unit              | `hexLatticePoints` is close-packed (six neighbours one spacing away)                                                                                                                                                          |
 | `tests/chemistry.test.mjs`  | unit + simulation | molecule geometries, rigid tumbling, hollow sites of an iron facet, exact N/H conservation over minutes of simulated reaction, every elementary step firing in both directions, and the H₂/N₂ speed ratio                     |
 | `tests/dogma-demo.test.mjs` | integrity         | the committed dogma demo: its page assets exist, every catalog topic/problem has a snapshot file, start-up GETs are captured, runnable problems have public-test bundles, and no solution, hidden test, or level-4 hint ships |
 | `tests/boot.test.mjs`       | smoke             | `src/background/main.js` boots without throwing under a stubbed canvas + `matchMedia` (jsdom); asserts the canvas is sized and molecules are created                                                                          |
@@ -42,7 +42,7 @@ jsdom implements neither the canvas 2D context nor `matchMedia`, so the test stu
 
 ## Type checking
 
-`npm run typecheck` runs `tsc --checkJs` (no emit) over the import-free leaf modules (`config.js`, `geometry.js`, `palette.js`, `random.js`). The other modules import each other with `?v=...` cache-bust query strings that TypeScript can't resolve, so they're excluded until that's addressed. Add JSDoc types incrementally to widen coverage.
+`npm run typecheck` runs `tsc --checkJs` (no emit) over the import-free leaf modules (`config.js`, `geometry.js`, `random.js`). The other modules import each other with `?v=...` cache-bust query strings that TypeScript can't resolve, so they're excluded until that's addressed. Add JSDoc types incrementally to widen coverage.
 
 ## CI
 

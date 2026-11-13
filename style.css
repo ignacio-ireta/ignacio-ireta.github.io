@@ -104,7 +104,6 @@ body::before {
   height: 100%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.96;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -114,10 +113,6 @@ body::before {
       radial-gradient(rgba(0, 0, 0, 0.22) 0.8px, transparent 0.9px);
     mix-blend-mode: screen;
     opacity: 0.34;
-  }
-
-  #molecule-canvas {
-    opacity: 0.78;
   }
 }
 

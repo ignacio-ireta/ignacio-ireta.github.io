@@ -1,16 +1,18 @@
-import { DPR_CAP } from "./config.js?v=haber-surface-20261113";
-import { drawDepthGuides } from "./geometry.js?v=haber-surface-20261113";
-import { readPalette } from "./palette.js?v=haber-surface-20261113";
-import { drawMoleculeField } from "./render.js?v=haber-surface-20261113";
-import { createMolecules, refitMolecules } from "./species.js?v=haber-surface-20261113";
-import { drawFieldLayer, drawPaperLayer } from "./watercolor.js?v=haber-surface-20261113";
+import {
+  createGrainTile,
+  drawFieldLayer,
+  drawFieldLights,
+  drawGrain
+} from "./backdrop.js?v=haber-micrograph-20261113";
+import { DPR_CAP } from "./config.js?v=haber-micrograph-20261113";
+import { drawMoleculeField } from "./render.js?v=haber-micrograph-20261113";
+import { createMolecules, refitMolecules } from "./species.js?v=haber-micrograph-20261113";
 
 export const state = {
   width: 0,
   height: 0,
   dpr: 1,
   isDark: false,
-  palette: {},
   molecules: [],
   catalysts: [],
   ambient: [],
@@ -30,7 +32,7 @@ function makeLayer(width, height, dpr) {
   return { canvas: layer, ctx: layerCtx };
 }
 
-export function resizeScene(canvas, ctx, root, { isDark }) {
+export function resizeScene(canvas, ctx, { isDark }) {
   const previousWidth = state.width;
   const previousHeight = state.height;
   state.isDark = isDark;
@@ -43,12 +45,9 @@ export function resizeScene(canvas, ctx, root, { isDark }) {
   canvas.style.height = `${state.height}px`;
   ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 
-  state.palette = readPalette(root, isDark);
-  state.layers.paper = makeLayer(state.width, state.height, state.dpr);
   state.layers.field = makeLayer(state.width, state.height, state.dpr);
-  drawPaperLayer(state.layers.paper.ctx, state, { isDark });
+  state.layers.grain = { tile: createGrainTile(isDark), pattern: null };
   drawFieldLayer(state.layers.field.ctx, state, { isDark });
-  drawDepthGuides(state.layers.field.ctx, state, 0, { isDark, reducedMotion: true });
 
   // A new width means a new layout (and possibly a new density tier), so start
   // over. A height-only change — mobile browser chrome, a color-scheme switch
@@ -62,8 +61,10 @@ export function resizeScene(canvas, ctx, root, { isDark }) {
 
 export function drawScene(ctx, now, options) {
   state.isDark = options.isDark;
-  ctx.clearRect(0, 0, state.width, state.height);
+  // Reduced motion gets one fixed frame of the moving light and grain.
+  const time = options.reducedMotion ? 0 : now;
   ctx.drawImage(state.layers.field.canvas, 0, 0, state.width, state.height);
-  drawMoleculeField(ctx, state);
-  ctx.drawImage(state.layers.paper.canvas, 0, 0, state.width, state.height);
+  drawFieldLights(ctx, state, time, options);
+  drawMoleculeField(ctx, state, time);
+  drawGrain(ctx, state, time, options);
 }

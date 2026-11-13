@@ -4,9 +4,9 @@ export const DPR_CAP = 2;
 // by the tier's `scale` (px per Å), so bond lengths, atom sizes, and the iron
 // lattice all stay in true proportion to one another at every viewport size.
 export const MOLECULE_DENSITY = {
-  mobile: { scale: 12, areaPerMolecule: 9500, min: 34, max: 64, catalysts: 2, far: 12, near: 2 },
-  tablet: { scale: 14, areaPerMolecule: 10500, min: 56, max: 100, catalysts: 3, far: 22, near: 3 },
-  desktop: { scale: 16, areaPerMolecule: 11500, min: 96, max: 180, catalysts: 4, far: 40, near: 4 }
+  mobile: { scale: 12, areaPerMolecule: 9500, min: 34, max: 64, catalysts: 2, far: 12, near: 3 },
+  tablet: { scale: 14, areaPerMolecule: 10500, min: 56, max: 100, catalysts: 3, far: 22, near: 4 },
+  desktop: { scale: 16, areaPerMolecule: 11500, min: 96, max: 180, catalysts: 4, far: 40, near: 6 }
 };
 
 export const POINTER = {
@@ -26,11 +26,11 @@ export const POINTER = {
 
 // `mass` in u. `ball` is the drawn ball-and-stick radius in Å (iron is drawn at
 // its metallic radius so the lattice reads as a close-packed surface). Colors
-// are CPK adapted to the site's cool palette: N blue, H near-white, Fe steel.
+// follow CPK: N blue, H white, and Fe its orange, burnished toward bronze.
 export const ELEMENTS = {
-  N: { mass: 14.007, ball: 0.37, light: "#2e62b5", dark: "#4f86e0" },
-  H: { mass: 1.008, ball: 0.25, light: "#eef2f8", dark: "#f1f4fa" },
-  Fe: { mass: 55.845, ball: 1.24, light: "#b3bfd0", dark: "#7d8ba2", metallic: true }
+  N: { mass: 14.007, ball: 0.37, light: "#2c5bd2", dark: "#4f84f2" },
+  H: { mass: 1.008, ball: 0.25, light: "#f8f5ee", dark: "#f7f4ec" },
+  Fe: { mass: 55.845, ball: 1.24, light: "#d59a5c", dark: "#c98848", metallic: true }
 };
 
 // Experimental gas-phase geometries (Å / degrees).
