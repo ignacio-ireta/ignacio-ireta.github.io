@@ -23,12 +23,20 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A height-only resize (mobile browser chrome, color-scheme switch) no longer
   restarts the simulation.
 
+- Site palette retuned to the micrograph: a warm-white field cooling toward the
+  rim, nitrogen blue for links, the catalyst's bronze for labels, and a deep navy
+  dark scheme with its own accent colours. The graph-paper grid and the hard
+  ovals inside cards give way to a vignette and soft corner light.
+
 ### Fixed
 
 - Dark mode: the page background no longer carries the light theme's pale wash.
 
 ### Added
 
+- Homepage preview of the Multi-City Convenience Map (`images/cdmx-map.webp`),
+  shot from the committed embed by `tools/cdmx-map/preview.mjs`, and a swatch on
+  each city link in that city's own map theme colour.
 - Enterprise case-study page at `projects/enterprise-ml-delivery/`: the MLOps rebuild
   of a legacy R credit-risk pipeline (energy sector) and the ontology-grounded LLM
   agent, written without client names, data, or internal diagrams. Added to

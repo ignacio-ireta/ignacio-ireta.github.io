@@ -1,32 +1,46 @@
+/* The palette follows the homepage micrograph: a lit field that is warm white
+   at its centre and cool toward the rim, nitrogen blue for links, and the
+   bronze of the iron catalyst for labels. */
 :root {
-  --bg: #f5fdf7;
-  --bg-deep: #dae6fe;
-  --surface: rgba(245, 253, 247, 0.74);
-  --surface-strong: rgba(239, 252, 255, 0.88);
-  --ink: #0e2869;
-  --muted: #3c719f;
-  --line: rgba(60, 113, 159, 0.2);
-  --line-strong: rgba(14, 40, 105, 0.36);
-  --steel: #95b2d4;
-  --accent-rose: #95b2d4;
-  --accent-blue: #3c719f;
-  --accent-teal: #7ad5c3;
-  --accent-gold: #0e2869;
-  --accent-violet: #8979b4;
-  --shadow: 0 1px 0 rgba(14, 40, 105, 0.12), 0 16px 40px rgba(88, 161, 181, 0.12);
+  --bg: #f8f7f2;
+  --bg-deep: #dbe3f2;
+  --surface: rgba(251, 250, 246, 0.8);
+  --surface-strong: rgba(253, 252, 249, 0.93);
+  --ink: #15224f;
+  --muted: #47598a;
+  --line: rgba(44, 62, 120, 0.16);
+  --line-strong: rgba(30, 46, 100, 0.3);
+  --accent-blue: #2c5bd2;
+  --accent-teal: #1f8a7c;
+  --accent-copper: #a9591c;
+  --accent-gold: var(--accent-copper);
+  --accent-violet: #6f5fb8;
+  --glow-teal: rgba(84, 178, 164, 0.17);
+  --glow-violet: rgba(140, 120, 200, 0.15);
+  --glow-amber: rgba(240, 170, 112, 0.18);
+  --vignette: rgba(40, 52, 108, 0.2);
+  --shadow: 0 1px 0 rgba(21, 34, 79, 0.08), 0 18px 44px rgba(52, 66, 120, 0.14);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #151712;
-    --bg-deep: #1d2118;
-    --surface: rgba(28, 31, 24, 0.9);
-    --surface-strong: rgba(34, 37, 29, 0.96);
-    --ink: #f4efe2;
-    --muted: #c3bbaa;
-    --line: rgba(255, 255, 255, 0.1);
-    --line-strong: rgba(255, 255, 255, 0.2);
-    --shadow: 0 1px 0 rgba(0, 0, 0, 0.36);
+    --bg: #111a29;
+    --bg-deep: #05080e;
+    --surface: rgba(15, 22, 36, 0.84);
+    --surface-strong: rgba(19, 28, 45, 0.95);
+    --ink: #f1ede2;
+    --muted: #a7b3cb;
+    --line: rgba(160, 190, 255, 0.12);
+    --line-strong: rgba(170, 195, 255, 0.24);
+    --accent-blue: #86a9ff;
+    --accent-teal: #6fd6c4;
+    --accent-copper: #e3a468;
+    --accent-violet: #b3a4f0;
+    --glow-teal: rgba(40, 150, 140, 0.2);
+    --glow-violet: rgba(110, 90, 190, 0.2);
+    --glow-amber: rgba(214, 120, 60, 0.16);
+    --vignette: rgba(0, 0, 0, 0.5);
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 18px 44px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -50,51 +64,22 @@ body {
   font-family: "Inter", system-ui, sans-serif;
   color: var(--ink);
   background:
-    linear-gradient(120deg, rgba(245, 253, 247, 0.78), transparent 34%),
-    linear-gradient(
-      90deg,
-      rgba(122, 213, 195, 0.16),
-      transparent 26%,
-      rgba(60, 113, 159, 0.14) 62%,
-      transparent 100%
-    ),
-    linear-gradient(180deg, rgba(137, 121, 180, 0.07), transparent 38%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+    radial-gradient(70% 55% at 12% 80%, var(--glow-teal), transparent 70%),
+    radial-gradient(60% 50% at 88% 14%, var(--glow-violet), transparent 70%),
+    radial-gradient(60% 50% at 76% 90%, var(--glow-amber), transparent 70%),
+    radial-gradient(120% 90% at 50% 40%, var(--bg) 0%, var(--bg-deep) 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background:
-      radial-gradient(120% 80% at 0% 0%, rgba(60, 113, 159, 0.17), transparent 60%),
-      radial-gradient(90% 70% at 100% 100%, rgba(63, 150, 140, 0.13), transparent 62%),
-      linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
-  }
-}
-
+/* The edge of the field of view. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(rgba(14, 40, 105, 0.075) 0.6px, transparent 0.7px),
-    radial-gradient(rgba(239, 252, 255, 0.42) 0.7px, transparent 0.8px),
-    linear-gradient(90deg, rgba(60, 113, 159, 0.075) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(88, 161, 181, 0.06) 1px, transparent 1px);
-  background-position:
-    0 0,
-    9px 7px,
-    0 0,
-    0 0;
-  background-size:
-    18px 18px,
-    23px 23px,
-    96px 96px,
-    96px 96px;
-  mix-blend-mode: multiply;
-  opacity: 0.72;
+  background: radial-gradient(ellipse at center, transparent 52%, var(--vignette) 100%);
 }
 
 #molecule-canvas {
@@ -104,16 +89,6 @@ body::before {
   height: 100%;
   z-index: 0;
   pointer-events: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  body::before {
-    background-image:
-      radial-gradient(rgba(244, 239, 224, 0.07) 0.6px, transparent 0.7px),
-      radial-gradient(rgba(0, 0, 0, 0.22) 0.8px, transparent 0.9px);
-    mix-blend-mode: screen;
-    opacity: 0.34;
-  }
 }
 
 .page-shell {
@@ -130,15 +105,9 @@ body::before {
   align-items: center;
   gap: 1rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(244, 251, 250, 0.74);
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(18px) saturate(135%);
-}
-
-@media (prefers-color-scheme: dark) {
-  .topbar {
-    background: rgba(21, 23, 18, 0.84);
-  }
 }
 
 .wordmark,
@@ -222,12 +191,14 @@ main {
   z-index: 0;
   pointer-events: none;
   border-radius: inherit;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent 34%),
-    repeating-linear-gradient(0deg, rgba(38, 52, 58, 0.024) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(90deg, rgba(38, 52, 58, 0.018) 0 1px, transparent 1px 11px);
-  mix-blend-mode: multiply;
-  opacity: 0.72;
+  /* A glass sheen from the upper left, where the light is. */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 38%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .panel::after {
+    background: linear-gradient(135deg, rgba(190, 210, 255, 0.06), transparent 38%);
+  }
 }
 
 .panel > * {
@@ -247,7 +218,7 @@ main {
   letter-spacing: 0;
   font-size: 0.73rem;
   font-weight: 700;
-  color: var(--accent-teal);
+  color: var(--accent-copper);
 }
 
 h1,
@@ -432,14 +403,9 @@ h3 {
 }
 
 .button.primary {
-  background: #13242a;
-  color: var(--bg);
-}
-
-@media (prefers-color-scheme: dark) {
-  .button.primary {
-    color: var(--ink);
-  }
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg-deep);
 }
 
 .button.secondary {
@@ -615,12 +581,12 @@ section {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Warm light in one corner, cool in the other, like the field behind. */
   background:
-    radial-gradient(ellipse at 18% 22%, rgba(126, 107, 167, 0.13) 0 10px, transparent 11px),
-    radial-gradient(ellipse at 78% 18%, rgba(67, 167, 160, 0.17) 0 15px, transparent 16px),
-    radial-gradient(ellipse at 82% 78%, rgba(40, 111, 183, 0.13) 0 12px, transparent 13px),
-    repeating-linear-gradient(135deg, rgba(38, 52, 58, 0.032) 0 1px, transparent 1px 12px);
-  opacity: 0.74;
+    radial-gradient(60% 80% at 100% 0%, var(--glow-amber), transparent 62%),
+    radial-gradient(50% 70% at 0% 100%, var(--glow-violet), transparent 62%);
+  border-radius: inherit;
+  opacity: 0.55;
 }
 
 .project-card > *,
@@ -643,9 +609,18 @@ section {
   padding: 1.6rem;
 }
 
+/* Alternate sides down the page: preview first, copy second. */
+.project-card.spotlight.flip {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+}
+
+.project-card.spotlight.flip .spotlight-preview {
+  order: -1;
+}
+
 .spotlight-note {
   font-size: 0.92rem;
-  border-left: 2px solid var(--accent-teal);
+  border-left: 2px solid var(--accent-copper);
   padding-left: 0.75rem;
 }
 
@@ -702,6 +677,46 @@ section {
 .city-links a {
   font-weight: 600;
   color: var(--accent-blue);
+}
+
+/* Each city's swatch is the accent of its own map theme. */
+.city-links a::before {
+  content: "";
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  margin-right: 0.38em;
+  border-radius: 50%;
+  background: var(--city, var(--accent-blue));
+  box-shadow: 0 0 0 1.5px var(--surface-strong);
+}
+
+.city-oslo {
+  --city: #3a36a0;
+}
+
+.city-bergen {
+  --city: #a8322b;
+}
+
+.city-stavanger {
+  --city: #0b6a86;
+}
+
+.city-trondheim {
+  --city: #1c7358;
+}
+
+.city-drammen {
+  --city: #2f6190;
+}
+
+.city-cdmx {
+  --city: #b5126f;
+}
+
+.city-morelia {
+  --city: #a4493d;
 }
 
 .city-links-label {
@@ -1030,9 +1045,14 @@ section {
     grid-column: span 6;
   }
 
-  .project-card.spotlight {
+  .project-card.spotlight,
+  .project-card.spotlight.flip {
     grid-column: 1 / -1;
     grid-template-columns: 1fr;
+  }
+
+  .project-card.spotlight.flip .spotlight-preview {
+    order: 0;
   }
 
   .interest-grid {

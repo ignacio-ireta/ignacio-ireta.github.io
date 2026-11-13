@@ -29,17 +29,17 @@
     />
     <style>
       html {
-        background: #f5fdf7;
+        background: #f8f7f2;
       }
       body {
         margin: 0;
         min-height: 100vh;
-        background: #f5fdf7;
+        background: #f8f7f2;
       }
       @media (prefers-color-scheme: dark) {
         html,
         body {
-          background: #151712;
+          background: #0b111b;
         }
       }
       #molecule-canvas {
@@ -56,7 +56,7 @@
         z-index: 1;
       }
     </style>
-    <link rel="stylesheet" href="style.css?v=haber-micrograph-20261113" />
+    <link rel="stylesheet" href="style.css?v=micrograph-palette-20261113" />
   </head>
   <body>
     <canvas id="molecule-canvas" aria-hidden="true"></canvas>
@@ -380,38 +380,56 @@
               </a>
             </article>
 
-            <article class="project-card panel featured">
-              <div class="project-chip">Geospatial pipeline · interactive map</div>
-              <h3>Multi-City Convenience Map: Norway and Mexico</h3>
-              <p>
-                A profile-driven scoring engine that ranks postal areas by commute, transit,
-                groceries, and gyms. Python does the geospatial work offline; the browser re-scores
-                the map as you move the weights. A new Norwegian city needs a profile, not new code.
-              </p>
-              <ul>
-                <li>832 Norwegian postal areas from Kartverket (Geonorge) and OpenStreetMap</li>
-                <li>1,215 Mexico City postal codes &middot; 1,837 colonias</li>
-                <li>optional Valhalla road routing, offline, with a fallback</li>
-                <li>typed Python CLI &middot; React + Leaflet &middot; no backend</li>
-              </ul>
-              <p class="city-links">
-                <span class="city-links-label">Open a city:</span>
-                <a href="projects/cdmx-map/?city=oslo">Oslo</a>
-                <a href="projects/cdmx-map/?city=bergen">Bergen</a>
-                <a href="projects/cdmx-map/?city=stavanger">Stavanger</a>
-                <a href="projects/cdmx-map/?city=trondheim">Trondheim</a>
-                <a href="projects/cdmx-map/?city=drammen">Drammen</a>
-                <a href="projects/cdmx-map/">Mexico City</a>
-                <a href="projects/cdmx-map/?city=morelia">Morelia</a>
-              </p>
-              <div class="project-links">
-                <a
-                  href="https://github.com/ignacio-ireta/cdmx-convenience-map"
-                  target="_blank"
-                  rel="noopener"
-                  >View source</a
-                >
+            <article class="project-card panel featured spotlight flip">
+              <div class="spotlight-copy">
+                <div class="project-chip">Geospatial pipeline · interactive map</div>
+                <h3>Multi-City Convenience Map: Norway and Mexico</h3>
+                <p>
+                  A profile-driven scoring engine that ranks postal areas by commute, transit,
+                  groceries, and gyms. Python does the geospatial work offline; the browser
+                  re-scores the map as you move the weights. A new Norwegian city needs a profile,
+                  not new code.
+                </p>
+                <ul>
+                  <li>832 Norwegian postal areas from Kartverket (Geonorge) and OpenStreetMap</li>
+                  <li>1,215 Mexico City postal codes &middot; 1,837 colonias</li>
+                  <li>optional Valhalla road routing, offline, with a fallback</li>
+                  <li>typed Python CLI &middot; React + Leaflet &middot; no backend</li>
+                </ul>
+                <p class="city-links">
+                  <span class="city-links-label">Open a city:</span>
+                  <a class="city-oslo" href="projects/cdmx-map/?city=oslo">Oslo</a>
+                  <a class="city-bergen" href="projects/cdmx-map/?city=bergen">Bergen</a>
+                  <a class="city-stavanger" href="projects/cdmx-map/?city=stavanger">Stavanger</a>
+                  <a class="city-trondheim" href="projects/cdmx-map/?city=trondheim">Trondheim</a>
+                  <a class="city-drammen" href="projects/cdmx-map/?city=drammen">Drammen</a>
+                  <a class="city-cdmx" href="projects/cdmx-map/">Mexico City</a>
+                  <a class="city-morelia" href="projects/cdmx-map/?city=morelia">Morelia</a>
+                </p>
+                <div class="project-links">
+                  <a
+                    href="https://github.com/ignacio-ireta/cdmx-convenience-map"
+                    target="_blank"
+                    rel="noopener"
+                    >View source</a
+                  >
+                </div>
               </div>
+              <a
+                class="spotlight-preview"
+                href="projects/cdmx-map/?city=oslo"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <img
+                  src="images/cdmx-map.webp"
+                  alt=""
+                  width="1600"
+                  height="1000"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
             </article>
 
             <article class="project-card panel">
