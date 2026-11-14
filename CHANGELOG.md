@@ -39,6 +39,11 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   pages follow the same treatment, and the homepage gains a one-line colophon
   explaining the background.
 
+- The featured projects follow the same design language in their own themes
+  (`docs/design-language.md`): the map embed is rebuilt as a cartographer's
+  sheet, and the ETF report, frontier explorer and figure gallery as a research
+  note on paper. The ETF page frames the reports on paper to match.
+
 ### Fixed
 
 - Dark mode: the page background no longer carries the light theme's pale wash.

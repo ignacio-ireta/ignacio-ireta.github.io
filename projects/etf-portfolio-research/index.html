@@ -42,7 +42,8 @@
         margin-top: 2.5rem;
       }
 
-      /* Interactive report embed: a framed, dark "specimen under glass". */
+      /* Interactive report embed: the report is a printed sheet, so the frame behind it is
+         paper in both colour schemes. */
       .report-embed {
         margin: 0;
         overflow: hidden;
@@ -54,7 +55,7 @@
         position: relative;
         width: 100%;
         min-height: clamp(520px, 78vh, 900px);
-        background: #0e1117;
+        background: #f8f7f3;
       }
       .report-embed--compact .report-embed__frame {
         min-height: clamp(440px, 62vh, 700px);
@@ -291,7 +292,7 @@
                 data-embed-load
                 aria-describedby="report-caption"
               >
-                <span class="report-embed__badge">Interactive · Plotly · 7.2 MB</span>
+                <span class="report-embed__badge">Interactive · Plotly · 7.4 MB</span>
                 <span class="report-embed__cta">Load the interactive report</span>
                 <span class="report-embed__hint">Loads on click to keep this page fast</span>
               </button>
@@ -333,7 +334,7 @@
                 data-embed-load
                 aria-describedby="frontier-caption"
               >
-                <span class="report-embed__badge">Interactive · Plotly · 4.85 MB</span>
+                <span class="report-embed__badge">Interactive · Plotly · 4.9 MB</span>
                 <span class="report-embed__cta">Load the frontier explorer</span>
                 <span class="report-embed__hint">Loads on click to keep this page fast</span>
               </button>
