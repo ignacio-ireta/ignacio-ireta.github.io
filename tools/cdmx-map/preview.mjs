@@ -3,7 +3,7 @@
 //   node tools/cdmx-map/preview.mjs [--city oslo] [--browser <path to a Chromium-family binary>]
 //
 // Serves the repository root on a free loopback port (as GitHub Pages would), opens the city,
-// zooms in on its centre so the scored postal areas fill the frame, and converts the shot with
+// zooms in and pans so the scored postal areas fill the frame, and converts the shot with
 // cwebp. The map embed itself is built in ignacio-ireta/cdmx-convenience-map and lands here
 // through its CI, so re-run this after an embed update that changes how the page looks.
 //
@@ -21,11 +21,12 @@ const TOOL_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(TOOL_DIR, "..", "..");
 const OUTPUT = join(REPO_ROOT, "images", "cdmx-map.webp");
 const VIEWPORT = { width: 1440, height: 900 };
-// Where the scored area sits in the default view, the middle of the map pane, and where to
-// leave the city: the middle of the strip of map between the sidebar and the ranking panel.
-const CITY_CENTRE = { x: 955, y: 545 };
-const MAP_CENTRE = { x: 915, y: 450 };
-const FRAME_CENTRE = { x: 740, y: 470 };
+// How far the city sits from the middle of the map pane in the default view, and where it
+// should end up: the middle of the strip of map between the sidebar and the ranking.
+const CITY_OFFSET = { x: 35, y: 95 };
+const FRAME_OFFSET = { x: -180, y: 20 };
+const ZOOM_STEPS = 2;
+const KEY_PAN_PX = 80; // Leaflet's keyboard pan distance
 const TYPES = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -115,8 +116,12 @@ try {
     });
   const evaluate = async (expression) =>
     (await send("Runtime.evaluate", { expression, returnByValue: true })).result?.result?.value;
-  const mouse = (type, point, extra = {}) =>
-    send("Input.dispatchMouseEvent", { type, x: point.x, y: point.y, button: "left", ...extra });
+  const press = async (key, code) => {
+    const event = { key, code: key, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
+    await send("Input.dispatchKeyEvent", { type: "rawKeyDown", ...event });
+    await send("Input.dispatchKeyEvent", { type: "keyUp", ...event });
+    await sleep(350);
+  };
 
   // Scored areas are drawn and every basemap tile in view has loaded.
   const settled = async () => {
@@ -143,42 +148,18 @@ try {
   await send("Page.navigate", { url });
   await settled();
 
-  // Dragging pans the map without selecting the area under the pointer.
-  const drag = async (from, to) => {
-    await mouse("mousePressed", from, { clickCount: 1 });
-    for (let step = 1; step <= 12; step += 1) {
-      await mouse("mouseMoved", {
-        x: from.x + ((to.x - from.x) * step) / 12,
-        y: from.y + ((to.y - from.y) * step) / 12
-      });
-      await sleep(30);
-    }
-    await sleep(200);
-    await mouse("mouseReleased", to, { clickCount: 1 });
-    await sleep(400);
-  };
-  // The zoom control zooms about the middle of the pane, so centre the city between steps.
-  const zoomIn = async () => {
+  // Zoom with the map's own control, then pan with its keyboard handler. The pointer never
+  // touches the map, so no area is selected and no hover tooltip is left in the shot.
+  for (let step = 0; step < ZOOM_STEPS; step += 1) {
     await evaluate(`document.querySelector(".leaflet-control-zoom-in").click()`);
     await sleep(700);
-  };
-
-  await zoomIn();
-  await drag(
-    {
-      x: MAP_CENTRE.x + (CITY_CENTRE.x - MAP_CENTRE.x) * 2,
-      y: MAP_CENTRE.y + (CITY_CENTRE.y - MAP_CENTRE.y) * 2
-    },
-    MAP_CENTRE
-  );
-  await zoomIn();
-  await drag(MAP_CENTRE, FRAME_CENTRE);
-  // Walk the pointer off the map and drop focus, so the shot has no focus ring. The last
-  // hover tooltip stays up, which shows what pointing at an area does.
-  for (let step = 1; step <= 10; step += 1) {
-    await mouse("mouseMoved", { x: FRAME_CENTRE.x - step * 54, y: 140 }, { button: "none" });
-    await sleep(30);
   }
+  await evaluate(`document.querySelector(".leaflet-container").focus()`);
+  const scale = 2 ** ZOOM_STEPS;
+  const right = Math.round((CITY_OFFSET.x * scale - FRAME_OFFSET.x) / KEY_PAN_PX);
+  const down = Math.round((CITY_OFFSET.y * scale - FRAME_OFFSET.y) / KEY_PAN_PX);
+  for (let step = 0; step < right; step += 1) await press("ArrowRight", 39);
+  for (let step = 0; step < down; step += 1) await press("ArrowDown", 40);
   await evaluate(`document.activeElement?.blur()`);
   await settled();
 
