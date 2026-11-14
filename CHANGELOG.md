@@ -41,8 +41,11 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The featured projects follow the same design language in their own themes
   (`docs/design-language.md`): the map embed is rebuilt as a cartographer's
-  sheet, and the ETF report, frontier explorer and figure gallery as a research
-  note on paper. The ETF page frames the reports on paper to match.
+  sheet, the ETF report, frontier explorer and figure gallery as a research
+  note on paper, and the dogma demo with its prose and lists set open on the
+  page. The ETF page frames the reports on paper to match.
+- The card screenshots are taken by dependency-free tools sharing
+  `tools/lib/page-shot.mjs`; the dogma preview no longer needs Playwright.
 
 ### Fixed
 

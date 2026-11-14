@@ -37,6 +37,7 @@ This is a **static site served by GitHub Pages** straight from the `master` bran
 ├── tests/                         # node:test unit + jsdom boot smoke tests + demo integrity
 ├── tools/dogma-demo/              # Build-time tool for projects/dogma/ (not run by CI)
 ├── tools/cdmx-map/                # Screenshot tool for the map's homepage preview (not run by CI)
+├── tools/lib/                     # Shared page-capture helper for the preview tools
 └── scripts/check-links.mjs        # Offline internal-link checker
 ```
 

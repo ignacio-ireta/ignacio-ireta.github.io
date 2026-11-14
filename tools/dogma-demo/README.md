@@ -14,7 +14,8 @@ This is a build-time tool. The site itself stays dependency-free, and CI never r
 - macOS: the capture grades the demo learner's attempts with dogma's sandboxed runner.
 - `npm --prefix tools/dogma-demo ci` once, for the pinned Pyodide used to verify grading.
 - Network access (Pyodide packages from jsdelivr).
-- For `preview.mjs` only: Playwright's Chromium in dogma's `web/`, and `cwebp`.
+- For `preview.mjs` only: an installed Chrome, Chromium, Brave or Edge, and `cwebp`. It uses
+  no npm packages (see [`tools/lib/page-shot.mjs`](../lib/page-shot.mjs)).
 
 ## Build
 
