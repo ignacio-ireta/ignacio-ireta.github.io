@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T12:16:44+00:00",
+  "generated_at": "2026-11-25T19:53:25+00:00",
   "city_id": "guadalajara",
   "area_unit": "colonia",
   "feature_count": 2648,
@@ -136,7 +136,7 @@
       "misses": 148,
       "entries": 122690
     },
-    "generated_at": "2026-11-25T12:16:44+00:00"
+    "generated_at": "2026-11-25T19:53:25+00:00"
   },
   "amenity_travel_time": {
     "source": "valhalla_free_flow",
@@ -209,7 +209,7 @@
       "Walking access and egress are straight-line distances and do not account for street barriers or station entrances.",
       "Different-line and different-system trips use fixed penalties instead of a real transfer graph."
     ],
-    "generated_at": "2026-11-25T12:16:44+00:00",
+    "generated_at": "2026-11-25T19:53:25+00:00",
     "engine": "stop_pair_approximation",
     "router": {
       "engine": "stop_pair_approximation",
@@ -246,9 +246,13 @@
   },
   "outputs": {
     "processed": "data/processed/guadalajara/scores_colonia.geojson",
-    "public": "frontend/public/data/guadalajara/scores_colonia.geojson",
+    "public": "frontend/public/data/guadalajara/scores_colonia_index.json",
     "legacy_processed": [],
-    "legacy_public": []
+    "legacy_public": [],
+    "public_parts": [
+      "frontend/public/data/guadalajara/scores_colonia.part-01.geojson",
+      "frontend/public/data/guadalajara/scores_colonia.part-02.geojson"
+    ]
   },
   "notes": [
     "Distances are straight-line representative-point-to-point distances in meters.",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T12:16:28+00:00",
+  "generated_at": "2026-11-25T19:53:08+00:00",
   "city_id": "monterrey",
   "area_unit": "colonia",
   "feature_count": 4698,
@@ -275,11 +275,11 @@
       }
     },
     "cache": {
-      "hits": 218592,
-      "misses": 2214,
+      "hits": 220562,
+      "misses": 244,
       "entries": 227132
     },
-    "generated_at": "2026-11-25T12:16:28+00:00"
+    "generated_at": "2026-11-25T19:53:08+00:00"
   },
   "amenity_travel_time": {
     "source": "valhalla_free_flow",
@@ -351,7 +351,7 @@
       "Walking access and egress are straight-line distances and do not account for street barriers or station entrances.",
       "Different-line and different-system trips use fixed penalties instead of a real transfer graph."
     ],
-    "generated_at": "2026-11-25T12:16:28+00:00",
+    "generated_at": "2026-11-25T19:53:08+00:00",
     "engine": "stop_pair_approximation",
     "router": {
       "engine": "stop_pair_approximation",
@@ -390,9 +390,15 @@
   },
   "outputs": {
     "processed": "data/processed/monterrey/scores_colonia.geojson",
-    "public": "frontend/public/data/monterrey/scores_colonia.geojson",
+    "public": "frontend/public/data/monterrey/scores_colonia_index.json",
     "legacy_processed": [],
-    "legacy_public": []
+    "legacy_public": [],
+    "public_parts": [
+      "frontend/public/data/monterrey/scores_colonia.part-01.geojson",
+      "frontend/public/data/monterrey/scores_colonia.part-02.geojson",
+      "frontend/public/data/monterrey/scores_colonia.part-03.geojson",
+      "frontend/public/data/monterrey/scores_colonia.part-04.geojson"
+    ]
   },
   "notes": [
     "Distances are straight-line representative-point-to-point distances in meters.",
