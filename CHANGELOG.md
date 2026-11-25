@@ -53,6 +53,10 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Monterrey and Guadalajara on the convenience map (`?city=monterrey`,
+  `?city=guadalajara`), each with postal-code and colonia geographies and
+  published Valhalla road routing. The homepage card links both and counts the
+  Mexican areas across all four cities.
 - Homepage preview of the Multi-City Convenience Map (`images/cdmx-map.webp`),
   shot from the committed embed by `tools/cdmx-map/preview.mjs`, and a swatch on
   each city link in that city's own map theme colour.

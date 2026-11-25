@@ -828,6 +828,14 @@ section {
   --city: #b5126f;
 }
 
+.city-monterrey {
+  --city: #a14e00;
+}
+
+.city-guadalajara {
+  --city: #7c5f00;
+}
+
 .city-morelia {
   --city: #a4493d;
 }
